@@ -1003,6 +1003,8 @@ settingsTable = {
 	slot4 = "M9"
 }
 
+
+
 local function saveSettings()
 	Notifi("SAVING SETTINGS",Color3.fromRGB(255, 255, 255))
 	local json;
@@ -1049,21 +1051,7 @@ local Players = game:GetService("Players")
 
 local ReplicateEvent = ReplicatedStorage:WaitForChild("ReplicateEvent")
 
-local Connections = getconnections(ReplicateEvent.OnClientEvent)
-
-function DisableShootEvent()
-	states.anticrash = true
-	for _,v in pairs(Connections) do
-		v:Disable()
-	end
-end
-
-function EnableShootEvent()
-	states.anticrash = false
-	for _,v in pairs(Connections) do
-		v:Enable()
-	end
-end
+local connections = getconnections(game.ReplicatedStorage.ReplicateEvent.OnClientEvent)
 
 ReplicateEvent.OnClientEvent:Connect(function(Bullets)
 	if states.anticrash then
@@ -1960,7 +1948,68 @@ function teiser(plr)
 	end)
 end
 
+function lagsxdd(Player)
+	pcall(function()
+		game.Workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["M9"].ITEMPICKUP)
 
+		local Gun = game.Players.LocalPlayer.Character:FindFirstChild("M9") or game.Players.LocalPlayer.Backpack:FindFirstChild("M9")
+
+		local FireEvent = {
+			[1] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+			}, [2] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+			}, [3] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[game.Players.LocalPlayer.Namee].Head
+			}, [4] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+			}, [5] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+			}, [6] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+			}, [7] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+			}, [8] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+			}, [9] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+			}, [10] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+			}
+		}
+		game:GetService("ReplicatedStorage").ShootEvent:FireServer(FireEvent, Gun)
+	end)
+end
 
 function quill(Player)
 	pcall(function()
@@ -2028,6 +2077,14 @@ function quill(Player)
 	end)
 end
 
+oldAmbien = game.Lighting.Ambient
+oldBri = game.Lighting.Brightness
+oldColorsh = game.Lighting.ColorShift_Top 
+oldEv = game.Lighting.EnvironmentDiffuseScale 
+oldOA = game.Lighting.OutdoorAmbient 
+oldSs = game.Lighting.ShadowSoftness
+oldex = game.Lighting.ExposureCompensation 
+
 function noteamquill(Player)
 	pcall(function()
 		if Player.Character:FindFirstChild("ForceField") or not workspace:FindFirstChild(Player.Name) or not workspace:FindFirstChild(Player.Name):FindFirstChild("Head") or Player == nil or Player.Character.Parent ~= workspace then return end
@@ -2093,6 +2150,8 @@ function noteamquill(Player)
 		game.Players.LocalPlayer.Character["M9"]:Destroy()
 	end)
 end
+
+local Material = {}
 
 local cmdzz = {
 	"re/respawn",
@@ -2182,6 +2241,7 @@ for i,v in pairs(cmdzz) do
 end
 
 cmdlist.CanvasSize = UDim2.new(0,longestText,0,TextLabel.TextSize * #cmdzz)
+local prfx = "."
 
 -- command function
 local frame = Commands
@@ -2190,7 +2250,8 @@ local box = TextBox
 
 local function get_command(fromchat, msg)
 	local command = {}
-
+	
+	
 	if fromchat == false then
 		for word in string.gmatch(box.Text, "%S+") do
 			table.insert(command, word)
@@ -2208,7 +2269,7 @@ local function get_command(fromchat, msg)
 	local cmd = command[1]
 
 	local prefix = string.sub(cmd, 0,1)
-	if prefix == "." then
+	if prefix == prfx then
 		action = string.sub(command[1], 2,#command[1])
 	end
 
@@ -2244,6 +2305,7 @@ local function get_command(fromchat, msg)
 		"autore",
 		"auto",
 		"autorespawn",
+		"serverhop",
 		"lock",
 		"autolock",
 		"autol",
@@ -2300,6 +2362,8 @@ local function get_command(fromchat, msg)
 		"clicktp",
 		"copyteam",
 		"slotguns",
+		"changeprefix",
+		"prefix",
 		"kill",
 		"loopkill",
 		"lk",
@@ -2318,6 +2382,7 @@ local function get_command(fromchat, msg)
 		"enemy",
 		"antibring",
 		"ts",
+		"betterlight",
 		"timestop",
 		"datocurioso",
 		"fakespam",
@@ -2345,7 +2410,6 @@ local function get_command(fromchat, msg)
 		"onepunch",
 		"op",
 		"lag",
-		"taserbypass",
 		"tb",
 		"walls"
 	}
@@ -2354,7 +2418,7 @@ local function get_command(fromchat, msg)
 		for _, command in pairs(actions) do
 			if command == action then
 				if fromchat == true then
-					if prefix == "." then
+					if prefix == prfx then
 						return true
 					end
 				else
@@ -2381,6 +2445,73 @@ local function get_command(fromchat, msg)
 				end
 			end
 			
+			if action == "betterlight" then
+				
+				if person == "on" then
+					game.Lighting.Ambient = Color3.fromRGB(112, 112, 112)
+					game.Lighting.Brightness = 3.93
+					game.Lighting.ColorShift_Top = Color3.fromRGB(118, 117, 101)
+					game.Lighting.EnvironmentDiffuseScale = 0.343
+					game.Lighting.OutdoorAmbient = Color3.fromRGB(141,141,141)
+					game.Lighting.ShadowSoftness = 0.1
+					game.Lighting.ExposureCompensation = 0.34
+					atmos = Instance.new("Atmosphere",game.Lighting)
+					bloom = Instance.new("BloomEffect",game.Lighting)
+					blur = Instance.new("BlurEffect",game.Lighting)
+					colorco = Instance.new("ColorCorrectionEffect",game.Lighting)
+					sunrays = Instance.new("SunRaysEffect",game.Lighting)
+
+					atmos.Density = 0.348
+					atmos.Offset = 0.199
+					atmos.Color = Color3.fromRGB(216,255,250)
+					atmos.Decay = Color3.fromRGB(92,60,13)
+					atmos.Glare = 0.68
+					atmos.Haze = 0.36
+
+					bloom.Intensity = 1
+					bloom.Size = 22
+					bloom.Threshold = 0.8
+
+					blur.Size = 2
+
+					colorco.Brightness = 0
+					colorco.Contrast = 0.2
+					colorco.Saturation = 0
+					colorco.TintColor = Color3.fromRGB(255,252,224)
+
+					sunrays.Intensity = 0.117
+					sunrays.Spread = 1
+				else
+					if person == "off" then
+						game.Lighting.Ambient = oldAmbien
+						game.Lighting.Brightness = oldBri
+						game.Lighting.ColorShift_Top = oldColorsh
+						game.Lighting.EnvironmentDiffuseScale = oldEv
+						game.Lighting.OutdoorAmbient = oldOA
+						game.Lighting.ShadowSoftness = oldSs
+						game.Lighting.ExposureCompensation = oldex
+
+						if atmos then
+							atmos:Destroy()
+							bloom:Destroy()
+							blur:Destroy()
+							colorco:Destroy()
+							sunrays:Destroy()
+						end
+					end
+				end
+			end
+			if action == "prefix" then
+				positiveNotify("YOUR COMMAND PREFIX IS "..prfx)
+			end
+			if action == "changeprefix" then
+				prfx = string.sub(person, 0,1)
+				
+				Notifi("CHANGED PREFIX TO "..prfx)
+			end
+			if action == "serverhop" then
+				game:GetService("TeleportService"):Teleport(game.PlaceId)
+			end
 			if action == "killaura" then
 				states.KILLAURA = true
 				
@@ -2389,12 +2520,89 @@ local function get_command(fromchat, msg)
 				saveSettings()
 			end
 			
+			if action == "lag" then
+				if person == "on" then
+					states.LAGGING = true
+					Notifi("LAGGING SERVER")
+					while states.LAGGING == true do
+						wait(0.2)
+						pcall(function()
+							workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
+
+							local Gun = game.Players.LocalPlayer.Backpack["Remington 870"] or game.Players.LocalPlayer.Character["Remington 870"]
+
+							local args = {
+								[1] = {
+									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+									["Distance"] = math.huge,
+									["Cframe"] = CFrame.new(), 
+									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+								}, [2] = {
+									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+									["Distance"] = math.huge,
+									["Cframe"] = CFrame.new(), 
+									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+								}, [3] = {
+									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+									["Distance"] = math.huge,
+									["Cframe"] = CFrame.new(), 
+									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+								}, [4] = {
+									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+									["Distance"] = math.huge, 
+									["Cframe"] = CFrame.new(), 
+									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+								}, [5] = {
+									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+									["Distance"] = math.huge,
+									["Cframe"] = CFrame.new(), 
+									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+								}, [6] = {
+									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+									["Distance"] = math.huge, 
+									["Cframe"] = CFrame.new(), 
+									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+								}, [7] = {
+									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+									["Distance"] = math.huge,
+									["Cframe"] = CFrame.new(), 
+									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+								}, [8] = {
+									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+									["Distance"] = math.huge, 
+									["Cframe"] = CFrame.new(), 
+									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+								}, [9] = {
+									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+									["Distance"] = math.huge,
+									["Cframe"] = CFrame.new(), 
+									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+								}, [10] = {
+									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+									["Distance"] = math.huge, 
+									["Cframe"] = CFrame.new(), 
+									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+								}
+							}
+
+							game:GetService("ReplicatedStorage").ShootEvent:FireServer(args, Gun)
+							game.ReplicatedStorage.ReloadEvent:FireServer(Gun)
+						end)
+					end
+				else
+					if person == "off" then
+						states.LAGGING = false
+						Notifi("UNLAGGING SERVER",Color3.fromRGB(255, 0, 0))
+					end
+				end
+			end
+			
 			if action == "tase" then
 				local Player = GetPlayerFromString(person)
 				local mayus = string.upper(Player.Name)
 				if Player ~= nil then
 					teiser(Player)
-					Notifi("TASED".. mayus)
+					Notifi("TASED ".. mayus)
 				end
 			end
 			
@@ -2777,10 +2985,31 @@ local function get_command(fromchat, msg)
 			if action == "anticrash" then
 
 				if person == "on" then
-					EnableShootEvent()
+					states.anticrash = true
+					Notifi("ANTICRASH IS ENABLED")
+					if states.ANTICRASH == true then
+						for i,v in pairs(connections) do
+							v:Disable()
+						end
+					else
+						for i,v in pairs(connections) do
+							v:Enable()
+						end
+					end
 				else
 					if person == "off" then
-						DisableShootEvent()
+						states.anticrash = false
+						Notifi("ANTICRASH IS DISABLED")
+						if states.ANTICRASH == false then
+							for i,v in pairs(connections) do
+								v:Disable()
+							end
+						else
+							for i,v in pairs(connections) do
+								v:Enable()
+							end
+						end
+					
 					end
 				end
 			end
@@ -3793,19 +4022,7 @@ local function get_command(fromchat, msg)
 							end
 						end
 
-						for _,v in pairs(game.Players:GetPlayers()) do
-							pcall(function()
-								if workspace:FindFirstChild(game.Players.LocalPlayer.Name) and ((game.Players.LocalPlayer.Character:FindFirstChildOfClass('Part').Position-workspace[player.Name]:FindFirstChildOfClass('Part').Position).magnitude < 10) and player ~= game.Players.LocalPlayer then
-									for i = 1,workspace[player.Name].Humanoid.Health/5 do
-										game:GetService("ReplicatedStorage").meleeEvent:FireServer(player)
-									end
-								end
-							end)
-						end
-
 						local crim = game:GetService("Workspace")["Criminals Spawn"].SpawnLocation
-
-						local player = GetPlayerFromString(person)
 
 						crim.CanCollide = false
 						crim.CFrame = GetRO()
@@ -4517,32 +4734,25 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "antilag" then
-				Notifi("ANTILAG IS ENABLED", Color3.fromRGB(0, 255, 0))
-				workspace:FindFirstChildOfClass('Terrain').WaterWaveSize = 0
-				workspace:FindFirstChildOfClass('Terrain').WaterWaveSpeed = 0
-				workspace:FindFirstChildOfClass('Terrain').WaterReflectance = 0
-				workspace:FindFirstChildOfClass('Terrain').WaterTransparency = 0
-				game:GetService("Lighting").GlobalShadows = false
-				game:GetService("Lighting").FogEnd = 9e9
-				settings().Rendering.QualityLevel = 1
-				for i,v in pairs(game:GetDescendants()) do
-					if v:IsA("Part") or v:IsA("UnionOperation") or v:IsA("MeshPart") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
-						v.Material = "Plastic"
-						v.Reflectance = 0
-					elseif v:IsA("Decal") then
-						v.Transparency = 1
-					elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-						v.Lifetime = NumberRange.new(0)
-					elseif v:IsA("Explosion") then
-						v.BlastPressure = 1
-						v.BlastRadius = 1
+				if person == "on" then
+					Notifi("ANTILAG IS ENABLED")
+					for _, v in pairs(game:GetDescendants()) do
+						pcall(function()
+							v.Material = Enum.Material.Plastic
+							Material[v.Name] = {Material = v.Material}
+						end)
+					end
+				else
+					if person == "off" then
+						Notifi("ANTILAG IS DISABLED", Color3.fromRGB(255, 0, 0))
+						for _, v in pairs(game:GetDescendants()) do
+							pcall(function()
+								v.Material = Material[v.Name].Material
+							end)
+						end
 					end
 				end
-				for i,v in pairs(game:GetService("Lighting"):GetDescendants()) do
-					if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
-						v.Enabled = false
-					end
-				end
+				
 				
 			end
 
@@ -4673,11 +4883,7 @@ local function get_command(fromchat, msg)
 							refreshT(Color3.fromRGB(0, 0, 0))
 						end
 
-						local crim = game:GetService("Workspace")["Criminals Spawn"]:GetChildren()
-
-						for i,v in pairs(crim) do
-							v.CFrame = CFrame.new(778, 500, 2465)
-						end
+						
 						
 						if states.ANTICRIM == false then
 							break
@@ -4940,6 +5146,11 @@ game.Players.LocalPlayer.Chatted:Connect(function(msg)
 	get_command(true, msg)
 end)
 
+game.Players.PlayerRemoving:Connect(function(Player)
+	if states.PlayerNotify == true then
+		negativeNotify(Player.Name.. " left the game")
+	end
+end)
 
 local uis = game:GetService("UserInputService")
 uis.InputBegan:Connect(function(input, gameProcessedEvent)
@@ -5061,17 +5272,10 @@ jojojaja.Size = Vector3.new(1000, 61, 1000)
 jojojaja.Material = Enum.Material.Grass
 jojojaja.BrickColor = BrickColor.new(Color3.fromRGB(58, 125, 21))
 
+
 local StarterGui = game:GetService("StarterGui")
 
 StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
-game:GetService("RunService").Stepped:Connect(function()
-	if states.ANTIBRING == true then
-		pcall(function()
-			game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-			game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-		end)
-	end
-end)
 
 Exploiters = {
 	"Frankiliano_22",
@@ -6093,9 +6297,6 @@ function AdminPlayerChatted(msg, Player)
 	end
 end
 
-game.Players.Chatted:Connect(function(msg)
-	
-end)
 function CheckPermissions(Player)
 	Player.Chatted:Connect(function(Message)
 		if adminXD[Player.UserId] then
@@ -6123,12 +6324,6 @@ local function InList(List, plr)
 		end
 	end
 end
-
-game.Players.PlayerRemoving:Connect(function(Player)
-	if states.PlayerNotify == true then
-		negativeNotify(Player.Name.. " left the game")
-	end
-end)
 
 game.Players.PlayerAdded:Connect(function(Player)
 	CheckPermissions(Player)
@@ -6248,9 +6443,8 @@ game.Players.PlayerAdded:Connect(function(Player)
 	for i,v in pairs(HDP) do
 		if Player.Name == v then
 			if states.BLACKLIST == true then
-
-				while wait() do
-					coroutine.wrap(function()
+				coroutine.wrap(function()
+					while wait() do
 						pcall(function()
 							workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
 
@@ -6302,8 +6496,8 @@ game.Players.PlayerAdded:Connect(function(Player)
 
 							game:GetService("ReplicatedStorage").ShootEvent:FireServer(args, Gun)
 						end)
-					end)()
-				end
+					end
+				end)()
 			end
 		end
 	end
@@ -6492,24 +6686,12 @@ coroutine.wrap(function()
 	end
 end)()
 
-local Old_Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-local Old_CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-
-spawn(function()
-	while wait() do
-		if states.ANTIBRING then
-			pcall(function()
-				if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position-Old_Position).magnitude > 6 then
-					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Old_CFrame
-				end
-				
-
-				if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position-Old_Position).magnitude < 6 then
-					Old_Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-					Old_CFrame = GetRO()
-				end
-			end)
-		end
+game:GetService("RunService").Stepped:Connect(function()
+	if states.ANTIBRING == true then
+		pcall(function()
+			game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+			game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+		end)
 	end
 end)
 
@@ -6518,4 +6700,3 @@ local crim = game:GetService("Workspace")["Criminals Spawn"]:GetChildren()
 for i,v in pairs(crim) do
 	v.CFrame = CFrame.new(778, 500, 2465)
 end
-
