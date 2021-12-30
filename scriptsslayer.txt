@@ -2147,6 +2147,8 @@ Bindable.Event:Connect(function(bullets, gun)
 			Clone.Rotation = math.random(0,90)
 
 			game:GetService('Debris'):AddItem(Clone, 0.05)
+			wait()
+			Clone:Destroy()
 		end
 	end
 end)
@@ -2730,7 +2732,7 @@ local function get_command(fromchat, msg)
 
 					colorco.Brightness = 0.1
 					colorco.Contrast = 0
-					colorco.Saturation = 0.8
+					colorco.Saturation = 0.2
 					colorco.TintColor = Color3.fromRGB(255, 255, 255)
 
 					sunrays.Intensity = 0.117
