@@ -868,6 +868,7 @@ states.LoopFF = false
 states.Notify = true
 states.anticrash = false
 states.DAMAGESOUNDS = false
+states.antiarmorspam = false
 
 local Walls = {
 	game.Workspace.Prison_Halls.walls,
@@ -1009,9 +1010,33 @@ uwu7w7.Enabled = false
 function fr1endh(plr)
 	game:GetService("Workspace")[plr.Name].HumanoidRootPart.Anchored = true
 end
+local Useraidi = tonumber((game:GetService("Players").LocalPlayer.CharacterAppearance):split('=')[#((game:GetService("Players").LocalPlayer.CharacterAppearance):split('='))])
+
+local Userneim = game:GetService('HttpService'):JSONDecode(game:HttpGet('http://api.roblox.com/users/'..Useraidi)).Username
 
 function en3myh(plr)
 	game:GetService("Workspace")[plr.Name].HumanoidRootPart.Anchored = false
+end
+function harrestatexd(plr, times)
+	local times = times or 1
+	if plr.TeamColor.Name == "Really red" then
+		local m_char = workspace:FindFirstChild(Userneim)
+		local m_h = m_char and m_char:FindFirstChild("HumanoidRootPart")
+		local plr_char = workspace:FindFirstChild(plr.Name)
+		local plr_h = plr_char and plr_char:FindFirstChild("HumanoidRootPart")
+		if m_char and m_h and plr_char and plr_h then 
+			local savedcframe = m_h.CFrame
+			repeat 
+				m_h.CFrame = plr_h.CFrame * CFrame.new(0,0,1.3)
+				local args = {plr_char:FindFirstChild("Head")}
+				for i=1,times do 
+					workspace.Remote.arrest:InvokeServer(unpack(args))
+				end
+			until plr_char.Head:FindFirstChild("handcuffedGui")
+			m_char.Humanoid.Sit = false
+			m_h.CFrame = savedcframe
+		end
+	end
 end
 
 function harrrezt(plr)
@@ -1022,6 +1047,28 @@ function ff()
 	refreshT(Color3.fromRGB(255, 0, 0))
 
 	workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+end
+
+function notcrims()
+	coroutine.wrap(function()
+		local LocalPlayer = game.Players.LocalPlayer
+		local doing = true
+		while wait() do
+			if LocalPlayer then
+				if LocalPlayer.TeamColor.Name ~= "Medium stone grey" then
+					workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+				end
+			end
+			if not LocalPlayer then
+				doing = false
+			end
+			
+			if doing == false then
+				break
+			end
+		end
+		
+	end)()
 end
 
 function refreshT(color)
@@ -1169,16 +1216,24 @@ function chattNotify(text)
 end
 
 function negativeNotify(text)
-	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[System]: "..text; Color = Color3.fromRGB(216, 0, 0); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
+	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[System]: "..text; Color = Color3.fromRGB(206, 0, 0); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
 end
+
+function errorNotify(text)
+	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[ERROR]: "..text; Color = Color3.fromRGB(255, 0, 0); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
+end
+
 
 function positiveNotify(text)
 	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[System]: "..text; Color = Color3.fromRGB(0, 255, 0); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
 end
 
+function CustomNotify(text1, text)
+	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "["..text1.."]: "..text; Color = Color3.fromRGB(0, 255, 0); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
+end
 
 function Warning(text)
-	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Warning]: "..text; Color = Color3.fromRGB(255, 0, 0); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
+	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Warning]: "..text; Color = Color3.fromRGB(255, 85, 0); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
 end
 
 function Blacklist(text)
@@ -1284,7 +1339,7 @@ local gunsitasxd = {
 	"M4A1",
 	"AK-47",
 	"Remington 870",
-	"M9"
+	"M9",
 }
 
 local teams = {
@@ -2069,6 +2124,7 @@ function lagsxdd(Player)
 		game:GetService("ReplicatedStorage").ShootEvent:FireServer(FireEvent, Gun)
 	end)
 end
+
 local IAPortable = Instance.new("ScreenGui")
 local Cursor = Instance.new("ImageLabel")
 local Hitmarker = Instance.new("ImageLabel")
@@ -2165,6 +2221,59 @@ OldNameCall = hookmetamethod(game, '__namecall', function(self, ...)
 	return OldNameCall(self, ...)
 end)
 
+function quill2(Player)
+	pcall(function()
+		if Player.Character:FindFirstChild("ForceField") or not workspace:FindFirstChild(Player.Name) or not workspace:FindFirstChild(Player.Name):FindFirstChild("Head") or Player == nil or Player.Character.Parent ~= workspace then return end
+		game.Workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["M9"].ITEMPICKUP)
+		local Gun = game.Players.LocalPlayer.Character:FindFirstChild("M9") or game.Players.LocalPlayer.Backpack:FindFirstChild("M9")
+
+		local FireEvent = {
+			[1] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[Player.Name].Head
+			}, [2] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[Player.Name].Head
+			}, [3] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[Player.Name].Head
+			}, [4] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[Player.Name].Head
+			}, [5] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[Player.Name].Head
+			}, [6] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[Player.Name].Head
+			}, [7] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[Player.Name].Head
+			}, [8] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[Player.Name].Head
+			}
+		}
+		game:GetService("ReplicatedStorage").ShootEvent:FireServer(FireEvent, Gun)
+		game:GetService("ReplicatedStorage").ReloadEvent:FireServer(Gun)
+	end)
+end
 
 function quill(Player)
 	pcall(function()
@@ -2232,6 +2341,7 @@ function quill(Player)
 	end)
 end
 
+local friends = {}
 oldAmbien = game.Lighting.Ambient
 oldBri = game.Lighting.Brightness
 oldColorsh = game.Lighting.ColorShift_Top 
@@ -2313,7 +2423,7 @@ local cmdzz = {
 	"team/t <team>",
 	"copyteam <player>",
 	"guns",
-	"gunorder <gun> <1/4>",
+	"gunorder <gun> <1/4>",	
 	"ws/walkspeed <num>",
 	"jp/jumppower <num>",
 	"gt/gravity <num>",
@@ -2323,11 +2433,15 @@ local cmdzz = {
 	"bring <player>",
 	"arrest <player>",
 	"view <player>",
+	"antiarmorspam <on/off>",
+	"antisalag/antiarrestlag <on/off>",
 	"unview",
 	"lock",
 	"colorguns/cg <on/off>",
 	"rejoin/rj",
 	"count",
+	"on",
+	"off",
 	"theme <rgb>",
 	"load <exploit>",
 	"to <player>",
@@ -2338,7 +2452,6 @@ local cmdzz = {
 	"cursorsize <num>",
 	"arrestaura <on/off>",
 	"autorespawn/auto <on/off>",
-	"autospawn <on/off>",
 	"autolock <on/off>",
 	"autoguns <on/off>",
 	"antishield <on/off>",
@@ -2386,7 +2499,8 @@ local cmdzz = {
 	"motionblur <on/off>",
 	"betterlight <on/off>",
 	"fastspawn <on/off>",
-	"damagesounds/ds <on/off>"
+	"damagesounds/ds <on/off>",
+	
 	
 	
 	
@@ -2414,11 +2528,10 @@ local prfx = "."
 -- command function
 local frame = Commands
 local box = TextBox
-
+local Lagpower = 0.5
 
 local function get_command(fromchat, msg)
 	local command = {}
-	
 	
 	if fromchat == false then
 		for word in string.gmatch(string.lower(box.Text), "%S+") do
@@ -2509,11 +2622,14 @@ local function get_command(fromchat, msg)
 		"garage",
 		"backcafe",
 		"cell",
+		"sit",
 		"down",
 		"secretzone",
 		"city",
 		"doors",
 		"autoguns",
+		"aguns",
+		"alock",
 		"t",
 		"bri",
 		"end",
@@ -2539,7 +2655,6 @@ local function get_command(fromchat, msg)
 		"blacklist",
 		"rb",
 		"cd",
-		"antisalag",
 		"playernotify",
 		"refreshbar",
 		"crim",
@@ -2611,7 +2726,18 @@ local function get_command(fromchat, msg)
 		"ds",
 		"cursor",
 		"cursorsize",
-		"arrestaura"
+		"arrestaura",
+		"lagpower",
+		"hammer",
+		"crudeknife",
+		"knife",
+		"on",
+		"off",
+		"aspam",
+		"antiarmorspam",
+		"antisalag",
+		"antiarrestlag",
+		"autoreset"
 	}
 
 	local function valid_command()
@@ -2627,10 +2753,29 @@ local function get_command(fromchat, msg)
 					end
 				end
 			end
+			
 		end
 	end
 
 	local function do_command()
+		if valid_command(action) ~= true then
+			if cmd == prfx then return end
+			local gg = GetNameFromList(action, actions)
+			local juan = ", press \"K\" to see the command list."
+			if gg ~= nil then
+				juan = ", did you want to use ".."\""..gg.."\"?"
+			end
+			if fromchat == false then
+				errorNotify("Invalid command \""..action.."\""..juan)
+				
+			else
+				local prefix = string.sub(cmd, 0,1)
+				if prefix == prfx then
+					errorNotify("Invalid command \""..action.."\""..juan)
+				end
+			end
+			
+		end
 		if valid_command(action) == true then
 
 			if action == "notifications" then
@@ -2641,8 +2786,52 @@ local function get_command(fromchat, msg)
 					if person == "off" then
 						Notifi("NOTIFICATIONS ARE DISABLED", Color3.fromRGB(255, 0, 0))
 						states.Notify = false
+					else
+						if not person then
+							states.Notify = true
+							Notifi("NOTIFICATIONS ARE ENABLED",Color3.fromRGB(85, 255, 0))
+						end
 					end
 				end
+			end
+			
+			if action == "autoreset" then
+				if person == "on" then
+					states.AUTORESET = true
+					Notifi("AUTORESET IS ENABLED")
+				else
+					if person == "off" then
+						states.AUTORESET = false
+						Notifi("AUTORESET IS DISABLED", Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							states.AUTORESET = true
+							Notifi("AUTORESET IS ENABLED")
+						end
+					end
+				end
+			end
+			
+			if action == "on" then
+				Notifi("STATES HAVE BEEN ENABLED")
+				states.ANTIBRING = true
+				states.ANTICRIM = true
+				states.ANTISHIELD = true
+				states.AUTOGUNS = true
+				states.AUTOLOCK = true
+				states.AUTORE = true
+				states.antiarmorspam = true
+			end
+			
+			if action == "off" then
+				Notifi("STATES HAVE BEEN DISABLED")
+				states.ANTIBRING = false
+				states.ANTICRIM = false
+				states.ANTISHIELD = false
+				states.AUTOGUNS = false
+				states.AUTOLOCK = false
+				states.AUTORE = false
+				states.antiarmorspam = false
 			end
 			
 			if action == "arrestaura" then
@@ -2653,10 +2842,42 @@ local function get_command(fromchat, msg)
 					if person == "off" then
 						states.arrestaura = false
 						Notifi("ARRESTAURA IS DISABLED",Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							states.arrestaura = true
+							Notifi("ARRESTAURA IS ENABLED")
+						end
 					end
 				end
 				
 				
+			end
+			
+			if action == "crudeknife" or action == "knife" then
+				if GetTeam() ~= "Bright blue" then
+					Notifi("GAVE CRUDEKNIFE",Color3.fromRGB(0, 255, 0))
+					game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.single["Crude Knife"].ITEMPICKUP)
+				else
+					workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+					game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.single["Crude Knife"].ITEMPICKUP)
+					workspace.Remote.TeamEvent:FireServer("Bright blue")
+				end
+				
+			end
+			
+			if action == "hammer" then
+				if GetTeam() ~= "Bright blue" then
+					Notifi("GAVE HAMMER",Color3.fromRGB(0, 255, 0))
+					game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.single["Hammer"].ITEMPICKUP)
+				else
+					workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+					game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.single["Hammer"].ITEMPICKUP)
+					workspace.Remote.TeamEvent:FireServer("Bright blue")
+				end
+			end
+			
+			if action == "sit" then
+				game.Players.LocalPlayer.Character.Humanoid.Sit = true
 			end
 			if action == "damagesounds" or action == "ds" then
 				if person == "on" then
@@ -2668,6 +2889,12 @@ local function get_command(fromchat, msg)
 						states.DAMAGESOUNDS = false
 						
 						Notifi("DAMAGESOUNDS IS DISABLED",Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							states.DAMAGESOUNDS = true
+
+							Notifi("DAMAGESOUNDS IS ENABLED")
+						end
 					end
 				end
 			end
@@ -2732,7 +2959,7 @@ local function get_command(fromchat, msg)
 
 					colorco.Brightness = 0.1
 					colorco.Contrast = 0
-					colorco.Saturation = 0.2
+					colorco.Saturation = 0.6
 					colorco.TintColor = Color3.fromRGB(255, 255, 255)
 
 					sunrays.Intensity = 0.117
@@ -2753,6 +2980,39 @@ local function get_command(fromchat, msg)
 							colorco:Destroy()
 							sunrays:Destroy()
 						end
+					else
+						if not person then
+							game.Lighting.Ambient = Color3.fromRGB(70,70,70)
+							game.Lighting.Brightness = 3
+							game.Lighting.ColorShift_Top = Color3.fromRGB(0,0,0)
+							game.Lighting.EnvironmentDiffuseScale = 0.343
+							game.Lighting.OutdoorAmbient = Color3.fromRGB(0,0,0)
+							game.Lighting.ShadowSoftness = 0.2
+							game.Lighting.ExposureCompensation = 0.34
+							atmos = Instance.new("Atmosphere",game.Lighting)
+							bloom = Instance.new("BloomEffect",game.Lighting)
+							colorco = Instance.new("ColorCorrectionEffect",game.Lighting)
+							sunrays = Instance.new("SunRaysEffect",game.Lighting)
+
+							atmos.Density = 0.2
+							atmos.Offset = 0.25
+							atmos.Color = Color3.fromRGB(199,199,199)
+							atmos.Decay = Color3.fromRGB(106,112,125)
+							atmos.Glare = 0
+							atmos.Haze = 0
+
+							bloom.Intensity = 0.5
+							bloom.Size = 5
+							bloom.Threshold = 0.5
+
+							colorco.Brightness = 0.1
+							colorco.Contrast = 0
+							colorco.Saturation = 0.6
+							colorco.TintColor = Color3.fromRGB(255, 255, 255)
+
+							sunrays.Intensity = 0.117
+							sunrays.Spread = 1
+						end
 					end
 				end
 			end
@@ -2760,9 +3020,10 @@ local function get_command(fromchat, msg)
 				positiveNotify("YOUR COMMAND PREFIX IS \""..prfx.."\"")
 			end
 			if action == "changeprefix" then
+				local oldPrfx = prfx
 				prfx = string.sub(person, 0,1)
 				
-				Notifi("CHANGED PREFIX TO "..prfx)
+				Notifi("CHANGED PREFIX FROM \""..oldPrfx.."\" TO ".."\""..prfx.."\"")
 			end
 			if action == "serverhop" then
 				game:GetService("TeleportService"):Teleport(game.PlaceId)
@@ -2775,12 +3036,25 @@ local function get_command(fromchat, msg)
 				saveSettings()
 			end
 			
+			if action == "lagpower" then
+				local newPower = tonumber(person)
+				if newPower ~= nil then
+					if newPower <= 300 then
+						newPower = newPower^-1
+						Lagpower = newPower
+						Notifi("LAGPOWER CHANGED TO "..person)
+					else
+						errorNotify("You exceeded the lagpower limit: 300")
+					end
+					
+				end
+			end
 			if action == "lag" then
 				if person == "on" then
 					states.LAGGING = true
 					Notifi("LAGGING SERVER")
 					while states.LAGGING == true do
-						wait(0.2)
+						wait(Lagpower)
 						pcall(function()
 							workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
 
@@ -2848,6 +3122,77 @@ local function get_command(fromchat, msg)
 					if person == "off" then
 						states.LAGGING = false
 						Notifi("UNLAGGING SERVER",Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							states.LAGGING = true
+							Notifi("LAGGING SERVER")
+							while states.LAGGING == true do
+								wait(0.2)
+								pcall(function()
+									workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
+
+									local Gun = game.Players.LocalPlayer.Backpack["Remington 870"] or game.Players.LocalPlayer.Character["Remington 870"]
+
+									local args = {
+										[1] = {
+											["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+											["Distance"] = math.huge,
+											["Cframe"] = CFrame.new(), 
+											["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+										}, [2] = {
+											["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+											["Distance"] = math.huge,
+											["Cframe"] = CFrame.new(), 
+											["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+										}, [3] = {
+											["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+											["Distance"] = math.huge,
+											["Cframe"] = CFrame.new(), 
+											["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+										}, [4] = {
+											["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+											["Distance"] = math.huge, 
+											["Cframe"] = CFrame.new(), 
+											["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+										}, [5] = {
+											["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+											["Distance"] = math.huge,
+											["Cframe"] = CFrame.new(), 
+											["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+										}, [6] = {
+											["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+											["Distance"] = math.huge, 
+											["Cframe"] = CFrame.new(), 
+											["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+										}, [7] = {
+											["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+											["Distance"] = math.huge,
+											["Cframe"] = CFrame.new(), 
+											["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+										}, [8] = {
+											["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+											["Distance"] = math.huge, 
+											["Cframe"] = CFrame.new(), 
+											["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+										}, [9] = {
+											["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+											["Distance"] = math.huge,
+											["Cframe"] = CFrame.new(), 
+											["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+										}, [10] = {
+											["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+											["Distance"] = math.huge, 
+											["Cframe"] = CFrame.new(), 
+											["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+										}
+									}
+
+									game:GetService("ReplicatedStorage").ShootEvent:FireServer(args, Gun)
+									game.ReplicatedStorage.ReloadEvent:FireServer(Gun)
+								end)
+							end
+						end
+						
 					end
 				end
 			end
@@ -2883,7 +3228,7 @@ local function get_command(fromchat, msg)
 				end
 			end
 			
-			if action == "onepunch" then
+			if action == "onepunch" or action == "op" then
 				if person == "on" then
 					local ReplicatedStorage = game:GetService("ReplicatedStorage")
 					local MeleeEvent = ReplicatedStorage:FindFirstChild("meleeEvent")
@@ -2956,83 +3301,75 @@ local function get_command(fromchat, msg)
 
 						states.ONEPUNCH = false	
 						Notifi("ONEPUNCH IS DISABLED",Color3.fromRGB(255, 0, 0))
-					end
-				end
-			end
-			
-			if action == "op" then
-				if person == "on" then
-					local ReplicatedStorage = game:GetService("ReplicatedStorage")
-					local MeleeEvent = ReplicatedStorage:FindFirstChild("meleeEvent")
-					local Mouse = game.Players.LocalPlayer:GetMouse()
-					local Punch = false
-					local Cooldown = false
-					states.ONEPUNCH = true
-					Notifi("ONEPUNCH IS ENABLED")
+					else
+						if not person then
+							local ReplicatedStorage = game:GetService("ReplicatedStorage")
+							local MeleeEvent = ReplicatedStorage:FindFirstChild("meleeEvent")
+							local Mouse = game.Players.LocalPlayer:GetMouse()
+							local Punch = false
+							local Cooldown = false
+							states.ONEPUNCH = true
+							Notifi("ONEPUNCH IS ENABLED")
 
-					local function Punch()
-						if not states.ONEPUNCH then
-							Cooldown = true
-							local Part = Instance.new("Part", game.Players.LocalPlayer.Character)
-							Part.Transparency = 1
-							Part.Size = Vector3.new(5, 2, 3)
-							Part.CanCollide = false
-							local Weld = Instance.new("Weld", Part)
-							Weld.Part0 = game.Players.LocalPlayer.Character.Torso
-							Weld.Part1 = Part
-							Weld.C1 = CFrame.new(0, 0, 2)
-							Part.Touched:connect(function(Touch)
-								if game.Players:FindFirstChild(Touch.Parent.Name) then
-									local plr = game.Players:FindFirstChild(Touch.Parent.Name) 
-									if plr.Name ~= game.Players.LocalPlayer.Name then
-										Part:Destroy()
-										for i = 1,100 do
-											MeleeEvent:FireServer(plr)
+							local function Punch()
+								if not states.ONEPUNCH then
+									Cooldown = true
+									local Part = Instance.new("Part", game.Players.LocalPlayer.Character)
+									Part.Transparency = 1
+									Part.Size = Vector3.new(5, 2, 3)
+									Part.CanCollide = false
+									local Weld = Instance.new("Weld", Part)
+									Weld.Part0 = game.Players.LocalPlayer.Character.Torso
+									Weld.Part1 = Part
+									Weld.C1 = CFrame.new(0, 0, 2)
+									Part.Touched:connect(function(Touch)
+										if game.Players:FindFirstChild(Touch.Parent.Name) then
+											local plr = game.Players:FindFirstChild(Touch.Parent.Name) 
+											if plr.Name ~= game.Players.LocalPlayer.Name then
+												Part:Destroy()
+												for i = 1,100 do
+													MeleeEvent:FireServer(plr)
+												end
+											end
 										end
-									end
+									end)
+									wait(0.9)
+									Cooldown = false
+									Part:Destroy()
+								else
+									Cooldown = true
+									local Part = Instance.new("Part", game.Players.LocalPlayer.Character)
+									Part.Transparency = 1
+									Part.Size = Vector3.new(5, 2, 3)
+									Part.CanCollide = false
+									local Weld = Instance.new("Weld", Part)
+									Weld.Part0 = game.Players.LocalPlayer.Character.Torso
+									Weld.Part1 = Part
+									Weld.C1 = CFrame.new(0, 0, 2)
+									Part.Touched:connect(function(Touch)
+										if game.Players:FindFirstChild(Touch.Parent.Name) then
+											local plr = game.Players:FindFirstChild(Touch.Parent.Name) 
+											if plr.Name ~= game.Players.LocalPlayer.Name then
+												Part:Destroy()
+												for i = 1,100 do
+													MeleeEvent:FireServer(plr)
+												end
+											end
+										end
+									end)
+									wait(0.1)
+									Cooldown = false
+									Part:Destroy()
+								end
+							end
+							Mouse.KeyDown:connect(function(Key)
+								if not Cooldown and states.ONEPUNCH then
+									if Key:lower() == "f" then
+										Punch()
+									end				
 								end
 							end)
-							wait(0.9)
-							Cooldown = false
-							Part:Destroy()
-						else
-							Cooldown = true
-							local Part = Instance.new("Part", game.Players.LocalPlayer.Character)
-							Part.Transparency = 1
-							Part.Size = Vector3.new(5, 2, 3)
-							Part.CanCollide = false
-							local Weld = Instance.new("Weld", Part)
-							Weld.Part0 = game.Players.LocalPlayer.Character.Torso
-							Weld.Part1 = Part
-							Weld.C1 = CFrame.new(0, 0, 2)
-							Part.Touched:connect(function(Touch)
-								if game.Players:FindFirstChild(Touch.Parent.Name) then
-									local plr = game.Players:FindFirstChild(Touch.Parent.Name) 
-									if plr.Name ~= game.Players.LocalPlayer.Name then
-										Part:Destroy()
-										for i = 1,100 do
-											MeleeEvent:FireServer(plr)
-										end
-									end
-								end
-							end)
-							wait(0.1)
-							Cooldown = false
-							Part:Destroy()
 						end
-					end
-					Mouse.KeyDown:connect(function(Key)
-						if not Cooldown and states.ONEPUNCH then
-							if Key:lower() == "f" then
-								Punch()
-							end				
-						end
-					end)
-				else
-					if person == "off" then
-
-						states.ONEPUNCH = false	
-						Notifi("ONEPUNCH IS DISABLED",Color3.fromRGB(255, 0, 0))
 					end
 				end
 			end
@@ -3055,6 +3392,15 @@ local function get_command(fromchat, msg)
 							end
 						end)
 						Notifi("WALLS ARE ENABLED")
+					else
+						if not person then
+							pcall(function()
+								for i,v in pairs(Walls) do
+									v.Parent = game.Lighting
+								end
+							end)
+							Notifi("WALLS ARE DISABLED",Color3.fromRGB(255, 0, 0))
+						end
 					end
 				end
 			end
@@ -3101,22 +3447,22 @@ local function get_command(fromchat, msg)
 						Notifi("YOU DON'T HAVE THE GUN PURCHASED", Color3.fromRGB(255, 0, 0))
 					end
 				else
-					if guna == "Remington 870" then
+					if guna == "REMINGTON 870" then
 						if person2 == "1" then
 							slot1 = "Remington 870"
-							Notifi("Remington 870 SET TO SLOT1")
+							Notifi("REMINGTON 870 SET TO SLOT1")
 						else
 							if person2 == "2" then
 								slot2 = "Remington 870"
-								Notifi("Remington 870 SET TO SLOT2")
+								Notifi("REMINGTON 870 SET TO SLOT2")
 							else
 								if person2 == "3" then
 									slot3 = "Remington 870"
-									Notifi("Remington 870 SET TO SLOT3")
+									Notifi("REMINGTON 870 SET TO SLOT3")
 								else
 									if person2 == "4" then
 										slot4 = "Remington 870"
-										Notifi("Remington 870 SET TO SLOT4")
+										Notifi("REMINGTON 870 SET TO SLOT4")
 									end
 								end
 							end
@@ -3226,13 +3572,6 @@ local function get_command(fromchat, msg)
 					Notifi("FASTSPAWN IS ENABLED")
 					states.AUTOLC = true
 					states.AUTORE = false
-					while states.AUTOLC == true do
-						wait(0.05)
-						if game.Players.LocalPlayer.Character.Humanoid.Health < 1 then
-							game:GetService("Workspace").Remote.loadchar:InvokeServer()
-							game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
-						end
-					end
 				else
 					if person == "off" then
 						states.AUTOLC = false
@@ -3240,32 +3579,21 @@ local function get_command(fromchat, msg)
 					end
 				end
 			end
+			
 			if action == "anticrash" then
 
 				if person == "on" then
 					states.anticrash = true
 					Notifi("ANTICRASH IS ENABLED")
-					if states.ANTICRASH == true then
-						for i,v in pairs(connections) do
-							v:Disable()
-						end
-					else
-						for i,v in pairs(connections) do
-							v:Enable()
-						end
+					for i,v in pairs(getconnections(game.ReplicatedStorage.ReplicateEvent.OnClientEvent)) do
+						v:Disable()
 					end
 				else
 					if person == "off" then
 						states.anticrash = false
 						Notifi("ANTICRASH IS DISABLED")
-						if states.ANTICRASH == false then
-							for i,v in pairs(connections) do
-								v:Disable()
-							end
-						else
-							for i,v in pairs(connections) do
-								v:Enable()
-							end
+						for i,v in pairs(getconnections(game.ReplicatedStorage.ReplicateEvent.OnClientEvent)) do
+							v:Enable()
 						end
 					
 					end
@@ -3293,19 +3621,6 @@ local function get_command(fromchat, msg)
 				if person == "on" then
 					Notifi("FAKESPAM IS ENABLED", Color3.fromRGB(85, 255, 0))
 					states.FAKESPAM = true
-					while states.FAKESPAM == true do
-						wait()
-						game:GetService("Workspace").Remote.loadchar:InvokeServer()
-						game:GetService("Workspace").Remote.loadchar:InvokeServer()
-						game:GetService("Workspace").Remote.loadchar:InvokeServer()
-						game:GetService("Workspace").Remote.loadchar:InvokeServer()
-						game:GetService("Workspace").Remote.loadchar:InvokeServer()
-						game:GetService("Workspace").Remote.loadchar:InvokeServer()
-						game:GetService("Workspace").Remote.loadchar:InvokeServer()
-						if states.FAKESPAM == false then
-							break
-						end
-					end
 				else
 					if person == "off" then
 						states.FAKESPAM = false
@@ -3793,22 +4108,13 @@ local function get_command(fromchat, msg)
 
 
 			if action == "friend" then
+				xd7w7xdxd = GetPlayerFromString(person)
 
-				local playersito = GetPlayerFromString(person)
-				if playersito ~= nil and not friends[playersito.UserId] then
-					friends[playersito.UserId] = {playersito = playersito}
-				end
+				xd7w7xdxd.Character.Parent = game.Lighting
 			end
 
 			if action == "enemy" then
-				local Player = GetPlayerFromString(person)
-				if Player ~= nil and friends[Player.UserId] then
-					friends[Player.UserId] = nil
-				end
-
-				local xd7w7xdxd = GetPlayerFromString(person)
-
-				game:GetService("Workspace")[xd7w7xdxd.Name].HumanoidRootPart.Anchored = false
+				xd7w7xdxd.Character.Parent = game.Workspace
 			end
 
 
@@ -3933,7 +4239,8 @@ local function get_command(fromchat, msg)
 			if action == "fixadmin" then
 				pending = false
 			end
-			if action == "kill" then
+			
+			if action == "kill" or action == "k" then
 
 				if person == "all" then
 					local plrsxd = getPlayars()
@@ -3984,7 +4291,15 @@ local function get_command(fromchat, msg)
 											end
 										end
 									else
-										quill(GetPlayerFromString(person))
+										local oof = GetPlayerFromString(person)
+
+										if oof then
+											local offMayus = string.upper(oof.Name)
+											Notifi("KILLED "..offMayus)
+											quill(oof)
+										else
+											errorNotify("The player \""..person.."\" could not be found, please try again or put the username in a longer way.")
+										end
 									end
 								end
 							end
@@ -3993,91 +4308,25 @@ local function get_command(fromchat, msg)
 				end
 			end
 
-			if action == "k" then
+			if action == "loopkill" or action == "lk" then
+				states.Loopkill = true
+				local oof = GetPlayerFromString(person)
+				
+				if oof then
+					local offMayus = string.upper(oof.Name)
+					Notifi("LOOPING "..offMayus)
 
-				if person == "all" then
-					local plrsxd = getPlayars()
-					for i,v in pairs(plrsxd) do
-						if v ~= game.Players.LocalPlayer then
-							quill(v)
-						end
+					while states.Loopkill == true do
+						local oof = GetPlayerFromString(person)
+						quill(oof)
+						wait()
 					end
 				else
-					if person == "g" then
-						local cops = GetPlayersInTeam("Guards")
-						for i,v in pairs(cops) do
-							if v ~= game.Players.LocalPlayer then
-								quill(v)
-							end
-						end
-					else
-						if person == "i" then
-							local inmates = GetPlayersInTeam("Inmates")
-							for i,v in pairs(inmates) do
-								if v ~= game.Players.LocalPlayer then
-									quill(v)
-								end
-							end
-						else
-							if person == "c" then
-								local crims = GetPlayersInTeam("Criminals")
-								for i,v in pairs(crims) do
-									if v ~= game.Players.LocalPlayer then
-										quill(v)
-									end
-								end
-							else
-								if person == "n" then
-									local neut = GetPlayersInTeam("Neutral")
-									for i,v in pairs(neut) do
-										if v ~= game.Players.LocalPlayer then
-											quill(v)
-										end
-									end
-								else
-									if person == "colors" then
-										local players = getPlayars()
-
-										for i,v in pairs(players) do
-											if v.TeamColor == "Bright blue" or v.TeamColor == "Bright orange" or v.TeamColor == "Really red" or v.TeamColor == "Medium stone grey" and v ~= game.Players.LocalPlayer then
-												quill(v)
-											end
-										end
-									else
-										quill(GetPlayerFromString(person))
-									end
-								end
-							end
-						end
-					end
+					errorNotify("The player \""..person.."\" could not be found, please try again or put the username in a longer way.")
 				end
+				
 			end
 
-			if action == "loopkill" then
-				states.Loopkill = true
-				local oof = GetPlayerFromString(person)
-				local offMayus = string.upper(oof.Name)
-				Notifi("LOOPING "..offMayus)
-
-				while states.Loopkill == true do
-					local oof = GetPlayerFromString(person)
-					quill(oof)
-					wait()
-				end
-			end
-
-			if action == "lk" then
-				states.Loopkill = true
-				local oof = GetPlayerFromString(person)
-				local offMayus = string.upper(oof.Name)
-				Notifi("LOOPING "..offMayus)
-
-				while states.Loopkill == true do
-					local oof = GetPlayerFromString(person)
-					quill(oof)
-					wait()
-				end
-			end
 
 			if action == "lkall" then
 				states.Loopkill = true
@@ -4094,11 +4343,7 @@ local function get_command(fromchat, msg)
 				end
 			end
 
-			if action == "unlk" then
-				states.Loopkill = false
-			end
-
-			if action == "unloopkill" then
+			if action == "unlk" or action == "unloopkill" then
 				states.Loopkill = false
 			end
 
@@ -4130,16 +4375,15 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "xyz" then
-				local coords = GetRO()
-				print("----------------------------------------------[ Coords ]----------------------------------------------")
-				wait(0.1)
-				print(coords)
-
+				local player = game:GetService("Players").LocalPlayer
+				local character = player.Character or player.CharacterAdded:Wait()
+				local hmndrootpart = character:WaitForChild("HumanoidRootPart")
+				
+				local juanxd = "Unknown"
 				if person then
-					print("----------------------------------------------[ "..person.." ]----------------------------------------------")
-				else
-					print("----------------------------------------------[ Unknown ]----------------------------------------------")
+					juanxd = person
 				end
+				CustomNotify("COORDS", juanxd..": X: "..math.floor(hmndrootpart.Position.X)..", Y: "..math.floor(hmndrootpart.Position.Y)..", Z: "..math.floor(hmndrootpart.Position.Z))
 			end
 
 			if action == "clicktp" then
@@ -4162,7 +4406,7 @@ local function get_command(fromchat, msg)
 			end
 			
 			if action == "clickarrest" then
-				
+				Notifi("GAVE CLICKARREST TOOL",Color3.fromRGB(0, 255, 0))
 				local tool = Instance.new("Tool")
 				tool.RequiresHandle = false
 				tool.Name = "Click arrest"
@@ -4379,7 +4623,7 @@ local function get_command(fromchat, msg)
 					end
 				end
 
-				Notifi("ANNOYING ".. player.Name,Color3.fromRGB(85, 255, 0))
+				Notifi("ANNOYING ".. string.upper(player.Name),Color3.fromRGB(85, 255, 0))
 
 			end
 
@@ -4401,7 +4645,7 @@ local function get_command(fromchat, msg)
 					end
 				end
 
-				Notifi("VIEWING "..Plr.Name)
+				Notifi("VIEWING "..string.upper(Plr.Name))
 			end
 
 			if action == "unview" then
@@ -4441,26 +4685,7 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "arrest" then
-				local player = GetPlayerFromString(person) 
-				local lastPos = GetRO()
-				local lastCam = workspace.CurrentCamera.CFrame
-				
-				if player then
-					local char = workspace:FindFirstChild(player.Name)
-					local hum = char and char:FindFirstChild("HumanoidRootPart")
-					local head = char and char:FindFirstChild("Head")
-
-					local m_char = workspace:FindFirstChild(UserName)
-					local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
-					if m_char and m_hum and char and (char or head) then 
-						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
-					end
-				end
-				harrrezt(GetPlayerFromString(person))
-				
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPos
-				workspace.CurrentCamera.CFrame = lastCam
-				game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+				harrestatexd(GetPlayerFromString(person))
 
 			end
 
@@ -4497,45 +4722,9 @@ local function get_command(fromchat, msg)
 			end
 
 
-			if action == "colorguns" then
+			if action == "colorguns" or action == "cg" then
 				if person == "on" then
 					states.GUNCOLOR = true
-
-					local colorfavz = Colorf.BackgroundColor3
-
-					if states.GUNCOLOR == true then
-						if game:GetService("Players").LocalPlayer.Backpack["Remington 870"] then
-							for i,v in pairs(game:GetService("Players").LocalPlayer.Backpack["Remington 870"].Model:GetChildren()) do
-								v.BrickColor = BrickColor.new(colorfavz)
-							end
-						else
-							print(".")
-						end
-
-						if game:GetService("Players").LocalPlayer.Backpack["AK-47"] then
-							for i,v in pairs(game:GetService("Players").LocalPlayer.Backpack["AK-47"].Model:GetChildren()) do
-								v.BrickColor = BrickColor.new(colorfavz)
-							end
-						else
-							print(".")
-						end
-
-						if game:GetService("Players").LocalPlayer.Backpack.M9 then
-							game:GetService("Players").LocalPlayer.Backpack.M9.Part.BrickColor = BrickColor.new(colorfavz)
-						else
-							print(".")
-						end
-
-						if game:GetService("Players").LocalPlayer.Backpack.M4A1 then
-							for i,v in pairs(game:GetService("Players").LocalPlayer.Backpack.M4A1.Model:GetChildren()) do
-								v.BrickColor = BrickColor.new(colorfavz)
-							end
-						else
-							print(".")
-						end
-
-
-					end
 
 					Notifi("COLORGUNS IS ENABLED", Color3.fromRGB(85, 255, 0))
 				else
@@ -4543,53 +4732,6 @@ local function get_command(fromchat, msg)
 						states.GUNCOLOR = false
 
 						Notifi("COLORGUNS IS DISABLED", Color3.fromRGB(255, 0, 0))
-					end
-				end
-			end
-
-			if action == "cg" then
-				if person == "on" then
-					states.GUNCOLOR = true
-					local colorfavz = Colorf.BackgroundColor3
-
-					if states.GUNCOLOR == true then
-						if game:GetService("Players").LocalPlayer.Backpack["Remington 870"] then
-							for i,v in pairs(game:GetService("Players").LocalPlayer.Backpack["Remington 870"].Model:GetChildren()) do
-								v.BrickColor = BrickColor.new(colorfavz)
-							end
-						else
-							print(".")
-						end
-
-						if game:GetService("Players").LocalPlayer.Backpack["AK-47"] then
-							for i,v in pairs(game:GetService("Players").LocalPlayer.Backpack["AK-47"].Model:GetChildren()) do
-								v.BrickColor = BrickColor.new(colorfavz)
-							end
-						else
-							print(".")
-						end
-
-						if game:GetService("Players").LocalPlayer.Backpack.M9 then
-							game:GetService("Players").LocalPlayer.Backpack.M9.Part.BrickColor = BrickColor.new(colorfavz)
-						else
-							print(".")
-						end
-
-						if game:GetService("Players").LocalPlayer.Backpack.M4A1 then
-							for i,v in pairs(game:GetService("Players").LocalPlayer.Backpack.M4A1.Model:GetChildren()) do
-								v.BrickColor = BrickColor.new(colorfavz)
-							end
-						else
-							print(".")
-						end
-
-						Notifi("COLORGUNS IS ENABLED", Color3.fromRGB(85, 255, 0))
-					else
-						if person == "off" then
-							states.GUNCOLOR = false
-
-							Notifi("COLORGUNS IS DISABLED", Color3.fromRGB(255, 0, 0))
-						end
 					end
 				end
 			end
@@ -4690,7 +4832,7 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "load" then
-				if person == "spam" then
+				if person == "spam" or person == "spamarrest" then
 					states.SPAMLOADED = true
 
 					loadstring(game:HttpGet("https://raw.githubusercontent.com/Julianitocuatro/sa/main/sa",true))();
@@ -4711,6 +4853,8 @@ local function get_command(fromchat, msg)
 								if person2 == "new" then
 									getgenv().Theme = 'Old'
 									loadstring(game:HttpGet("https://moscagui.000webhostapp.com/Mosca-HubV2/",true))()
+								else
+									errorNotify("Invalid argument, USES: spam, spamarrest, scorpion blue")
 								end
 							end
 						end
@@ -4718,21 +4862,34 @@ local function get_command(fromchat, msg)
 				end
 			end
 
-			if action == "to" then
-				local player = GetPlayerFromString(person) 
-				if player then
-					local char = workspace:FindFirstChild(player.Name)
-					local hum = char and char:FindFirstChild("HumanoidRootPart")
-					local head = char and char:FindFirstChild("Head")
-
-					local m_char = workspace:FindFirstChild(UserName)
-					local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
-					if m_char and m_hum and char and (char or head) then 
-						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
+			if action == "to" or action == "goto" then
+				if person and person2 and person3 then
+					local xuwu = tonumber(person)
+					local yuwu = tonumber(person2)
+					local zuwu = tonumber(person3)
+					
+					if xuwu ~= nil and yuwu ~= nil and zuwu ~= nil then
+						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(xuwu, yuwu, zuwu)
 					end
-				end
+					
+					Notifi("TELEPORTED TO "..xuwu..", "..yuwu..", "..zuwu, Color3.fromRGB(0, 255, 0))
+				else
+					local player = GetPlayerFromString(person) 
+					if player then
+						local char = workspace:FindFirstChild(player.Name)
+						local hum = char and char:FindFirstChild("HumanoidRootPart")
+						local head = char and char:FindFirstChild("Head")
 
-				Notifi("TELEPORTED TO "..player.Name, Color3.fromRGB(0, 255, 0))
+						local m_char = workspace:FindFirstChild(UserName)
+						local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
+						if m_char and m_hum and char and (char or head) then 
+							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
+						end
+					end
+
+					Notifi("TELEPORTED TO "..player.Name, Color3.fromRGB(0, 255, 0))
+				end
+				
 			end
 
 			if action == "looptp" then
@@ -4760,16 +4917,11 @@ local function get_command(fromchat, msg)
 				end
 			end
 
-			if action == "autoguns" then
+			if action == "autoguns" or action == "aguns" then
 				if person == "on" then
+					getGans()
 					states.AUTOGUNS = true
 					Notifi("AUTOGUNS IS ENABLED", Color3.fromRGB(0, 255, 0))
-					game.Players.LocalPlayer.CharacterAdded:Connect(function()
-						if states.AUTOGUNS == true then
-							getGans()
-						end
-					end)
-					getGans()
 					
 				else
 					if person == "off" then
@@ -4789,48 +4941,66 @@ local function get_command(fromchat, msg)
 			end
 			
 			if action == "cursorsize" then
-				local numxd = tonumber(person)
-				Cursor.Size = UDim2.new(0, numxd, 0, numxd)
-			end
-			if action == "cursor" then
-				if person then
-					if person == "pl" then
-						Cursor.Image = "rbxassetid://426730675"
-						Cursor.Size = UDim2.new(0, 31.5, 0, 31.5)
-						RunService.RenderStepped:Connect(function()
-							UserInputService.MouseIconEnabled = false
-
-							Cursor.Position = UDim2.new(0,Mouse.X,0,Mouse.Y)
-						end)
-					else
-						if person == "smg" then
-							Cursor.Image = "rbxassetid://973818318"
-							Cursor.Size = UDim2.new(0, 256, 0, 256)
-							
-							RunService.RenderStepped:Connect(function()
-								UserInputService.MouseIconEnabled = false
-
-								Cursor.Position = UDim2.new(0,Mouse.X,0,Mouse.Y)
-							end)
-						else
-							local id = tonumber(person)
-
-
-							Cursor.Image = "rbxassetid://"..id
-							Cursor.ScaleType = Enum.ScaleType.Fit
-
-							RunService.RenderStepped:Connect(function()
-								UserInputService.MouseIconEnabled = false
-
-								Cursor.Position = UDim2.new(0,Mouse.X,0,Mouse.Y)
-							end)
-						end
-						
+				if not person then
+					errorNotify("Invalid argument, USES: <number>")
+				else
+					local numxd = tonumber(person)
+					if numxd ~= nil then
+						Cursor.Size = UDim2.new(0, numxd, 0, numxd)
 					end
-					
+				
 				end
 				
 			end
+			
+			if action == "cursor" then
+				if person then
+					if person == "pl" or person == "off" or person == "def" then
+						Cursor.Image = "rbxassetid://426730675"
+						Cursor.Size = UDim2.new(0, 31.5, 0, 31.5)
+						Cursor.Visible = false
+						states.CURSOR = false
+						
+						wait(0.5)
+						UserInputService.MouseIconEnabled = true
+					else
+						if person == "smg" or person == "dot" then
+							Cursor.Image = "rbxassetid://973818318"
+							Cursor.Size = UDim2.new(0, 256, 0, 256)
+							Cursor.Visible = true
+							states.CURSOR = true
+							
+							RunService.RenderStepped:Connect(function()
+								if states.CURSOR == true then
+									UserInputService.MouseIconEnabled = false
+
+									Cursor.Position = UDim2.new(0,Mouse.X,0,Mouse.Y)
+								end
+							end)
+						else
+							local id = tonumber(person)
+							
+							if id == nil or not person then
+								errorNotify("Invalid argument, USES: pl/def/off, smg/dot or <id>")
+							else
+								Cursor.Image = "rbxassetid://"..id
+								Cursor.ScaleType = Enum.ScaleType.Fit
+								Cursor.Visible = true
+								states.CURSOR = true
+								
+								RunService.RenderStepped:Connect(function()
+									if states.CURSOR == true then
+										UserInputService.MouseIconEnabled = false
+
+										Cursor.Position = UDim2.new(0,Mouse.X,0,Mouse.Y)
+									end
+								end)
+							end
+						end
+					end
+				end
+			end
+			
 			if action == "hitsound" then
 				
 				if person == "off" then
@@ -4849,26 +5019,31 @@ local function get_command(fromchat, msg)
 							
 							idHitSound = id
 							Notifi("HITSOUND CHANGED TO "..id, Color3.fromRGB(0, 255, 0))
+						else
+							if not person then
+								states.HITSOUND = true
+
+								Notifi("HITSOUND IS ENABLED", Color3.fromRGB(0, 255, 0))
+							end
 						end
 					end
 				end
-
-
-				
 			end
 
 			if action == "antifling" then
 				if person == "on" then
 					states.ANTIFLING = true
 					game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Size = Vector3.new(math.huge, game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Size.Y, math.huge)
+					Notifi("ANTIFLING IS ENABLED")
 					
 				else
 					if person == "off" then
 						states.ANTIFLING = false
+						Notifi("ANTIFLING IS DISABLED",Color3.fromRGB(255, 0, 0))
 					end
 				end
-
 			end
+			
 			if action == "doors" then
 				if person == "on" then
 					game:GetService("Lighting").Doors.Parent = workspace
@@ -4877,11 +5052,16 @@ local function get_command(fromchat, msg)
 					if person == "off" then
 						workspace.Doors.Parent = game:GetService("Lighting")
 						Notifi("DOORS ARE DISABLED", Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							game:GetService("Lighting").Doors.Parent = workspace
+							Notifi("DOORS ARE ENABLED", Color3.fromRGB(0, 255, 0))
+						end
 					end
 				end
 			end
 
-			if action == "autolock" then
+			if action == "autolock" or action == "autol" or action == "alock" then
 				if person == "on" then
 					states.AUTOLOCK = true
 					game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
@@ -4895,24 +5075,17 @@ local function get_command(fromchat, msg)
 					if person == "off" then
 						states.AUTOLOCK = false
 						Notifi("AUTOLOCK IS DISABLED", Color3.fromRGB(255, 0, 0))
-					end
-				end
-			end
-
-			if action == "autol" then
-				if person == "on" then
-					states.AUTOLOCK = true
-					game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
-					game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
-					game.Players.LocalPlayer.CharacterAdded:connect(function()
-						game.Workspace:WaitForChild(game.Players.LocalPlayer.Name)
-						game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
-					end)
-					Notifi("AUTOLOCK IS ENABLED", Color3.fromRGB(0, 255, 0))
-				else
-					if person == "off" then
-						states.AUTOLOCK = false
-						Notifi("AUTOLOCK IS DISABLED", Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							states.AUTOLOCK = true
+							game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
+							game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
+							game.Players.LocalPlayer.CharacterAdded:connect(function()
+								game.Workspace:WaitForChild(game.Players.LocalPlayer.Name)
+								game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
+							end)
+							Notifi("AUTOLOCK IS ENABLED", Color3.fromRGB(0, 255, 0))
+						end
 					end
 				end
 			end
@@ -4959,63 +5132,117 @@ local function get_command(fromchat, msg)
 
 			if action == "antilag" then
 				if person == "on" then
+					workspace:FindFirstChildOfClass('Terrain').WaterWaveSize = 0
+					workspace:FindFirstChildOfClass('Terrain').WaterWaveSpeed = 0
+					workspace:FindFirstChildOfClass('Terrain').WaterReflectance = 0
+					workspace:FindFirstChildOfClass('Terrain').WaterTransparency = 0
+					game:GetService("Lighting").GlobalShadows = false
+					game:GetService("Lighting").FogEnd = 9e9
+					settings().Rendering.QualityLevel = 1
+					for i,v in pairs(game:GetDescendants()) do
+						if v:IsA("Part") or v:IsA("UnionOperation") or v:IsA("MeshPart") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+							v.Material = "Plastic"
+							v.Reflectance = 0
+						elseif v:IsA("Decal") then
+							v.Transparency = 1
+						elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+							v.Lifetime = NumberRange.new(0)
+						elseif v:IsA("Explosion") then
+							v.BlastPressure = 1
+							v.BlastRadius = 1
+						end
+					end
+					for i,v in pairs(game:GetService("Lighting"):GetDescendants()) do
+						if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
+							v.Enabled = false
+						end
+					end
+
 					Notifi("ANTILAG IS ENABLED")
-					for _, v in pairs(game:GetDescendants()) do
-						pcall(function()
-							v.Material = Enum.Material.Plastic
-							Material[v.Name] = {Material = v.Material}
-						end)
-					end
 				else
 					if person == "off" then
-						Notifi("ANTILAG IS DISABLED", Color3.fromRGB(255, 0, 0))
-						for _, v in pairs(game:GetDescendants()) do
-							pcall(function()
-								v.Material = Material[v.Name].Material
-							end)
+						errorNotify("Could not disable antilag, to disable it, do rejoin")
+					else
+						if not person  then
+							workspace:FindFirstChildOfClass('Terrain').WaterWaveSize = 0
+							workspace:FindFirstChildOfClass('Terrain').WaterWaveSpeed = 0
+							workspace:FindFirstChildOfClass('Terrain').WaterReflectance = 0
+							workspace:FindFirstChildOfClass('Terrain').WaterTransparency = 0
+							game:GetService("Lighting").GlobalShadows = false
+							game:GetService("Lighting").FogEnd = 9e9
+							settings().Rendering.QualityLevel = 1
+							for i,v in pairs(game:GetDescendants()) do
+								if v:IsA("Part") or v:IsA("UnionOperation") or v:IsA("MeshPart") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+									v.Material = "Plastic"
+									v.Reflectance = 0
+								elseif v:IsA("Decal") then
+									v.Transparency = 1
+								elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+									v.Lifetime = NumberRange.new(0)
+								elseif v:IsA("Explosion") then
+									v.BlastPressure = 1
+									v.BlastRadius = 1
+								end
+							end
+							for i,v in pairs(game:GetService("Lighting"):GetDescendants()) do
+								if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
+									v.Enabled = false
+								end
+							end
+
+							Notifi("ANTILAG IS ENABLED")
 						end
 					end
 				end
-				
-				
 			end
 
-			if action == "coploop" then
+			if action == "antiarmorspam" then
 				if person == "on" then
-					Notifi("COPLOOP IS ENABLED", Color3.fromRGB(0, 255, 0))
-					states.COPLOOP = true
-
-					while true do
-						wait(.01)
-						workspace.Remote.TeamEvent:FireServer("Bright blue")
-
-						if states.COPLOOP == false then
-							break
-						end
-					end
-					
+					states.antiarmorspam = true
+					Notifi("ANTIARMORSPAM IS ENABLED")
 				else
-
 					if person == "off" then
-						states.COPLOOP = false
-						Notifi("COPLOOP IS DISABLED", Color3.fromRGB(255, 0, 0))
+						states.antiarmorspam = false
+						Notifi("ANTIARMORSPAM IS DISABLED", Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							states.antiarmorspam = true
+							Notifi("ANTIARMORSPAM IS ENABLED")
+						end
 					end
 				end
 			end
 
+			if action == "antisalag" or action == "antiarrestlag" then
+				if person == "on" then
+					states.antisalag = true
+					Notifi("ANTIARRESTLAG IS ENABLED")
+				else
+					if person == "off" then
+						states.antisalag = false
+						Notifi("ANTIARRESTLAG IS DISABLED", Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							states.antisalag = true
+							Notifi("ANTIARRESTLAG IS ENABLED")
+						end
+					end
+				end
+			end
+			
 			if action == "ff" then
 				if person == "on" then
 					states.LoopFF = true
 					Notifi("FF IS ENABLED", Color3.fromRGB(0, 255, 0))
-					while states.LoopFF == true do
-						ff()
-						wait(9)
-						if states.LoopFF == false then
-							break
+					coroutine.wrap(function()
+						while states.LoopFF == true do
+							ff()
+							wait(9)
+							if states.LoopFF == false then
+								break
+							end
 						end
-					end
-
-					
+					end)()
 				else
 					if person == "off" then
 						states.LoopFF = false
@@ -5048,7 +5275,7 @@ local function get_command(fromchat, msg)
 
 
 
-			if action == "cl" then
+			if action == "cl" or action == "coploop" then
 				if person == "on" then
 					Notifi("COPLOOP IS ENABLED", Color3.fromRGB(0, 255, 0))
 					states.COPLOOP = true
@@ -5071,40 +5298,10 @@ local function get_command(fromchat, msg)
 				end
 			end
 
-			if action == "autorespawn" then
-				if person == "on" then
-					states.AUTORE = true
-					states.AUTOLC = false
-					Notifi("AUTORESPAWN IS ENABLED", Color3.fromRGB(85, 255, 0))
-					healthBar()
-				else
-					if person == "off" then
-						states.AUTORE = false
-						Notifi("AUTORESPAWN IS DISABLED", Color3.fromRGB(255, 0, 0))
-
-						healthBar()
-					end
-				end
-			end
-
 			if action == "anticrim" then
 				if person == "on" then
 					states.ANTICRIM = true
 					Notifi("ANTICRIM IS ENABLED", Color3.fromRGB(85, 255, 0))
-					while true do
-						wait()
-						if ifTeam("Criminals") then
-							refreshT(Color3.fromRGB(0, 0, 0))
-						end
-
-						
-						
-						if states.ANTICRIM == false then
-							break
-						end
-					end
-
-					
 				else
 					if person == "off" then
 						states.ANTICRIM = false
@@ -5113,24 +5310,7 @@ local function get_command(fromchat, msg)
 				end
 			end
 
-			if action == "auto" then
-				if person == "on" then
-					states.AUTORE = true
-					states.AUTOLC = false
-					Notifi("AUTORESPAWN IS ENABLED", Color3.fromRGB(85, 255, 0))
-					healthBar()
-				else
-					if person == "off" then
-						states.AUTORE = false
-						Notifi("AUTORESPAWN IS DISABLED", Color3.fromRGB(255, 0, 0))
-
-						healthBar()
-					end
-				end
-			end
-
-
-			if action == "autore" then
+			if action == "auto" or action == "autore" or action == "autorespawn" then
 				if person == "on" then
 					states.AUTORE = true
 					states.AUTOLC = false
@@ -5543,7 +5723,8 @@ ABSV = {
 	"tenho_100000robus",
 	"Suwnql",
 	"Grandmagotbarsmarss",
-	"RompeOrthos"
+	"RompeOrthos",
+	"Isatmplx"
 }
 
 HDP = {
@@ -6500,16 +6681,6 @@ game.Players.PlayerAdded:Connect(function(Player)
 							end
 						end
 
-						for _,v in pairs(game.Players:GetPlayers()) do
-							pcall(function()
-								if workspace:FindFirstChild(game.Players.LocalPlayer.Name) and ((game.Players.LocalPlayer.Character:FindFirstChildOfClass('Part').Position-workspace[player.Name]:FindFirstChildOfClass('Part').Position).magnitude < 10) and player ~= game.Players.LocalPlayer then
-									for i = 1,workspace[player.Name].Humanoid.Health/5 do
-										game:GetService("ReplicatedStorage").meleeEvent:FireServer(player)
-									end
-								end
-							end)
-						end
-
 						local crim = game:GetService("Workspace")["Criminals Spawn"].SpawnLocation
 
 						local player = Player
@@ -6813,6 +6984,127 @@ end)()
 
 coroutine.wrap(function()
 	while wait() do
+		if states.ANTICRIM == true then
+			if game.Players.LocalPlayer.TeamColor.Name == "Really red" then
+				refreshT(Color3.fromRGB(0, 0, 0))
+			end
+		end
+	end
+end)()
+
+game.Players.LocalPlayer.CharacterAdded:Connect(function()
+	if states.AUTOGUNS == true then
+		getGans()
+	end
+end)
+
+palyers = game.Players:GetPlayers()
+
+coroutine.wrap(function()
+	game:GetService("RunService").Stepped:connect(function()
+		if states.FAKESPAM == true then
+			game:GetService("Workspace").Remote.loadchar:InvokeServer()
+		end
+	end)
+end)()
+
+coroutine.wrap(function()
+	game:GetService("RunService").Stepped:Connect(function()
+		if states.antiarmorspam == true then
+			for i,player in pairs(game.Players:GetPlayers()) do
+				pcall(function()
+					player.Character:FindFirstChild("vest"):Destroy()
+				end)
+			end
+		end
+	end)
+end)()
+
+
+coroutine.wrap(function()
+	game:GetService("RunService").Stepped:Connect(function()
+		if states.antisalag == true then
+			pcall(function()
+				for i,player in pairs(game.Players:GetPlayers()) do
+					for i, part in pairs(player.Character:GetDescendants()) do
+						if part.Name == "handcuffedGui" then
+							part:Destroy()
+						end
+
+					end
+				end
+			end)
+		end
+	end)
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if states.antiarmorspam == true then
+			for i,player in pairs(game.Players:GetPlayers()) do
+				for i, part in pairs(player.Character:GetChildren()) do
+					if part.Name == "vest" then
+						pcall(function()
+							part:Destroy()
+						end)
+					end
+
+				end
+			end
+		end
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if states.antisalag == true then
+			for i,player in pairs(game.Players:GetPlayers()) do
+				for i, part in pairs(player.Character:GetDescendants()) do
+					if part.Name == "handcuffedGui" then
+						pcall(function()
+							part:Destroy()
+						end)
+					end
+				end
+			end
+		end
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if states.AUTOLC == true then
+			pcall(function()
+				if game.Players.LocalPlayer.Character.Humanoid.Health < 1 then
+					if game.Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("Home").hud.Topbar.titleBar.Title.Text ~= "Lights out" then
+						if game.Players.LocalPlayer.TeamColor.Name ~= "Medium stone grey" then
+							if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+								workspace.Remote.loadchar:InvokeServer()
+							end
+						else
+							if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+								workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright orange").Name)
+							end
+						end
+					else
+						if game.Players.LocalPlayer.TeamColor.Name ~= "Medium stone grey" then
+							if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+								workspace.Remote.loadchar:InvokeServer()
+							end
+						else
+							if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+								workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright orange").Name)
+							end
+						end
+					end
+				end
+			end)
+		end
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
 		if states.AUTORE == true then
 			pcall(function()
 				if game.Players.LocalPlayer.Character.Humanoid.Health < 1 then
@@ -6877,7 +7169,17 @@ coroutine.wrap(function()
 	end
 end)()
 
-
+coroutine.wrap(function()
+	while wait() do
+		if states.ANTIFLING == true then
+			pcall(function()
+				for i,v in pairs(game.Players:GetPlayers()) do
+					v.Character.HumanoidRootPart.CanCollide = false
+				end
+			end)
+		end
+	end
+end)()
 
 local crim = game:GetService("Workspace")["Criminals Spawn"]:GetChildren()
 
