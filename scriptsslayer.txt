@@ -1145,6 +1145,31 @@ local function toPlayer(play)
 	pl.CFrame = game.Players[pl2].Character.HumanoidRootPart.CFrame
 end
 
+allMaterials = {
+	"Plastic",
+	"Wood",
+	"Slate",
+	"Concrete",
+	"CorrodedMetal",
+	"DiamondPlate",
+	"Foil",
+	"Grass",
+	"Ice",
+	"Marble",
+	"Granite",
+	"Brick",
+	"Pebble",
+	"Sand",
+	"Fabric",
+	"SmoothPlastic",
+	"Metal",
+	"WoodPlanks",
+	"Cobblestone",
+	"Neon",
+	"Glass",
+	"ForceField"
+}
+
 function refreshColor()
 	local colorfavz = Colorf.BackgroundColor3
 
@@ -1255,6 +1280,12 @@ if (game:GetService("MarketplaceService"):UserOwnsGamePassAsync(game.Players.Loc
 
 end
 
+local function checkplayer(plr)
+	if plr.TeamColor.Name ~= "Bright blue" and plr.TeamColor.Name ~= "Bright orange" and plr.TeamColor.Name ~= "Medium stone grey" and plr.TeamColor.Name ~= "Really red" then
+		Warning(plr.Name.." is exploiting: Color team")
+	end
+end
+	
 local function ifTeam(Team)
 	local tiamm = GetPlayersInTeam(Team)
 
@@ -1348,6 +1379,14 @@ local teams = {
 	"Guards",
 	"Criminals",
 }
+
+local function removeIndex(array, index)
+	for i,v in pairs(array) do
+		if v == index then
+			table.remove(array, i)
+		end
+	end
+end
 
 local function getGins()
 	game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slot1].ITEMPICKUP)
@@ -1481,7 +1520,6 @@ end
 function healthBar()
 	local StarterGui = game:GetService("StarterGui")
 
-	StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
 	local Player = game.Players.LocalPlayer 
 	local Character = Player.Character
 	local Humanoid = Character:FindFirstChild("Humanoid")
@@ -1509,6 +1547,12 @@ function healthBar()
 
 		local Health = math.floor(Health)
 		Health = math.floor(Humanoid.Health/Humanoid.MaxHealth * 100)
+		
+		if Health < 1 then
+			Bar.Visible = false
+		else
+			Bar.Visible = true
+		end
 		
 		Bar.Size = UDim2.new(0, Health, 0, 3)
 
@@ -1538,7 +1582,7 @@ function healthBar()
 			local dmg = Dmg
 
 			dmg.BackgroundTransparency = 0.9
-			wait(.06)
+			wait(.1)
 			dmg.BackgroundTransparency = 1
 			cHealth = Health
 
@@ -2500,7 +2544,10 @@ local cmdzz = {
 	"betterlight <on/off>",
 	"fastspawn <on/off>",
 	"damagesounds/ds <on/off>",
-	
+	"cape <on/off>",
+	"capecolor <rgb>",
+	"capematerial <material>",
+	"armorspam <on/off>"
 	
 	
 	
@@ -2529,6 +2576,10 @@ local prfx = "."
 local frame = Commands
 local box = TextBox
 local Lagpower = 0.5
+
+capeColorz = Color3.fromRGB(170, 0, 0)
+capeMaterialz = Enum.Material.SmoothPlastic
+currentCape = nil
 
 local function get_command(fromchat, msg)
 	local command = {}
@@ -2642,7 +2693,6 @@ local function get_command(fromchat, msg)
 		"arr",
 		"view",
 		"unview",
-		"v",
 		"unv",
 		"annoy",
 		"unannoy",
@@ -2680,7 +2730,7 @@ local function get_command(fromchat, msg)
 		"antifling",
 		"unantifling",
 		"friend",
-		"enemy",
+		"unfriend",
 		"antibring",
 		"ts",
 		"betterlight",
@@ -2737,7 +2787,12 @@ local function get_command(fromchat, msg)
 		"antiarmorspam",
 		"antisalag",
 		"antiarrestlag",
-		"autoreset"
+		"autoreset",
+		"cape",
+		"capecolor",
+		"capematerial",
+		"taserbypass",
+		"armorspam"
 	}
 
 	local function valid_command()
@@ -2795,6 +2850,26 @@ local function get_command(fromchat, msg)
 				end
 			end
 			
+			if action == "armorspam" then
+				if person == "on" then
+					states.ARMORSPAM = true
+					Notifi("SPAMMING ARMOR")
+					local pos = GetRO()
+					workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright blue").Name)
+					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+				else
+					if person == "off" then
+						states.ARMORSPAM = false
+						Notifi("ARMORSPAM IS DISABLED", Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							states.ARMORSPAM = true
+							Notifi("SPAMMING ARMOR")
+							refreshT(BrickColor.new("Bright blue"))
+						end
+					end
+				end
+			end
 			if action == "autoreset" then
 				if person == "on" then
 					states.AUTORESET = true
@@ -2810,6 +2885,198 @@ local function get_command(fromchat, msg)
 						end
 					end
 				end
+			end
+			
+			if action == "cape" then
+				if person == "on" then
+					states.CAPE = true
+					Notifi("CAPE IS ENABLED")
+					local player = game.Players.LocalPlayer
+					repeat wait() until player and player.Character and player.Character:FindFirstChild("Humanoid")
+					if player.Character:FindFirstChild("Torso") then
+						torso = player.Character.Torso
+					else
+						torso = player.Character.UpperTorso
+					end
+					local p = Instance.new("Part", torso.Parent)
+					currentCape = p
+
+					p.Name = "Cape"
+					p.Anchored = false
+					p.CanCollide = false
+					p.TopSurface = 0
+					p.BottomSurface = 0
+					p.Color = capeColorz
+					p.Material = capeMaterialz
+					p.FormFactor = "Custom"
+					p.Size = Vector3.new(0.2,0.2,0.2)
+					local msh = Instance.new("BlockMesh", p)
+					msh.Scale = Vector3.new(9,17.5,0.5)
+					local motor = Instance.new("Motor", p)
+					motor.Part0 = p
+					motor.Part1 = torso
+					motor.MaxVelocity = 0.01
+					motor.C0 = CFrame.new(0,1.75,0) * CFrame.Angles(0,math.rad(90),0)
+					motor.C1 = CFrame.new(0,1,0.45) * CFrame.Angles(0,math.rad(90),0)
+					local wave = false
+					repeat wait(1/44)
+						local ang = 0.1
+						local oldmag = torso.Velocity.magnitude
+						local mv = 0.002
+						if wave then
+							ang = ang + ((torso.Velocity.magnitude/10) * 0.05) + 0.05
+							wave = false
+						else
+							wave = true
+						end
+						ang = ang + math.min(torso.Velocity.magnitude/11, 0.5)
+						motor.MaxVelocity = math.min((torso.Velocity.magnitude/111), 0.04) + mv
+						motor.DesiredAngle = -ang
+						if motor.CurrentAngle < -0.2 and motor.DesiredAngle > -0.2 then
+							motor.MaxVelocity = 0.04
+						end
+						repeat wait() until motor.CurrentAngle == motor.DesiredAngle or math.abs(torso.Velocity.magnitude - oldmag) >= (torso.Velocity.magnitude/10) + 1
+						if torso.Velocity.magnitude < 0.1 then
+							wait(0.1)
+						end
+					until not p or p.Parent ~= torso.Parent
+				else
+					if person == "off" then
+						states.CAPE = false
+						Notifi("CAPE IS DISABLED", Color3.fromRGB(255, 0, 0))
+						currentCape:Destroy()
+					else
+						if not person then
+							states.CAPE = true
+							Notifi("CAPE IS ENABLED")
+							local player = game.Players.LocalPlayer
+							repeat wait() until player and player.Character and player.Character:FindFirstChild("Humanoid")
+							if player.Character:FindFirstChild("Torso") then
+								torso = player.Character.Torso
+							else
+								torso = player.Character.UpperTorso
+							end
+							local p = Instance.new("Part", torso.Parent)
+							currentCape = p
+
+							p.Name = "Cape"
+							p.Anchored = false
+							p.CanCollide = false
+							p.TopSurface = 0
+							p.BottomSurface = 0
+							p.Color = capeColorz
+							p.Material = capeMaterialz
+							p.FormFactor = "Custom"
+							p.Size = Vector3.new(0.2,0.2,0.2)
+							local msh = Instance.new("BlockMesh", p)
+							msh.Scale = Vector3.new(9,17.5,0.5)
+							local motor = Instance.new("Motor", p)
+							motor.Part0 = p
+							motor.Part1 = torso
+							motor.MaxVelocity = 0.01
+							motor.C0 = CFrame.new(0,1.75,0) * CFrame.Angles(0,math.rad(90),0)
+							motor.C1 = CFrame.new(0,1,0.45) * CFrame.Angles(0,math.rad(90),0)
+							local wave = false
+							repeat wait(1/44)
+								local ang = 0.1
+								local oldmag = torso.Velocity.magnitude
+								local mv = 0.002
+								if wave then
+									ang = ang + ((torso.Velocity.magnitude/10) * 0.05) + 0.05
+									wave = false
+								else
+									wave = true
+								end
+								ang = ang + math.min(torso.Velocity.magnitude/11, 0.5)
+								motor.MaxVelocity = math.min((torso.Velocity.magnitude/111), 0.04) + mv
+								motor.DesiredAngle = -ang
+								if motor.CurrentAngle < -0.2 and motor.DesiredAngle > -0.2 then
+									motor.MaxVelocity = 0.04
+								end
+								repeat wait() until motor.CurrentAngle == motor.DesiredAngle or math.abs(torso.Velocity.magnitude - oldmag) >= (torso.Velocity.magnitude/10) + 1
+								if torso.Velocity.magnitude < 0.1 then
+									wait(0.1)
+								end
+							until not p or p.Parent ~= torso.Parent
+							
+						end
+					end
+				end
+			end
+			
+			if action == "capecolor" then
+				if person == "rgb" then
+					states.RGBCape = true
+					Notifi("CAPE COLOR CHANGED TO RGB", Color3.fromRGB(85, 255, 0))
+					while states.RGBCape == true  do
+						if states.RGB == true  then
+							wait()
+							capeColorz = globalrgb.BackgroundColor3
+						else
+							wait()
+							capeColorz = globalrgb.BackgroundColor3
+						end
+
+					end
+				else
+					if person == "color" then
+						if states.RGBCape == true then
+							states.RGBCape = false
+							wait(0.2)
+							capeColorz = Colorf.BackgroundColor3
+							Notifi("CAPE COLOR CHANGED TO "..string.upper(Colorf.BackgroundColor3.Name), Color3.fromRGB(85, 255, 0))
+						else
+							capeColorz = Colorf.BackgroundColor3
+							Notifi("CAPE COLOR CHANGED TO "..string.upper(Colorf.BackgroundColor3.Name), Color3.fromRGB(85, 255, 0))
+						end
+						
+					else
+						if person == "random" then
+							if states.RGBCape == true then
+								local x = math.random(0,255)
+								local y = math.random(0,255)
+								local z = math.random(0,255)
+								Notifi("CAPE COLOR CHANGED TO "..x..","..y..","..z, Color3.fromRGB(85, 255, 0))
+								states.RGBCape = false
+								wait(0.2)
+
+								capeColorz = Color3.fromRGB(x,y,z)
+							else
+								local x = math.random(0,255)
+								local y = math.random(0,255)
+								local z = math.random(0,255)
+								Notifi("CAPE COLOR CHANGED TO "..x..","..y..","..z, Color3.fromRGB(85, 255, 0))
+								capeColorz = Color3.fromRGB(x,y,z)
+							end
+							
+						end
+						if tonumber(person) and tonumber(person2) and tonumber(person3) then
+							if states.RGBCape == true then
+								states.RGBCape = false
+								wait(0.2)
+								capeColorz = Color3.fromRGB(tonumber(person), tonumber(person2), tonumber(person3))
+								Notifi("CAPE COLOR CHANGED TO "..person..","..person2..","..person3, Color3.fromRGB(85, 255, 0))
+							else
+								capeColorz = Color3.fromRGB(tonumber(person), tonumber(person2), tonumber(person3))
+								Notifi("CAPE COLOR CHANGED TO "..person..","..person2..","..person3, Color3.fromRGB(85, 255, 0))
+							end
+							
+						end
+					end
+					
+				end
+				
+			end
+			
+			if action == "capematerial" then
+				if person then
+					Material = GetNameFromList(person, allMaterials)
+					if Material then
+						capeMaterialz = Enum.Material[Material]
+						Notifi("CAPE MATERIAL CHANGED TO "..string.upper(Material))
+					end
+				end
+				
 			end
 			
 			if action == "on" then
@@ -2879,6 +3146,7 @@ local function get_command(fromchat, msg)
 			if action == "sit" then
 				game.Players.LocalPlayer.Character.Humanoid.Sit = true
 			end
+			
 			if action == "damagesounds" or action == "ds" then
 				if person == "on" then
 					states.DAMAGESOUNDS = true
@@ -2898,6 +3166,7 @@ local function get_command(fromchat, msg)
 					end
 				end
 			end
+			
 			if action == "loopbring" then
 				local ggxdxd = GetPlayerFromString(person)
 				
@@ -3206,28 +3475,6 @@ local function get_command(fromchat, msg)
 				end
 			end
 			
-			if action == "antispam" then
-				if person == "on" then
-					states.ANTISPAM = true
-					Notifi("ANTISPAM IS ENABLED")
-					while wait() do
-						if states.ANTISPAM == true then
-							pcall(function()
-								local parts = game.Players.LocalPlayer.Character:GetChildren()
-								if parts:FindFirstChild("handcuffedGui") then
-									game.Players.LocalPlayer.Character.Humanoid.Health = 0
-								end
-							end)
-						end
-					end
-				else
-					if person == "off" then
-						states.ANTISPAM = false
-						Notifi("ANTISPAM IS DISABLED", Color3.fromRGB(255, 0, 0))
-					end
-				end
-			end
-			
 			if action == "onepunch" or action == "op" then
 				if person == "on" then
 					local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -3405,9 +3652,6 @@ local function get_command(fromchat, msg)
 				end
 			end
 			
-			if action == "loads" then
-				loadSettings()
-			end
 			if action == "rgb" then
 				if person == "on" then
 					states.RGB = true
@@ -3415,6 +3659,10 @@ local function get_command(fromchat, msg)
 				else
 					if person == "off" then
 						states.RGB = false
+					else
+						if not person then
+							states.RGB = true
+						end
 					end
 				end
 			end
@@ -3447,7 +3695,7 @@ local function get_command(fromchat, msg)
 						Notifi("YOU DON'T HAVE THE GUN PURCHASED", Color3.fromRGB(255, 0, 0))
 					end
 				else
-					if guna == "REMINGTON 870" then
+					if guna == "Remington 870" then
 						if person2 == "1" then
 							slot1 = "Remington 870"
 							Notifi("REMINGTON 870 SET TO SLOT1")
@@ -3554,12 +3802,6 @@ local function get_command(fromchat, msg)
 				end
 			end
 
-			if action == "notff" then
-				if person == "on" then
-					states.LoopFF = false
-					states.notff = true
-				end
-			end
 			if action == "lol" then
 				if person then
 					local num = math.random(0,100)
@@ -3607,8 +3849,6 @@ local function get_command(fromchat, msg)
 				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPos
 				workspace.CurrentCamera.CFrame = lastCam
 				game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
-
-				healthBar()
 			end
 
 			if action == "crim" then
@@ -3709,50 +3949,6 @@ local function get_command(fromchat, msg)
 
 			end
 
-			if action == "datocurioso" then
-				local numeroDato = math.random(1, 100)
-
-				local Datos = {
-					"Casi el 3% del hielo en los glaciares de la Antartida es orina de pingüino",
-					"Cuando te enhmhrhs pierdes alrededor de 2 amigos",
-					"El 93% de la vida de la tierra vive en el océano",
-					"Las manzanas tienen un 25% de aire",
-					"Los ojos hacen más ejercicio que las piernas",
-					"Las tortugas viven de 70 a 80 años",
-					"Existen mas gallinas que seres humanos",
-					"Las ballenas que cantan mal las notas se pierden y viven solas",
-					"La fortuna de MrBeast alcanza los 24m de dolares",
-					"Algunas especies de delfines llegan a tener hasta 250 dientes",
-					"El guepardo es el animal mas rapido del mundo",
-					"Las moscas sólo pueden consumir alimentos líquidos",
-					"Una coneja puede tener hasta 800 hijos, nietos y bisnietos a lo largo de su vida",
-					"Los elefantes piensan que los humanos somos tiernos",
-					"Cada 10 minutos aproximadamente se dicen 3 mentiras",
-					"En Júpiter y Saturno llueven diamantes",
-					"Es imposible estornudar con los ojos abiertos",
-					"Las hormigas nunca duermen",
-					"Las primeras almohadas eran de piedra",
-					"Existió un hombre que se murió de risa",
-					"Los dientes humanos son casi tan duros como los diamantes",
-					"En Júpiter y Saturno llueven diamantes",
-					"El elefante es un único animal con 4 rodillas",
-					"La falta de sueño hace que veas enemigos a tu alrededor",
-					"La lengua de cada persona es única e irrepetible",
-					"La primera palmera creció en el polo norte",
-					"El primer producto vendido en Internet fue una pizza",
-					"Una gota de petróleo puede contaminar 25 litros de agua",
-					"El ataque de hipo más largo duró 68 años",
-					"El 90% de las personas editan sus fotos",
-					"La saliva es sangre filtrada"
-				}
-
-				local Datito = Datos[math.random(1,#Datos)]
-
-				wait(0.8)
-				shat(Datito)
-
-			end
-
 			if action == "admin" then
 
 				local playersito = GetPlayerFromString(person)
@@ -3774,150 +3970,7 @@ local function get_command(fromchat, msg)
 				Notifi(Player.Name.."IS NOT ADMIN", Color3.fromRGB(85, 255, 0))
 			end
 
-			if action == "ts" then
-				while wait() do
-					coroutine.wrap(function()
-						pcall(function()
-							workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
-
-							local Gun = game.Players.LocalPlayer.Backpack["Remington 870"] or game.Players.LocalPlayer.Character["Remington 870"]
-
-							local args = {
-								[1] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [2] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [3] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [4] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [5] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [6] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [7] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [8] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [9] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [10] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [11] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [12] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [13] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [14] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [15] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [16] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [17] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [18] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [19] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [20] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [21] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [22] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [23] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [24] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [25] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}
-							}
-
-							game:GetService("ReplicatedStorage").ShootEvent:FireServer(args, Gun)
-						end)
-					end)()
-				end
-			end
-
-			if action == "timestop" then
+			if action == "ts" or action == "timestop" then
 				while wait() do
 					coroutine.wrap(function()
 						pcall(function()
@@ -4077,6 +4130,10 @@ local function get_command(fromchat, msg)
 					if person == "off" then
 						states.MOTIONBLUR = false
 						motionBlur:Destroy()
+					else
+						if not person then
+							states.MOTIONBLUR = true
+						end
 					end
 				end
 
@@ -4108,13 +4165,24 @@ local function get_command(fromchat, msg)
 
 
 			if action == "friend" then
-				xd7w7xdxd = GetPlayerFromString(person)
-
-				xd7w7xdxd.Character.Parent = game.Lighting
+				if GetPlayerFromString(person) ~= nil then
+					table.insert(friends, GetPlayerFromString(person))
+					Notifi(string.upper(GetPlayerFromString(person).Name).." IS NOT VISIBLE")
+				end
 			end
 
-			if action == "enemy" then
-				xd7w7xdxd.Character.Parent = game.Workspace
+			if action == "unfriend" then
+				if GetPlayerFromString(person) ~= nil then
+					removeIndex(friends, GetPlayerFromString(person))
+					Notifi(string.upper(GetPlayerFromString(person).Name).." IS VISIBLE")
+					wait(0.3)
+					for i,v in pairs(game.Lighting:GetChildren()) do
+						if v.ClassName == "Model" then
+							v.Parent = game.Workspace
+						end
+					end
+					
+				end
 			end
 
 
@@ -4195,12 +4263,6 @@ local function get_command(fromchat, msg)
 				end
 			end
 
-			if action == "cd" then
-				if person == "on" then
-					states.CONTENTD = true
-				end
-			end
-
 			if action == "bloom" then
 				if person == "on" then
 					uwu7w7.Enabled = true
@@ -4214,10 +4276,11 @@ local function get_command(fromchat, msg)
 			if action == "antishield" then
 				if person == "on" then
 					states.ANTISHIELD = true
-
+					Notifi("ANTISHIELD IS ENABLED")
 				else
 					if person == "off" then
 						states.ANTISHIELD = false
+						Notifi("ANTISHIELD IS ENABLED", Color3.fromRGB(255, 0, 0))
 					end
 				end
 			end
@@ -4228,12 +4291,6 @@ local function get_command(fromchat, msg)
 				Notifi("COPIED TEAM FROM "..juan)
 
 				refreshT(copyrait.TeamColor.Color)
-			end
-
-			if action == "slotguns" then
-				if person == "m4" then
-					print("aun no xdd")
-				end
 			end
 
 			if action == "fixadmin" then
@@ -4423,12 +4480,7 @@ local function get_command(fromchat, msg)
 
 			if action == "refreshbar" then
 				Notifi("HEALTH BAR REFRESHED", Color3.fromRGB(85, 255, 0))
-				refreshHBar()
 				healthBar()
-			end
-
-			if action == "rb" then
-				print("aun no")
 			end
 
 			if action == "secretzone" then
@@ -4507,8 +4559,6 @@ local function get_command(fromchat, msg)
 							end
 						end
 					end
-
-
 				else
 					if person == "off" then
 						states.GODMODE = false
@@ -4519,58 +4569,61 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "loopcrim" then
-				states.LOOPCRIM = true
-				Notifi("LOOPCRIM IS ENABLED",Color3.fromRGB(85, 255, 0))
+				if GetPlayerFromString(person) then
+					states.LOOPCRIM = true
+					Notifi("LOOPINGCRIM "..string.upper(GetPlayerFromString(person).Name),Color3.fromRGB(85, 255, 0))
 
-				coroutine.wrap(function()
-					while states.LOOPCRIM == true do
-						wait(0.05)
+					coroutine.wrap(function()
+						while states.LOOPCRIM == true do
+							wait(0.05)
 
-						local player = GetPlayerFromString(person) 
+							local player = GetPlayerFromString(person) 
 
-						if player then
-							local char = workspace:FindFirstChild(player.Name)
-							local hum = char and char:FindFirstChild("HumanoidRootPart")
-							local head = char and char:FindFirstChild("Head")
+							if player then
+								local char = workspace:FindFirstChild(player.Name)
+								local hum = char and char:FindFirstChild("HumanoidRootPart")
+								local head = char and char:FindFirstChild("Head")
 
-							local m_char = workspace:FindFirstChild(UserName)
-							local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
-							if m_char and m_hum and char and (char or head) then 
-								game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
+								local m_char = workspace:FindFirstChild(UserName)
+								local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
+								if m_char and m_hum and char and (char or head) then 
+									game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
+								end
+							end
+
+							local crim = game:GetService("Workspace")["Criminals Spawn"].SpawnLocation
+
+							crim.CanCollide = false
+							crim.CFrame = GetRO()
+
+							if states.LOOPCRIM == false then
+								break
 							end
 						end
+					end)()
 
-						local crim = game:GetService("Workspace")["Criminals Spawn"].SpawnLocation
+					coroutine.wrap(function()
+						while states.LOOPCRIM == true do
+							wait(0.5)
 
-						crim.CanCollide = false
-						crim.CFrame = GetRO()
+							local player = GetPlayerFromString(person) 
 
-						if states.LOOPCRIM == false then
-							break
-						end
-					end
-				end)()
-
-				coroutine.wrap(function()
-					while states.LOOPCRIM == true do
-						wait(0.5)
-
-						local player = GetPlayerFromString(person) 
-
-						for _,v in pairs(game.Players:GetPlayers()) do
-							pcall(function()
-								if workspace:FindFirstChild(game.Players.LocalPlayer.Name) and ((game.Players.LocalPlayer.Character:FindFirstChildOfClass('Part').Position-workspace[player.Name]:FindFirstChildOfClass('Part').Position).magnitude < 10) and player ~= game.Players.LocalPlayer then
-									for i = 1,workspace[player.Name].Humanoid.Health/5 do
-										game:GetService("ReplicatedStorage").meleeEvent:FireServer(player)
+							for _,v in pairs(game.Players:GetPlayers()) do
+								pcall(function()
+									if workspace:FindFirstChild(game.Players.LocalPlayer.Name) and ((game.Players.LocalPlayer.Character:FindFirstChildOfClass('Part').Position-workspace[player.Name]:FindFirstChildOfClass('Part').Position).magnitude < 10) and player ~= game.Players.LocalPlayer then
+										for i = 1,workspace[player.Name].Humanoid.Health/5 do
+											game:GetService("ReplicatedStorage").meleeEvent:FireServer(player)
+										end
 									end
-								end
-							end)
+								end)
+							end
+							if states.LOOPCRIM == false then
+								break
+							end
 						end
-						if states.LOOPCRIM == false then
-							break
-						end
-					end
-				end)()
+					end)()
+				end
+				
 			end
 
 			if action == "unloopcrim" then
@@ -4586,71 +4639,76 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "annoy" then
-				states.ANNOY = true
-				local player = GetPlayerFromString(person) 
-
-				while states.ANNOY == true do
-					wait(0.02)
-
-					workspace.Remote.TeamEvent:FireServer("Bright orange")
-
+				if GetPlayerFromString(person) then
+					states.ANNOY = true
 					local player = GetPlayerFromString(person) 
 
-					if player then
-						local char = workspace:FindFirstChild(player.Name)
-						local hum = char and char:FindFirstChild("HumanoidRootPart")
-						local head = char and char:FindFirstChild("Head")
+					while states.ANNOY == true do
+						wait(0.02)
 
-						local m_char = workspace:FindFirstChild(UserName)
-						local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
-						if m_char and m_hum and char and (char or head) then 
-							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
+						workspace.Remote.TeamEvent:FireServer("Bright orange")
+
+						local player = GetPlayerFromString(person) 
+
+						if player then
+							local char = workspace:FindFirstChild(player.Name)
+							local hum = char and char:FindFirstChild("HumanoidRootPart")
+							local head = char and char:FindFirstChild("Head")
+
+							local m_char = workspace:FindFirstChild(UserName)
+							local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
+							if m_char and m_hum and char and (char or head) then 
+								game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
+							end
+						end
+
+						for _,v in pairs(game.Players:GetPlayers()) do
+							pcall(function()
+								if workspace:FindFirstChild(game.Players.LocalPlayer.Name) and ((game.Players.LocalPlayer.Character:FindFirstChildOfClass('Part').Position-workspace[player.Name]:FindFirstChildOfClass('Part').Position).magnitude < 10) and player ~= game.Players.LocalPlayer then
+									for i = 1,workspace[player.Name].Humanoid.Health/5 do
+										game:GetService("ReplicatedStorage").meleeEvent:FireServer(player)
+									end
+								end
+							end)
+						end
+
+						if states.ANNOY == false then
+							break
 						end
 					end
 
-					for _,v in pairs(game.Players:GetPlayers()) do
-						pcall(function()
-							if workspace:FindFirstChild(game.Players.LocalPlayer.Name) and ((game.Players.LocalPlayer.Character:FindFirstChildOfClass('Part').Position-workspace[player.Name]:FindFirstChildOfClass('Part').Position).magnitude < 10) and player ~= game.Players.LocalPlayer then
-								for i = 1,workspace[player.Name].Humanoid.Health/5 do
-									game:GetService("ReplicatedStorage").meleeEvent:FireServer(player)
-								end
-							end
-						end)
-					end
-
-					if states.ANNOY == false then
-						break
-					end
+					Notifi("ANNOYING ".. string.upper(player.Name),Color3.fromRGB(85, 255, 0))
 				end
-
-				Notifi("ANNOYING ".. string.upper(player.Name),Color3.fromRGB(85, 255, 0))
-
 			end
 
 			if action == "unannoy" then
 				states.ANNOY = false
+				Notifi("ANNOY IS DISABLED",Color3.fromRGB(255, 0, 0))
 			end
 
 			if action == "view" then
-				local Plr = GetPlayerFromString(person)
-				if Plr ~= nil then
-					states.VIEWING = Plr
-				end
-
-				while wait() do
-					if states.VIEWING ~= nil then
-						pcall(function()
-							workspace.CurrentCamera.CameraSubject = workspace[states.VIEWING.Name]
-						end)
+				if GetPlayerFromString(person) then
+					local Plr = GetPlayerFromString(person)
+					if Plr ~= nil then
+						states.VIEWING = Plr
 					end
-				end
 
-				Notifi("VIEWING "..string.upper(Plr.Name))
+					while wait() do
+						if states.VIEWING ~= nil then
+							pcall(function()
+								workspace.CurrentCamera.CameraSubject = workspace[states.VIEWING.Name]
+							end)
+						end
+					end
+
+					Notifi("VIEWING "..string.upper(Plr.Name))
+				end
 			end
 
 			if action == "unview" then
 				states.VIEWING = nil
 				workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character
+				Notifi("VIEW IS DISABLED", Color3.fromRGB(255, 0, 0))
 			end
 			if action == "count" then
 
@@ -4680,16 +4738,22 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "bring" then
-				local pl = GetPlayerFromString(person)
-				vr1ng(pl)
+				if GetPlayerFromString(person) then
+					Notifi("BRINGING "..string.upper(GetPlayerFromString(person).Name))
+					local pl = GetPlayerFromString(person)
+					vr1ng(pl)
+				end
 			end
 
 			if action == "arrest" then
-				harrestatexd(GetPlayerFromString(person))
-
+				if GetPlayerFromString(person) then
+					Notifi("ARRESTING "..string.upper(GetPlayerFromString(person).Name))
+					harrestatexd(GetPlayerFromString(person))
+				end
 			end
 
 			if action == "end" then
+				Notifi("ENDING SERVER")
 				local PackageSize = 100000
 				local SendPackageAmountOfTimes = 5
 
@@ -4732,6 +4796,12 @@ local function get_command(fromchat, msg)
 						states.GUNCOLOR = false
 
 						Notifi("COLORGUNS IS DISABLED", Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							states.GUNCOLOR = true
+
+							Notifi("COLORGUNS IS ENABLED", Color3.fromRGB(85, 255, 0))
+						end
 					end
 				end
 			end
@@ -4828,14 +4898,18 @@ local function get_command(fromchat, msg)
 					game.Workspace:WaitForChild(game.Players.LocalPlayer.Name)
 					game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
 				end)
-
 			end
 
 			if action == "load" then
 				if person == "spam" or person == "spamarrest" then
-					states.SPAMLOADED = true
+					if states.SPAMLOADED == false then
+						states.SPAMLOADED = true
 
-					loadstring(game:HttpGet("https://raw.githubusercontent.com/Julianitocuatro/sa/main/sa",true))();
+						loadstring(game:HttpGet("https://raw.githubusercontent.com/Julianitocuatro/sa/main/sa",true))();
+					else
+						errorNotify("Spam arrest is already loaded")
+					end
+					
 				else
 					if person == "scorpion" then
 						if person2 then
@@ -4893,28 +4967,31 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "looptp" then
-				local player = GetPlayerFromString(person) 
-				Notifi("LOOPTP IS ENABLED", Color3.fromRGB(0, 255, 0))
-				states.LoopTP = true
-				while states.LoopTP == true do
-					wait(0.01)
-					
-					if player then
-						local char = workspace:FindFirstChild(player.Name)
-						local hum = char and char:FindFirstChild("HumanoidRootPart")
-						local head = char and char:FindFirstChild("Head")
+				if GetPlayerFromString(person) then
+					local player = GetPlayerFromString(person) 
+					Notifi("LOOPING TP "..string.upper(GetPlayerFromString(person)), Color3.fromRGB(0, 255, 0))
+					states.LoopTP = true
+					while states.LoopTP == true do
+						wait(0.01)
 
-						local m_char = workspace:FindFirstChild(UserName)
-						local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
-						if m_char and m_hum and char and (char or head) then 
-							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
+						if player then
+							local char = workspace:FindFirstChild(player.Name)
+							local hum = char and char:FindFirstChild("HumanoidRootPart")
+							local head = char and char:FindFirstChild("Head")
+
+							local m_char = workspace:FindFirstChild(UserName)
+							local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
+							if m_char and m_hum and char and (char or head) then 
+								game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
+							end
+						end
+
+						if states.LoopTP == false then
+							break
 						end
 					end
-
-					if states.LoopTP == false then
-						break
-					end
 				end
+				
 			end
 
 			if action == "autoguns" or action == "aguns" then
@@ -4932,12 +5009,12 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "sa" then
-				print("sa")
+				krim(GetPlayerFromString())
 			end
 
 			if action == "unlooptp" then
 				states.LoopTP = false
-				Notifi("LOOPTP IS DISABLED", Color3.fromRGB(0, 255, 0))
+				Notifi("LOOP TP IS DISABLED", Color3.fromRGB(0, 255, 0))
 			end
 			
 			if action == "cursorsize" then
@@ -4948,7 +5025,7 @@ local function get_command(fromchat, msg)
 					if numxd ~= nil then
 						Cursor.Size = UDim2.new(0, numxd, 0, numxd)
 					end
-				
+					Notifi("CURSOR SIZE CHANGED TO "..numxd)
 				end
 				
 			end
@@ -5040,6 +5117,12 @@ local function get_command(fromchat, msg)
 					if person == "off" then
 						states.ANTIFLING = false
 						Notifi("ANTIFLING IS DISABLED",Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							states.ANTIFLING = true
+							game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Size = Vector3.new(math.huge, game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Size.Y, math.huge)
+							Notifi("ANTIFLING IS ENABLED")
+						end
 					end
 				end
 			end
@@ -5061,7 +5144,7 @@ local function get_command(fromchat, msg)
 				end
 			end
 
-			if action == "autolock" or action == "autol" or action == "alock" then
+			if action == "autolock" or action == "autol" or action == "alock" or action == "taserbypass" then
 				if person == "on" then
 					states.AUTOLOCK = true
 					game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
@@ -5230,31 +5313,11 @@ local function get_command(fromchat, msg)
 				end
 			end
 			
-			if action == "ff" then
+			if action == "loopff" or action == "ff" then
+
 				if person == "on" then
-					states.LoopFF = true
 					Notifi("FF IS ENABLED", Color3.fromRGB(0, 255, 0))
-					coroutine.wrap(function()
-						while states.LoopFF == true do
-							ff()
-							wait(9)
-							if states.LoopFF == false then
-								break
-							end
-						end
-					end)()
-				else
-					if person == "off" then
-						states.LoopFF = false
-						Notifi("FF IS DISABLED", Color3.fromRGB(0, 255, 0))
-					end
-				end
-			end
-
-			if action == "loopff" then
-
-				if person == "on" then
-					Notifi("LOOPFF IS ENABLED", Color3.fromRGB(0, 255, 0))
+					states.ANTICRIM = false
 					states.LoopFF = true
 					while states.LoopFF == true do
 						ff()
@@ -5268,7 +5331,20 @@ local function get_command(fromchat, msg)
 				else
 					if person == "off" then
 						states.LoopFF = false
-						Notifi("LOOPFF IS DISABLED", Color3.fromRGB(0, 255, 0))
+						Notifi("FF IS DISABLED", Color3.fromRGB(0, 255, 0))
+					else
+						if not person then
+							Notifi("FF IS ENABLED", Color3.fromRGB(0, 255, 0))
+							states.ANTICRIM = false
+							states.LoopFF = true
+							while states.LoopFF == true do
+								ff()
+								wait(9)
+								if states.LoopFF == false then
+									break
+								end
+							end
+						end
 					end
 				end
 			end
@@ -5294,6 +5370,20 @@ local function get_command(fromchat, msg)
 					if person == "off" then
 						states.COPLOOP = false
 						Notifi("COPLOOP IS DISABLED", Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							Notifi("COPLOOP IS ENABLED", Color3.fromRGB(0, 255, 0))
+							states.COPLOOP = true
+
+							while true do
+								wait(.01)
+								workspace.Remote.TeamEvent:FireServer("Bright blue")
+
+								if states.COPLOOP == false then
+									break
+								end
+							end
+						end
 					end
 				end
 			end
@@ -5306,6 +5396,11 @@ local function get_command(fromchat, msg)
 					if person == "off" then
 						states.ANTICRIM = false
 						Notifi("ANTICRIM IS DISABLED", Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							states.ANTICRIM = true
+							Notifi("ANTICRIM IS ENABLED", Color3.fromRGB(85, 255, 0))
+						end
 					end
 				end
 			end
@@ -5322,6 +5417,13 @@ local function get_command(fromchat, msg)
 						Notifi("AUTORESPAWN IS DISABLED", Color3.fromRGB(255, 0, 0))
 
 						healthBar()
+					else
+						if not person then
+							states.AUTORE = true
+							states.AUTOLC = false
+							Notifi("AUTORESPAWN IS ENABLED", Color3.fromRGB(85, 255, 0))
+							healthBar()
+						end
 					end
 				end
 			end
@@ -5383,8 +5485,7 @@ local function get_command(fromchat, msg)
 			end
 		end	
 	end
-
-	wait()
+	
 	do_command()
 
 end
@@ -5706,25 +5807,37 @@ Exploiters = {
 	"Darknesslook1",
 	"calmdownordie",
 	"yosoykority",
-	"maradis09"
+	"maradis09",
+	"0_0patryk1",
+	"Lautaro_1958",
+	"LUCAS8JK8",
+	"dannaYSA22",
+	"opoqppoo",
+	"12yatagarasu",
+	"SweaterCand",
+	"poppy154325",
+	"Unicornios_Kawaiiii",
+	"prinsfers",
+	"pkj8282",
+	"Wilk_555",
+	"Haylie_Blox012",
+	"Stephanie7w7r",
+	"Rjein39",
+	"valentina7149"
 }
 
 ABSV = {
 	"Frankiliano_22",
-	"XxCamiloDiazXx",
 	"itsFreddy_Cookie",
 	"tutututututusa",
-	"AdhesiveMed",
 	"Isatmplx",
 	"FortniBloxYT12",
-	"Moisesms1234",
 	"Scripts_0193913",
-	"BLACKx_PINK210",
 	"tenho_100000robus",
 	"Suwnql",
 	"Grandmagotbarsmarss",
 	"RompeOrthos",
-	"Isatmplx"
+	"Rjein39"
 }
 
 HDP = {
@@ -6621,7 +6734,7 @@ game.Players.PlayerAdded:Connect(function(Player)
 			local name = Player.Name
 			local uwuxd = string.upper(name)
 
-			Warning(uwuxd.." IS A POSSIBLE ALT")
+			Warning(uwuxd.." IS A POSSIBLE ALT. Days: "..tonumber(Player.AccountAge))
 		else
 			if InList(Exploiters, Player) == true and InList(ABSV, Player) == true then
 				local name = Player.Name
@@ -6782,7 +6895,7 @@ game.Players.PlayerAdded:Connect(function(Player)
 end)
 
 game.Players.LocalPlayer.CharacterAdded:Connect(function()
-	wait(0.1)
+	wait(0.2)
 	healthBar()
 end)
 
@@ -6963,6 +7076,76 @@ coroutine.wrap(function()
 	end
 end)()
 
+game.Players.LocalPlayer.CharacterAdded:connect(function(chr)
+	if states.CAPE == true then
+		local player = game.Players.LocalPlayer
+		repeat wait() until player and player.Character and player.Character:FindFirstChild("Humanoid")
+		if player.Character:FindFirstChild("Torso") then
+			torso = player.Character.Torso
+		else
+			torso = player.Character.UpperTorso
+		end
+		local p = Instance.new("Part", torso.Parent)
+		currentCape = p
+		
+		p.Name = "Cape"
+		p.Anchored = false
+		p.CanCollide = false
+		p.TopSurface = 0
+		p.BottomSurface = 0
+		p.Color = capeColorz
+		p.Material = capeMaterialz
+		p.FormFactor = "Custom"
+		p.Size = Vector3.new(0.2,0.2,0.2)
+		local msh = Instance.new("BlockMesh", p)
+		msh.Scale = Vector3.new(9,17.5,0.5)
+		local motor = Instance.new("Motor", p)
+		motor.Part0 = p
+		motor.Part1 = torso
+		motor.MaxVelocity = 0.01
+		motor.C0 = CFrame.new(0,1.75,0) * CFrame.Angles(0,math.rad(90),0)
+		motor.C1 = CFrame.new(0,1,0.45) * CFrame.Angles(0,math.rad(90),0)
+		local wave = false
+		repeat wait(1/44)
+			local ang = 0.1
+			local oldmag = torso.Velocity.magnitude
+			local mv = 0.002
+			if wave then
+				ang = ang + ((torso.Velocity.magnitude/10) * 0.05) + 0.05
+				wave = false
+			else
+				wave = true
+			end
+			ang = ang + math.min(torso.Velocity.magnitude/11, 0.5)
+			motor.MaxVelocity = math.min((torso.Velocity.magnitude/111), 0.04) + mv
+			motor.DesiredAngle = -ang
+			if motor.CurrentAngle < -0.2 and motor.DesiredAngle > -0.2 then
+				motor.MaxVelocity = 0.04
+			end
+			repeat wait() until motor.CurrentAngle == motor.DesiredAngle or math.abs(torso.Velocity.magnitude - oldmag) >= (torso.Velocity.magnitude/10) + 1
+			if torso.Velocity.magnitude < 0.1 then
+				wait(0.1)
+			end
+		until not p or p.Parent ~= torso.Parent
+	end
+end)
+
+coroutine.wrap(function()
+	while wait() do
+		if currentCape then
+			currentCape.Color = capeColorz
+		end
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if currentCape then
+			currentCape.Material = capeMaterialz
+		end
+	end
+end)()
+
 game.Players.LocalPlayer.CharacterAdded:Connect(function(Character)
 	if states.ANTIFLING == true then
 		pcall(function()
@@ -6986,7 +7169,9 @@ coroutine.wrap(function()
 	while wait() do
 		if states.ANTICRIM == true then
 			if game.Players.LocalPlayer.TeamColor.Name == "Really red" then
-				refreshT(Color3.fromRGB(0, 0, 0))
+				pcall(function()
+					refreshT(Color3.fromRGB(0, 0, 0))
+				end)
 			end
 		end
 	end
@@ -7001,9 +7186,20 @@ end)
 palyers = game.Players:GetPlayers()
 
 coroutine.wrap(function()
-	game:GetService("RunService").Stepped:connect(function()
+	game:GetService("RunService").Heartbeat:Connect(function()
 		if states.FAKESPAM == true then
 			game:GetService("Workspace").Remote.loadchar:InvokeServer()
+		end
+	end)
+end)()
+
+coroutine.wrap(function()
+	game:GetService("RunService").Stepped:Connect(function()
+		if states.ARMORSPAM == true then
+			game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.clothes["Riot Police"].ITEMPICKUP)
+			game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.clothes["Riot Police"].ITEMPICKUP)
+			game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.clothes["Riot Police"].ITEMPICKUP)
+			game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.clothes["Riot Police"].ITEMPICKUP)
 		end
 	end)
 end)()
@@ -7020,7 +7216,15 @@ coroutine.wrap(function()
 	end)
 end)()
 
-
+coroutine.wrap(function()
+	while wait() do
+		for i,v in pairs(friends) do
+			if v.Character then
+				v.Character.Parent = game.Lighting
+			end
+		end
+	end
+end)()
 coroutine.wrap(function()
 	game:GetService("RunService").Stepped:Connect(function()
 		if states.antisalag == true then
@@ -7105,6 +7309,30 @@ end)()
 
 coroutine.wrap(function()
 	while wait() do
+		if states.AUTORESET == true then
+			pcall(function()
+				local descendants = game.Players.LocalPlayer.Character:GetDescendants()
+				for i,v in pairs(descendants) do
+					if v.Name == "handcuffedGui" then
+						game.Players.LocalPlayer.Character:BreakJoints()
+					end
+				end
+			end)
+		end
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		pcall(function()
+			game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+			game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
+		end)
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
 		if states.AUTORE == true then
 			pcall(function()
 				if game.Players.LocalPlayer.Character.Humanoid.Health < 1 then
@@ -7174,7 +7402,11 @@ coroutine.wrap(function()
 		if states.ANTIFLING == true then
 			pcall(function()
 				for i,v in pairs(game.Players:GetPlayers()) do
-					v.Character.HumanoidRootPart.CanCollide = false
+					if v.Name ~= game.Players.LocalPlayer.Name then
+						v.Character.HumanoidRootPart.CanCollide = false
+						v.Character.HumanoidRootPart.Transparency = 0.95
+						v.Character.HumanoidRootPart.Color = Color3.fromRGB(85, 170, 255)
+					end
 				end
 			end)
 		end
@@ -7187,6 +7419,6 @@ for i,v in pairs(crim) do
 	v.CFrame = CFrame.new(778, 500, 2465)
 end
 
-
+print("Version 1.0")
 adminLoaded = true
 
