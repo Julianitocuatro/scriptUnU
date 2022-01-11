@@ -2577,7 +2577,7 @@ local frame = Commands
 local box = TextBox
 local Lagpower = 0.5
 
-capeColorz = Color3.fromRGB(170, 0, 0)
+capeColorz = Color3.fromRGB(255, 255, 255)
 capeMaterialz = Enum.Material.SmoothPlastic
 currentCape = nil
 
@@ -2899,6 +2899,9 @@ local function get_command(fromchat, msg)
 						torso = player.Character.UpperTorso
 					end
 					local p = Instance.new("Part", torso.Parent)
+					if currentCape ~= nil then
+						currentCape:Destroy()
+					end
 					currentCape = p
 
 					p.Name = "Cape"
@@ -2957,6 +2960,9 @@ local function get_command(fromchat, msg)
 								torso = player.Character.UpperTorso
 							end
 							local p = Instance.new("Part", torso.Parent)
+							if currentCape ~= nil then
+								currentCape:Destroy()
+							end
 							currentCape = p
 
 							p.Name = "Cape"
@@ -3088,6 +3094,20 @@ local function get_command(fromchat, msg)
 				states.AUTOLOCK = true
 				states.AUTORE = true
 				states.antiarmorspam = true
+				states.antisalag = true
+				coroutine.wrap(function()
+					if states.AUTOLOCK == true then
+						game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
+						game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
+						game.Players.LocalPlayer.CharacterAdded:connect(function()
+							game.Workspace:WaitForChild(game.Players.LocalPlayer.Name)
+							game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
+						end)
+					end
+				end)()
+				coroutine.wrap(function()
+					getGans()
+				end)()
 			end
 			
 			if action == "off" then
@@ -6734,7 +6754,7 @@ game.Players.PlayerAdded:Connect(function(Player)
 			local name = Player.Name
 			local uwuxd = string.upper(name)
 
-			Warning(uwuxd.." IS A POSSIBLE ALT. Days: "..tonumber(Player.AccountAge))
+			Warning(uwuxd.." IS A POSSIBLE ALT. "..tonumber(Player.AccountAge).." DAYS")
 		else
 			if InList(Exploiters, Player) == true and InList(ABSV, Player) == true then
 				local name = Player.Name
@@ -6895,7 +6915,7 @@ game.Players.PlayerAdded:Connect(function(Player)
 end)
 
 game.Players.LocalPlayer.CharacterAdded:Connect(function()
-	wait(0.2)
+	wait(0.25)
 	healthBar()
 end)
 
@@ -7086,6 +7106,9 @@ game.Players.LocalPlayer.CharacterAdded:connect(function(chr)
 			torso = player.Character.UpperTorso
 		end
 		local p = Instance.new("Part", torso.Parent)
+		if currentCape ~= nil then
+			currentCape:Destroy()
+		end
 		currentCape = p
 		
 		p.Name = "Cape"
@@ -7196,10 +7219,10 @@ end)()
 coroutine.wrap(function()
 	game:GetService("RunService").Stepped:Connect(function()
 		if states.ARMORSPAM == true then
-			game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.clothes["Riot Police"].ITEMPICKUP)
-			game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.clothes["Riot Police"].ITEMPICKUP)
-			game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.clothes["Riot Police"].ITEMPICKUP)
-			game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.clothes["Riot Police"].ITEMPICKUP)
+			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.clothes["Riot Police"].ITEMPICKUP)
+			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.clothes["Riot Police"].ITEMPICKUP)
+			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.clothes["Riot Police"].ITEMPICKUP)
+			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.clothes["Riot Police"].ITEMPICKUP)
 		end
 	end)
 end)()
@@ -7419,6 +7442,6 @@ for i,v in pairs(crim) do
 	v.CFrame = CFrame.new(778, 500, 2465)
 end
 
-print("Version 1.0")
+print("Version 1.2 BETA")
 adminLoaded = true
 
