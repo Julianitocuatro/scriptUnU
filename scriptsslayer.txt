@@ -66,7 +66,7 @@ ScreenGui.Parent = game.CoreGui
 
 Commands.Name = "Commands"
 Commands.Parent = ScreenGui
-Commands.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+Commands.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Commands.BorderColor3 = Color3.fromRGB(0, 115, 172)
 Commands.Position = UDim2.new(0.00148588407, 0, 0.912883461, 0)
 Commands.Size = UDim2.new(0, 167, 0, 65)
@@ -79,7 +79,7 @@ Colorf.Visible = false
 
 nomejodas.Name = "nomejodas"
 nomejodas.Parent = Commands
-nomejodas.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
+nomejodas.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 nomejodas.Position = UDim2.new(0.0152824521, 0, 0.451105684, 0)
 nomejodas.Size = UDim2.new(0, 160, 0, 29)
 
@@ -92,7 +92,7 @@ Vicentico.Size = UDim2.new(0, 100, 0, 100)
 Vicentico.Visible = false
 
 TextBox.Parent = Commands
-TextBox.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
+TextBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 TextBox.BorderSizePixel = 0
 TextBox.Position = UDim2.new(0.0691746697, 0, 0.451105684, 0)
 TextBox.Size = UDim2.new(0, 141, 0, 29)
@@ -207,7 +207,7 @@ UICorner_6.Parent = Listo
 
 AllCmds.Name = "AllCmds"
 AllCmds.Parent = ScreenGui
-AllCmds.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+AllCmds.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 AllCmds.BorderColor3 = Color3.fromRGB(0, 115, 172)
 AllCmds.Position = UDim2.new(0.00148588407, 0, 0.608491063, 0)
 AllCmds.Size = UDim2.new(0, 167, 0, 235)
@@ -228,8 +228,8 @@ Comms.TextWrapped = true
 cmdlist.Name = "cmdlist"
 cmdlist.Parent = AllCmds
 cmdlist.Active = true
-cmdlist.BackgroundColor3 = Color3.fromRGB(17, 17, 17)
-cmdlist.BorderColor3 = Color3.fromRGB(17, 17, 17)
+cmdlist.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+cmdlist.BorderColor3 = Color3.fromRGB(0, 0, 0)
 cmdlist.Position = UDim2.new(0.0393574238, 0, 0.170255423, 0)
 cmdlist.Selectable = false
 cmdlist.Size = UDim2.new(0, 152, 0, 180)
@@ -257,7 +257,7 @@ cmd.TextYAlignment = Enum.TextYAlignment.Top
 
 background.Name = "background"
 background.Parent = ScreenGui
-background.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 background.BackgroundTransparency = 1.000
 background.BorderColor3 = Color3.fromRGB(0, 115, 172)
 background.Position = UDim2.new(0.378417939, 0, 0.414527416, 0)
@@ -279,7 +279,7 @@ titletext.BackgroundTransparency = 1.000
 titletext.Position = UDim2.new(0.227462783, 0, 0.0592672415, 0)
 titletext.Size = UDim2.new(0, 241, 0, 25)
 titletext.Font = Enum.Font.FredokaOne
-titletext.Text = "AUNNOTIENENOMBREXD"
+titletext.Text = "GhxstHub V1"
 titletext.TextColor3 = Color3.fromRGB(255, 255, 255)
 titletext.TextSize = 24.000
 titletext.TextTransparency = 1.000
@@ -348,7 +348,7 @@ rem1.Position = UDim2.new(0.0638644174, 0, 0.144456998, 0)
 rem1.Size = UDim2.new(0, 283, 0, 11)
 rem1.Font = Enum.Font.FredokaOne
 rem1.LineHeight = 0.900
-rem1.Text = "PRESS \"Q\" TO USE  THE COMMAND BAR"
+rem1.Text = "PRESS \".\" TO USE  THE COMMAND BAR"
 rem1.TextColor3 = Color3.fromRGB(117, 117, 117)
 rem1.TextSize = 14.000
 rem1.TextTransparency = 1.000
@@ -475,7 +475,7 @@ local function PNOQQO_fake_script() -- Commands.LocalScript
 	
 	uis.InputBegan:Connect(function(Input, gameProcessedEvent)
 		if gameProcessedEvent then return end
-		if Input.KeyCode == Enum.KeyCode.Q and script.Parent.Visible == true then
+		if Input.KeyCode == Enum.KeyCode.Period and script.Parent.Visible == true then
 			script.Disabled = true
 	
 			script.Parent:TweenPosition(
@@ -492,7 +492,7 @@ local function PNOQQO_fake_script() -- Commands.LocalScript
 			TextBox.Text = " "
 	
 		else
-			if Input.KeyCode == Enum.KeyCode.Q and script.Parent.Visible == false then
+			if Input.KeyCode == Enum.KeyCode.Period and script.Parent.Visible == false then
 				script.Disabled = true
 				script.Parent.Visible = true
 	
@@ -660,7 +660,7 @@ local function SRJQXD_fake_script() -- ScreenGui.zcript
 	local tweenService = game:GetService("TweenService")
 	local MyFrame = script.Parent.background
 	local frames = script.Parent.background:GetChildren()
-	tweenService:Create(MyFrame, TweenInfo.new(0.3), {BackgroundTransparency = 0}):Play()
+	tweenService:Create(MyFrame, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play()
 	wait(0.3)
 	for i,v in pairs(frames) do
 		tweenService:Create(v, TweenInfo.new(0.3), {BackgroundTransparency = 0}):Play()
@@ -721,7 +721,7 @@ local function SRJQXD_fake_script() -- ScreenGui.zcript
 					tweenService:Create(v, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
 				end
 				wait(0.5)
-				tweenService:Create(MyFrame, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
+				tweenService:Create(MyFrame, TweenInfo.new(0.2), {BackgroundTransparency = 1}):Play()
 			end
 		end
 	end)()
@@ -870,47 +870,47 @@ states.anticrash = false
 states.DAMAGESOUNDS = false
 states.antiarmorspam = false
 
-local Walls = {
-	game.Workspace.Prison_Halls.walls,
-	game.Workspace.Prison_Halls.roof,
-	game.Workspace.Prison_Halls.outlines,
-	game.Workspace.Prison_Halls.lights,
-	game.Workspace.Prison_Halls.accent,
-	game.Workspace.Prison_Halls.glass,
-	game.Workspace.Prison_Cellblock.b_front,
-	game.Workspace.Prison_Cellblock.doors,
-	game.Workspace.Prison_Cellblock.c_tables,
-	game.Workspace.Prison_Cellblock.a_front,
-	game.Workspace.Prison_Cellblock.b_outerwall,
-	game.Workspace.Prison_Cellblock.c_wall,
-	game.Workspace.Prison_Cellblock.b_wall,
-	game.Workspace.Prison_Cellblock.c_hallwall,
-	game.Workspace.Prison_Cellblock.a_outerwall,
-	game.Workspace.Prison_Cellblock.b_ramp,
-	game.Workspace.Prison_Cellblock.a_ramp,
-	game.Workspace.Prison_Cellblock.a_walls,
-	game.Workspace.Prison_Cellblock.Cells_B,
-	game.Workspace.Prison_Cellblock.Cells_A,
-	game.Workspace.Prison_Cellblock.c_corner,
-	game.Workspace.Prison_Cellblock.Wedge,
-	game.Workspace.Prison_Cellblock.a_ceiling,
-	game.Workspace.Prison_Cellblock.b_ceiling,
-	game.Workspace.City_buildings,
-	game.Workspace.Prison_OuterWall,
-	game.Workspace.Prison_Fences,
-	game.Workspace.Prison_Guard_Outpost,
-	game.Workspace.Prison_Cafeteria.building,
-	game.Workspace.Prison_Cafeteria.glass,
-	game.Workspace.Prison_Cafeteria.oven,
-	game.Workspace.Prison_Cafeteria.shelves,
-	game.Workspace.Prison_Cafeteria.vents,
-	game.Workspace.Prison_Cafeteria.accents,
-	game.Workspace.Prison_Cafeteria["vending machine"],
-	game.Workspace.Prison_Cafeteria.Prison_table1,
-	game.Workspace.Prison_Cafeteria.counter,
-	game.Workspace.Prison_Cafeteria.boxes,
-	game.Workspace.Prison_Cafeteria["trash bins"]
-}
+local Walls = {}
+
+table.insert(Walls, game.Workspace.Prison_Halls.walls)
+table.insert(Walls, game.Workspace.Prison_Halls.roof)
+table.insert(Walls, game.Workspace.Prison_Halls.outlines)
+table.insert(Walls, game.Workspace.Prison_Halls.lights)
+table.insert(Walls, game.Workspace.Prison_Halls.accent)
+table.insert(Walls, game.Workspace.Prison_Halls.glass)
+table.insert(Walls, game.Workspace.Prison_Cellblock.b_front)
+table.insert(Walls, game.Workspace.Prison_Cellblock.doors)
+table.insert(Walls, game.Workspace.Prison_Cellblock.c_tables)
+table.insert(Walls, game.Workspace.Prison_Cellblock.a_front)
+table.insert(Walls, game.Workspace.Prison_Cellblock.b_outerwall)
+table.insert(Walls, game.Workspace.Prison_Cellblock.c_wall)
+table.insert(Walls, game.Workspace.Prison_Cellblock.b_wall)
+table.insert(Walls, game.Workspace.Prison_Cellblock.c_hallwall)
+table.insert(Walls, game.Workspace.Prison_Cellblock.a_outerwall)
+table.insert(Walls, game.Workspace.Prison_Cellblock.b_ramp)
+table.insert(Walls, game.Workspace.Prison_Cellblock.a_walls)
+table.insert(Walls, game.Workspace.Prison_Cellblock.Cells_B)
+table.insert(Walls, game.Workspace.Prison_Cellblock.Cells_A)
+table.insert(Walls, game.Workspace.Prison_Cellblock.c_corner)
+table.insert(Walls, game.Workspace.Prison_Cellblock.Wedge)
+table.insert(Walls, game.Workspace.Prison_Cellblock.a_ceiling)
+table.insert(Walls, game.Workspace.Prison_Cellblock.b_ceiling)
+table.insert(Walls, game.Workspace.City_buildings)
+table.insert(Walls, game.Workspace.Prison_OuterWall)
+table.insert(Walls, game.Workspace.Prison_Fences)
+table.insert(Walls, game.Workspace.Prison_Guard_Outpost)
+table.insert(Walls, game.Workspace.Prison_Cafeteria.building)
+table.insert(Walls, game.Workspace.Prison_Cafeteria.glass)
+table.insert(Walls, game.Workspace.Prison_Cafeteria.oven)
+table.insert(Walls, game.Workspace.Prison_Cafeteria.shelves)
+table.insert(Walls, game.Workspace.Prison_Cafeteria.vents)
+table.insert(Walls, game.Workspace.Prison_Cafeteria.accents)
+table.insert(Walls, game.Workspace.Prison_Cafeteria["vending machine"])
+table.insert(Walls, game.Workspace.Prison_Cafeteria.Prison_table1)
+table.insert(Walls, game.Workspace.Prison_Cafeteria.counter)
+table.insert(Walls, game.Workspace.Prison_Cafeteria.boxes)
+table.insert(Walls, game.Workspace.Prison_Cafeteria["trash bins"])
+
 
 settingsTable = {
 	MENUCUSTOM = false,
@@ -968,7 +968,7 @@ local saveColor6 = game:GetService("Players").LocalPlayer.PlayerGui.Home.hud.Top
 local saveColor7 = game:GetService("Players").LocalPlayer.PlayerGui.Home.hud.Topbar.Pulldownmenu.tb.BackgroundColor3
 
 --
-friends = {}
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
@@ -1258,7 +1258,7 @@ function CustomNotify(text1, text)
 end
 
 function Warning(text)
-	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Warning]: "..text; Color = Color3.fromRGB(255, 85, 0); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
+	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Warning]: "..text; Color = Color3.fromRGB(255, 255, 127); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
 end
 
 function Blacklist(text)
@@ -1315,22 +1315,22 @@ function Notifi(msg, color)
 				end
 			end)()
 			
-			xddd:TweenPosition(UDim2.new(0.893, 0 ,0.458, 0),Enum.EasingDirection.InOut,Enum.EasingStyle.Quad,0.3,true)
+			xddd:TweenPosition(UDim2.new(0.893, 0 ,0.458, 0),Enum.EasingDirection.InOut,Enum.EasingStyle.Quad,0.4,true)
 
 			xddd.Listo.MouseButton1Down:connect(function()
 				xddd:TweenPosition(
 					UDim2.new(2, 0, 0.458, 0),
 					Enum.EasingDirection.InOut,
 					Enum.EasingStyle.Quad,
-					0.3,
+					0.4,
 					true
 				)
-				wait(0.3)
+				wait(0.4)
 				xddd:Destroy()
 			end)
 
 			xddd.cmdout.Text = msg
-			xddd.cmdout.TextColor3 = color
+			xddd.cmdout.TextColor3 = Color3.fromRGB(111, 0, 167)
 
 			wait(0.3)
 			xddd.Listo.Text = "CLOSE (3)"
@@ -1344,10 +1344,10 @@ function Notifi(msg, color)
 				UDim2.new(2, 0, 0.458, 0),
 				Enum.EasingDirection.InOut,
 				Enum.EasingStyle.Quad,
-				0.3,
+				0.4,
 				true
 			)
-			wait(0.3)
+			wait(0.4)
 			xddd:Destroy()
 		end
 	end)()
@@ -2325,6 +2325,11 @@ function quill(Player)
 		game.Workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["M9"].ITEMPICKUP)
 
 		local Gun = game.Players.LocalPlayer.Character:FindFirstChild("M9") or game.Players.LocalPlayer.Backpack:FindFirstChild("M9")
+		for i,v in pairs(Gun:GetChildren()) do
+			if v.Name == "Handle" then
+				v:Destroy()
+			end
+		end
 
 		local FireEvent = {
 			[1] = {
@@ -2380,12 +2385,15 @@ function quill(Player)
 			}
 		}
 		game:GetService("ReplicatedStorage").ShootEvent:FireServer(FireEvent, Gun)
+
 		Gun.Parent = game.Players.LocalPlayer.Character
 		game.Players.LocalPlayer.Character["M9"]:Destroy()
 	end)
 end
 
 local friends = {}
+local loopkills = {}
+
 oldAmbien = game.Lighting.Ambient
 oldBri = game.Lighting.Brightness
 oldColorsh = game.Lighting.ColorShift_Top 
@@ -2455,12 +2463,15 @@ function noteamquill(Player)
 			}
 		}
 		game:GetService("ReplicatedStorage").ShootEvent:FireServer(FireEvent, Gun)
+		
 		Gun.Parent = game.Players.LocalPlayer.Character
 		game.Players.LocalPlayer.Character["M9"]:Destroy()
 	end)
 end
 
 local Material = {}
+
+colorforguns = Color3.fromRGB(13, 13, 13)
 
 local cmdzz = {
 	"re/respawn",
@@ -2481,14 +2492,14 @@ local cmdzz = {
 	"antisalag/antiarrestlag <on/off>",
 	"unview",
 	"lock",
-	"colorguns/cg <on/off>",
+	"colorguns/cg <rgb>",
 	"rejoin/rj",
 	"count",
 	"on",
 	"off",
 	"theme <rgb>",
 	"load <exploit>",
-	"to <player>",
+	"to/goto <player>",
 	"looptp <player>",
 	"unlooptp",
 	"hitsound <on/off>",
@@ -2539,7 +2550,6 @@ local cmdzz = {
 	"notifications <on/off>",
 	"xyz <name>",
 	"clicktp",
-	"rgb <on/off>",
 	"motionblur <on/off>",
 	"betterlight <on/off>",
 	"fastspawn <on/off>",
@@ -2547,11 +2557,13 @@ local cmdzz = {
 	"cape <on/off>",
 	"capecolor <rgb>",
 	"capematerial <material>",
-	"armorspam <on/off>"
-	
-	
-	
+	"armorspam <on/off>",
+	"antiinvis <on/off>",
+	"antiafk <on/off>>",
+	"antilag",
+	"addskid <player> <reason>"
 }
+
 function IsEven(num)
 	return num % 2 == 0
 end
@@ -2583,14 +2595,14 @@ currentCape = nil
 
 local function get_command(fromchat, msg)
 	local command = {}
-	
+	local pattern = "%S+"
 	if fromchat == false then
-		for word in string.gmatch(string.lower(box.Text), "%S+") do
+		for word in string.gmatch(string.lower(box.Text), pattern) do
 			table.insert(command, word)
 		end
 	else
 		if fromchat == true then
-			for word in string.gmatch(string.lower(msg), "%S+") do
+			for word in string.gmatch(string.lower(msg), pattern) do
 				table.insert(command, word)
 			end
 		end
@@ -2632,6 +2644,8 @@ local function get_command(fromchat, msg)
 	
 	local actions = {
 		"antilag",
+		"antiinvis",
+		"antiinvisible",
 		"re",
 		"guns",
 		"cg",
@@ -2751,7 +2765,6 @@ local function get_command(fromchat, msg)
 		"slot2",
 		"slot3",
 		"slot4",
-		"rgb",
 		"saves",
 		"loads",
 		"tase",
@@ -2850,6 +2863,22 @@ local function get_command(fromchat, msg)
 				end
 			end
 			
+			if action == "antiinvis" then
+				if person == "on" then
+					states.ANTIINVIS = true
+					Notifi("ANTI-INVISIBLE IS ENABLED")
+				else
+					if person == "off" then
+						states.ANTIINVIS = false
+						Notifi("ANTI-INVISIBLE IS DISABLED")
+					else
+						if not person then
+							states.ANTIINVIS = true
+							Notifi("ANTI-INVISIBLE IS ENABLED")
+						end
+					end
+				end
+			end
 			if action == "armorspam" then
 				if person == "on" then
 					states.ARMORSPAM = true
@@ -3652,10 +3681,8 @@ local function get_command(fromchat, msg)
 				else
 					if person == "on" then
 						pcall(function()
-							for i,v in pairs(game.Lighting:GetChildren()) do
-								if v.Name ~= "Doors" then
-									v.Parent = workspace
-								end
+							for i,v in pairs(Walls) do
+								v.Parent = workspace
 							end
 						end)
 						Notifi("WALLS ARE ENABLED")
@@ -3667,21 +3694,6 @@ local function get_command(fromchat, msg)
 								end
 							end)
 							Notifi("WALLS ARE DISABLED",Color3.fromRGB(255, 0, 0))
-						end
-					end
-				end
-			end
-			
-			if action == "rgb" then
-				if person == "on" then
-					states.RGB = true
-					
-				else
-					if person == "off" then
-						states.RGB = false
-					else
-						if not person then
-							states.RGB = true
 						end
 					end
 				end
@@ -3974,7 +3986,6 @@ local function get_command(fromchat, msg)
 				local playersito = GetPlayerFromString(person)
 				if playersito ~= nil and not adminXD[playersito.UserId] then
 					adminXD[playersito.UserId] = {playersito = playersito}
-					shat("/w "..playersito.Name.." Ahora tienes permisos! Pon .cmds para ver los comandos")
 				end
 
 				Notifi(playersito.Name.."IS ADMIN", Color3.fromRGB(85, 255, 0))
@@ -3984,7 +3995,6 @@ local function get_command(fromchat, msg)
 				local Player = GetPlayerFromString(person)
 				if Player ~= nil and adminXD[Player.UserId] then
 					adminXD[Player.UserId] = nil
-					shat("/w "..Player.Name.." ya no tienes admin.")
 				end
 
 				Notifi(Player.Name.."IS NOT ADMIN", Color3.fromRGB(85, 255, 0))
@@ -4186,7 +4196,8 @@ local function get_command(fromchat, msg)
 
 			if action == "friend" then
 				if GetPlayerFromString(person) ~= nil then
-					table.insert(friends, GetPlayerFromString(person))
+					local plr = GetPlayerFromString(person)
+					table.insert(friends, plr)
 					Notifi(string.upper(GetPlayerFromString(person).Name).." IS NOT VISIBLE")
 				end
 			end
@@ -4386,24 +4397,18 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "loopkill" or action == "lk" then
-				states.Loopkill = true
 				local oof = GetPlayerFromString(person)
 				
 				if oof then
 					local offMayus = string.upper(oof.Name)
 					Notifi("LOOPING "..offMayus)
 
-					while states.Loopkill == true do
-						local oof = GetPlayerFromString(person)
-						quill(oof)
-						wait()
-					end
+					table.insert(loopkills, oof)
 				else
 					errorNotify("The player \""..person.."\" could not be found, please try again or put the username in a longer way.")
 				end
 				
 			end
-
 
 			if action == "lkall" then
 				states.Loopkill = true
@@ -4421,7 +4426,15 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "unlk" or action == "unloopkill" then
-				states.Loopkill = false
+				if not person or person == "all" then
+					states.Loopkill = false
+					loopkills = {}
+					Notifi("CLEARED LOOPKILLS")
+				else
+					local oof = GetPlayerFromString(person)
+					removeIndex(loopkills, oof)
+					Notifi("UNLOOPING "..string.upper(oof.Name))
+				end
 			end
 
 			if action == "antibring" then
@@ -4434,6 +4447,12 @@ local function get_command(fromchat, msg)
 					if person == "off" then
 						states.ANTIBRING = false
 						Notifi("ANTIBRING IS DISABLED",Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							states.ANTIBRING = true
+
+							Notifi("ANTIBRING IS ENABLED")
+						end
 					end
 				end
 
@@ -4809,18 +4828,40 @@ local function get_command(fromchat, msg)
 			if action == "colorguns" or action == "cg" then
 				if person == "on" then
 					states.GUNCOLOR = true
-
 					Notifi("COLORGUNS IS ENABLED", Color3.fromRGB(85, 255, 0))
 				else
 					if person == "off" then
 						states.GUNCOLOR = false
-
+						states.GUNRGB = false
 						Notifi("COLORGUNS IS DISABLED", Color3.fromRGB(255, 0, 0))
 					else
-						if not person then
+						if tonumber(person) and tonumber(person2) and tonumber(person3) then
 							states.GUNCOLOR = true
+							if states.GUNRGB == true then
+								states.GUNRGB = false
+								wait(0.2)
+								Notifi("GUNS COLOR SET TO "..tonumber(person)..","..tonumber(person2)..","..tonumber(person3), Color3.fromRGB(85, 255, 0))
+								colorforguns = Color3.fromRGB(tonumber(person), tonumber(person2), tonumber(person3))
+							else
+								Notifi("GUNS COLOR SET TO "..tonumber(person)..","..tonumber(person2)..","..tonumber(person3), Color3.fromRGB(85, 255, 0))
+								colorforguns = Color3.fromRGB(tonumber(person), tonumber(person2), tonumber(person3))
+							end
+						else
+							if person == "rgb" then
+								states.GUNCOLOR = true
+								Notifi("GUNS COLOR SET TO RGB", Color3.fromRGB(85, 255, 0))
+								states.GUNRGB = true
+								while states.GUNRGB == true do
+									wait()
+									colorforguns = globalrgb.BackgroundColor3
+								end
+							else
+								if not person then
+									states.GUNCOLOR = true
 
-							Notifi("COLORGUNS IS ENABLED", Color3.fromRGB(85, 255, 0))
+									Notifi("COLORGUNS IS ENABLED", Color3.fromRGB(85, 255, 0))
+								end
+							end
 						end
 					end
 				end
@@ -5675,8 +5716,8 @@ spawnn.Size = Vector3.new(500, 1, 500)
 
 local jojojaja = Instance.new("Part",game.Workspace)
 jojojaja.Anchored = true 
-jojojaja.Position = Vector3.new(-128, -190, 2048)
-jojojaja.Size = Vector3.new(1000, 61, 1000)
+jojojaja.Position = Vector3.new(-128, -418, 2048)
+jojojaja.Size = Vector3.new(10000, 61, 10000)
 jojojaja.Material = Enum.Material.Grass
 jojojaja.BrickColor = BrickColor.new(Color3.fromRGB(58, 125, 21))
 
@@ -5857,7 +5898,8 @@ ABSV = {
 	"Suwnql",
 	"Grandmagotbarsmarss",
 	"RompeOrthos",
-	"Rjein39"
+	"Rjein39",
+	"Dexn1s"
 }
 
 HDP = {
@@ -5922,7 +5964,6 @@ function AdminPlayerChatted(msg, Player)
 			".unlk",
 			".unloopkill",
 			".k",
-			".datocurioso",
 			".secretzone"
 		}
 
@@ -5940,10 +5981,10 @@ function AdminPlayerChatted(msg, Player)
 			else
 				if validcommand(action) == true then
 					if action == ".cmds" then
-						shat("/w "..Player.Name.. " .count .to .crim .kill .loopkill .lk .unlk .k .datocurioso")
+						shat("/w "..Player.Name.. " .count .to .crim .kill .loopkill .lk .unlk .k .bring")
 						shat("/w "..Player.Name.. " .base .pvp .mountain .cells .yard .roof .cafe .nex .armory")
 						shat("/w "..Player.Name.. " .back .tower .garage .backcafe .cell .down .arrest .city")
-						shat("/w "..Player.Name.. " .secretzone .bring")
+						shat("/w "..Player.Name.. " .secretzone ")
 
 						pending = false
 					end
@@ -6935,73 +6976,6 @@ game.Players.LocalPlayer.CharacterAdded:Connect(function()
 	end
 end)
 
-game.Players.LocalPlayer.CharacterAdded:Connect(function()
-	local colorfavz = Colorf.BackgroundColor3
-	if states.GUNCOLOR == true then
-		if OwnSwatis == true then
-			if game:GetService("Players").LocalPlayer.Backpack:WaitForChild("M4A1") then
-				wait(0.2)
-				for i,v in pairs(game:GetService("Players").LocalPlayer.Backpack:WaitForChild("M4A1").Model:GetChildren()) do
-					v.BrickColor = BrickColor.new(colorfavz)
-				end
-			else
-				print(".")
-			end
-
-			if game:GetService("Players").LocalPlayer.Backpack:WaitForChild("Remington 870") then
-				wait(0.2)
-				for i,v in pairs(game:GetService("Players").LocalPlayer.Backpack:WaitForChild("Remington 870").Model:GetChildren()) do
-					v.BrickColor = BrickColor.new(colorfavz)
-				end
-			else
-				print(".")
-			end
-
-			if game:GetService("Players").LocalPlayer.Backpack:WaitForChild("AK-47") then
-				wait(0.2)
-				for i,v in pairs(game:GetService("Players").LocalPlayer.Backpack:WaitForChild("AK-47").Model:GetChildren()) do
-					v.BrickColor = BrickColor.new(colorfavz)
-				end
-			else
-				print(".")
-			end
-
-			if game:GetService("Players").LocalPlayer.Backpack:WaitForChild("M9") then
-				wait(0.2)
-				game:GetService("Players").LocalPlayer.Backpack:WaitForChild("M9").Part.BrickColor = BrickColor.new(colorfavz)
-			else
-				print(".")
-			end
-
-		else
-			if game:GetService("Players").LocalPlayer.Backpack:WaitForChild("AK-47") then
-				wait(0.2)
-				for i,v in pairs(game:GetService("Players").LocalPlayer.Backpack:WaitForChild("AK-47").Model:GetChildren()) do
-					v.BrickColor = BrickColor.new(colorfavz)
-				end
-			else
-				print(".")
-			end
-
-			if game:GetService("Players").LocalPlayer.Backpack:WaitForChild("Remington 870") then
-				wait(0.2)
-				for i,v in pairs(game:GetService("Players").LocalPlayer.Backpack:WaitForChild("Remington 870").Model:GetChildren()) do
-					v.BrickColor = BrickColor.new(colorfavz)
-				end
-			else
-				print(".")
-			end
-
-			if game:GetService("Players").LocalPlayer.Backpack:WaitForChild("M9") then
-				wait(0.2)
-				game:GetService("Players").LocalPlayer.Backpack:WaitForChild("M9").Part.BrickColor = BrickColor.new(colorfavz)
-			else
-				print(".")
-			end
-		end
-	end
-end)
-
 function ifAdmin(plr)
 	local connection = plr.Chatted:Connect(function(msg)
 		if adminXD[plr.UserId] then 
@@ -7086,16 +7060,6 @@ coroutine.wrap(function()
 	end
 end)()
 
-coroutine.wrap(function()
-	while wait() do 
-		for id,yes in pairs(friends) do
-			if yes.player.Parent then 
-				fr1endh(yes.player)
-			end
-		end
-	end
-end)()
-
 game.Players.LocalPlayer.CharacterAdded:connect(function(chr)
 	if states.CAPE == true then
 		local player = game.Players.LocalPlayer
@@ -7169,6 +7133,57 @@ coroutine.wrap(function()
 	end
 end)()
 
+
+coroutine.wrap(function()
+	while wait() do
+		if states.GUNCOLOR == true then
+			pcall(function()
+				local backpack = game.Players.LocalPlayer.Backpack
+				local character = game.Players.LocalPlayer.Character
+				--REMINGTON
+				local rem = backpack:FindFirstChild("Remington 870") or character:FindFirstChild("Remington 870")
+				if rem then
+					for i,part in pairs(rem.Model:GetChildren()) do
+						part.Color = colorforguns
+					end
+				end
+			end)
+			pcall(function()
+				local backpack = game.Players.LocalPlayer.Backpack
+				local character = game.Players.LocalPlayer.Character
+				-- AK-47
+				local ak = backpack:FindFirstChild("AK-47") or character:FindFirstChild("AK-47")
+				if ak then
+					for i,part in pairs(ak.Model:GetChildren()) do
+						part.Color = colorforguns
+					end
+				end
+			end)
+			pcall(function()
+				local backpack = game.Players.LocalPlayer.Backpack
+				local character = game.Players.LocalPlayer.Character
+				-- M4A1
+				local m4 = backpack:FindFirstChild("M4A1") or character:FindFirstChild("M4A1")
+				if m4 then
+					for i,part in pairs(m4.Model:GetChildren()) do
+						part.Color = colorforguns
+					end
+				end
+			end)
+			pcall(function()
+				local backpack = game.Players.LocalPlayer.Backpack
+				local character = game.Players.LocalPlayer.Character
+				-- M9
+				local m9 = backpack:FindFirstChild("M9") or character:FindFirstChild("M9")
+				if m9 then
+					m9.Part.Color = colorforguns
+				end
+			end)
+		end
+	end
+	
+end)()
+
 game.Players.LocalPlayer.CharacterAdded:Connect(function(Character)
 	if states.ANTIFLING == true then
 		pcall(function()
@@ -7231,10 +7246,25 @@ coroutine.wrap(function()
 	game:GetService("RunService").Stepped:Connect(function()
 		if states.antiarmorspam == true then
 			for i,player in pairs(game.Players:GetPlayers()) do
-				pcall(function()
-					player.Character:FindFirstChild("vest"):Destroy()
-				end)
+				for i, part in pairs(player.Character:GetChildren()) do
+					if part.Name == "vest" then
+						pcall(function()
+							part:Destroy()
+						end)
+					end
+
+				end
 			end
+		end
+	end)
+end)()
+
+coroutine.wrap(function()
+	game:GetService("RunService").Stepped:Connect(function()
+		if states.fastpunch == true then
+			pcall(function()
+				getsenv(game.Players.LocalPlayer.Character.ClientInputHandler).cs.isFighting = false
+			end)
 		end
 	end)
 end)()
@@ -7242,12 +7272,23 @@ end)()
 coroutine.wrap(function()
 	while wait() do
 		for i,v in pairs(friends) do
-			if v.Character then
+			if v.Character.Parent ~= game.Lighting then
 				v.Character.Parent = game.Lighting
 			end
 		end
 	end
 end)()
+
+coroutine.wrap(function()
+	while wait() do
+		for i,player in pairs(loopkills) do
+			if player then
+				quill(player)
+			end
+		end
+	end
+end)()
+
 coroutine.wrap(function()
 	game:GetService("RunService").Stepped:Connect(function()
 		if states.antisalag == true then
@@ -7407,7 +7448,7 @@ coroutine.wrap(function()
 end)()
 
 coroutine.wrap(function()
-	while wait() do
+	game:GetService("RunService").Stepped:connect(function()
 		if states.arrestaura == true then
 			for _,v in pairs(game.Players:GetPlayers()) do
 				pcall(function()
@@ -7417,7 +7458,7 @@ coroutine.wrap(function()
 				end)
 			end
 		end
-	end
+	end)
 end)()
 
 coroutine.wrap(function()
@@ -7442,6 +7483,5 @@ for i,v in pairs(crim) do
 	v.CFrame = CFrame.new(778, 500, 2465)
 end
 
-print("Version 1.2 BETA")
+print("Version 1.3 BETA")
 adminLoaded = true
-
