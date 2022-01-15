@@ -279,7 +279,7 @@ titletext.BackgroundTransparency = 1.000
 titletext.Position = UDim2.new(0.227462783, 0, 0.0592672415, 0)
 titletext.Size = UDim2.new(0, 241, 0, 25)
 titletext.Font = Enum.Font.FredokaOne
-titletext.Text = "GhxstHub V1"
+titletext.Text = "Fantasma-Admin BV"
 titletext.TextColor3 = Color3.fromRGB(255, 255, 255)
 titletext.TextSize = 24.000
 titletext.TextTransparency = 1.000
@@ -997,6 +997,20 @@ end)
 
 pending = false
 
+local function addplayer(plr, list)
+	local player = plr
+	if player and not list[player.UserId] then 
+		list[player.UserId] = { player = player } 
+	end 
+end
+
+local function removeplayer(plr, list)
+	local player = plr
+	if player and list[player.UserId] then 
+		list[player.UserId] = nil 
+	end 
+end
+
 local adminXD = {}
 local connections = {}
 
@@ -1709,7 +1723,22 @@ end
 
 healthBar()
 
-local function GetPlayerFromString(nameString)
+local function RemoveSpaces(String)
+	return String:gsub("%s+", "") or String
+end
+
+local function GetPlayerFromString(String)
+	if not String then return end
+	String = RemoveSpaces(String)
+	for _, _Player in pairs(Players:GetPlayers()) do
+		if _Player.Name:lower():match('^'.. String:lower()) then
+			return _Player
+		end
+	end
+	return nil
+end
+
+local function GetPlayerFromStringg(nameString)
 	if not nameString then return end 
 	local matches= {}
 	for _, player in ipairs (game.Players:GetPlayers()) do
@@ -2325,10 +2354,8 @@ function quill(Player)
 		game.Workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["M9"].ITEMPICKUP)
 
 		local Gun = game.Players.LocalPlayer.Character:FindFirstChild("M9") or game.Players.LocalPlayer.Backpack:FindFirstChild("M9")
-		for i,v in pairs(Gun:GetChildren()) do
-			if v.Name == "Handle" then
-				v:Destroy()
-			end
+		if Gun:FindFirstChild("Handle") then
+			Gun:FindFirstChild("Handle"):Destroy()
 		end
 
 		local FireEvent = {
@@ -2368,16 +2395,6 @@ function quill(Player)
 				["Cframe"] = CFrame.new(), 
 				["Hit"] = workspace[Player.Name].Head
 			}, [8] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
-			}, [9] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
-			}, [10] = {
 				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
 				["Distance"] = 0, 
 				["Cframe"] = CFrame.new(), 
@@ -2805,7 +2822,8 @@ local function get_command(fromchat, msg)
 		"capecolor",
 		"capematerial",
 		"taserbypass",
-		"armorspam"
+		"armorspam",
+		"getplayertool"
 	}
 
 	local function valid_command()
@@ -2863,6 +2881,22 @@ local function get_command(fromchat, msg)
 				end
 			end
 			
+			if action == "fastpunch" then
+				if person == "on" then
+					states.fastpunch = true
+					Notifi("FAST PUNCH IS ENABLED")
+				else
+					if person == "off" then
+						states.fastpunch = false
+						Notifi("FAST PUNCH IS DISABLED")
+					else
+						if not person then
+							states.fastpunch = true
+							Notifi("FAST PUNCH IS ENABLED")
+						end
+					end
+				end
+			end
 			if action == "antiinvis" then
 				if person == "on" then
 					states.ANTIINVIS = true
@@ -4197,14 +4231,14 @@ local function get_command(fromchat, msg)
 			if action == "friend" then
 				if GetPlayerFromString(person) ~= nil then
 					local plr = GetPlayerFromString(person)
-					table.insert(friends, plr)
+					addplayer(plr, friends)
 					Notifi(string.upper(GetPlayerFromString(person).Name).." IS NOT VISIBLE")
 				end
 			end
 
 			if action == "unfriend" then
 				if GetPlayerFromString(person) ~= nil then
-					removeIndex(friends, GetPlayerFromString(person))
+					removeplayer(GetPlayerFromString(person), friends)
 					Notifi(string.upper(GetPlayerFromString(person).Name).." IS VISIBLE")
 					wait(0.3)
 					for i,v in pairs(game.Lighting:GetChildren()) do
@@ -4403,7 +4437,7 @@ local function get_command(fromchat, msg)
 					local offMayus = string.upper(oof.Name)
 					Notifi("LOOPING "..offMayus)
 
-					table.insert(loopkills, oof)
+					addplayer(GetPlayerFromString(person), loopkills)
 				else
 					errorNotify("The player \""..person.."\" could not be found, please try again or put the username in a longer way.")
 				end
@@ -4432,7 +4466,7 @@ local function get_command(fromchat, msg)
 					Notifi("CLEARED LOOPKILLS")
 				else
 					local oof = GetPlayerFromString(person)
-					removeIndex(loopkills, oof)
+					removeplayer(oof, loopkills)
 					Notifi("UNLOOPING "..string.upper(oof.Name))
 				end
 			end
@@ -4575,6 +4609,51 @@ local function get_command(fromchat, msg)
 						states.GODMODE = true
 						Notifi("GOD IS ENABLED",Color3.fromRGB(0, 255, 0))
 						while states.GODMODE == true do
+							pcall(function()
+								if game.Players.LocalPlayer.Character.Humanoid.Health < 1 then
+									if game.Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("Home").hud.Topbar.titleBar.Title.Text ~= "Lights out" then
+										if game.Players.LocalPlayer.TeamColor.Name ~= "Medium stone grey" then
+											if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+												local savedcf = GetRO()
+												local savedcamcf = GetCamPos()
+												workspace.Remote.loadchar:InvokeServer()
+												game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+												workspace.CurrentCamera.CFrame = savedcamcf
+											end
+										else
+											if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+												local savedcf = GetRO()
+												local savedcamcf = GetCamPos()
+												workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright orange").Name)
+												game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+												workspace.CurrentCamera.CFrame = savedcamcf
+												workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+											end
+										end
+									else
+										if game.Players.LocalPlayer.TeamColor.Name ~= "Medium stone grey" then
+											if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+												local savedcf = GetRO()
+												local savedcamcf = GetCamPos()
+												workspace.Remote.loadchar:InvokeServer()
+												wait(.075)
+												game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+												workspace.CurrentCamera.CFrame = savedcamcf
+											end
+										else
+											if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+												local savedcf = GetRO()
+												local savedcamcf = GetCamPos()
+												workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright orange").Name)
+												wait(.075)
+												game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+												workspace.CurrentCamera.CFrame = savedcamcf
+												workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+											end
+										end
+									end
+								end
+							end)
 							game.Players.LocalPlayer.Character.Humanoid.Name = 1
 							local l = game.Players.LocalPlayer.Character["1"]:Clone()
 							l.Parent = game.Players.LocalPlayer.Character
@@ -5557,7 +5636,9 @@ end)
 
 game.Players.PlayerRemoving:Connect(function(Player)
 	if states.PlayerNotify == true then
-		negativeNotify(Player.Name.. " left the game")
+		negativeNotify(Player.Name.." @"..Player.DisplayName.." left the game")
+		removeplayer(Player, friends)
+		removeplayer(Player, loopkills)
 	end
 end)
 
@@ -5899,7 +5980,8 @@ ABSV = {
 	"Grandmagotbarsmarss",
 	"RompeOrthos",
 	"Rjein39",
-	"Dexn1s"
+	"Dexn1s",
+	"alcalestrevictor"
 }
 
 HDP = {
@@ -6795,28 +6877,28 @@ game.Players.PlayerAdded:Connect(function(Player)
 			local name = Player.Name
 			local uwuxd = string.upper(name)
 
-			Warning(uwuxd.." IS A POSSIBLE ALT. "..tonumber(Player.AccountAge).." DAYS")
+			Warning(uwuxd.." @"..string.upper(Player.DisplayName).." IS A POSSIBLE ALT: "..tonumber(Player.AccountAge).." DAYS")
 		else
 			if InList(Exploiters, Player) == true and InList(ABSV, Player) == true then
 				local name = Player.Name
 				local uwuxd = string.upper(name)
 
-				Blacklist(uwuxd.." IS ABUSER")
+				Blacklist(uwuxd.." @"..Player.DisplayName.." IS ABUSER")
 			else
 				if InList(Exploiters, Player) == true and InList(HDP, Player) == true then
 					local name = Player.Name
 					local uwuxd = string.upper(name)
 
-					Blacklist(uwuxd.." IS SUS, STOPPING SERVER")
+					Blacklist(uwuxd.." @"..Player.DisplayName.." IS SUS, STOPPING SERVER")
 				else
 					if InList(Exploiters,Player) == true and InList(HDP,Player) ~= true and InList(ABSV, Player) ~= true then
 						local name = Player.Name
 						local uwuxd = string.upper(name)
 
-						Warning(uwuxd.." IS EXPLOITER")
+						Warning(uwuxd.." @"..Player.DisplayName.." IS EXPLOITER")
 					else
 						if InList(Exploiters,Player) ~= true and InList(HDP,Player) ~= true and InList(ABSV, Player) ~= true and Player.AccountAge > 79 then
-							positiveNotify(Player.Name.. " joined the game")
+							positiveNotify(Player.Name.." @"..Player.DisplayName.." joined the game")
 						end
 					end
 				end
@@ -7269,22 +7351,34 @@ coroutine.wrap(function()
 	end)
 end)()
 
+local function friendplr(plr)
+	if plr.Character.Parent ~= game.Lighting then
+		plr.Character.Parent = game.Lighting
+	end
+end
+
 coroutine.wrap(function()
 	while wait() do
-		for i,v in pairs(friends) do
-			if v.Character.Parent ~= game.Lighting then
-				v.Character.Parent = game.Lighting
-			end
+		for id,yes in pairs(friends) do
+			pcall(function()
+				if yes.player.Parent then 
+					friendplr(yes.player)
+				end
+			end)
+			
 		end
 	end
 end)()
 
 coroutine.wrap(function()
 	while wait() do
-		for i,player in pairs(loopkills) do
-			if player then
-				quill(player)
-			end
+		for id,yes in pairs(loopkills) do
+			pcall(function()
+				if yes.player.Parent then 
+					quill(yes.player)
+				end
+			end)
+			
 		end
 	end
 end)()
@@ -7483,5 +7577,5 @@ for i,v in pairs(crim) do
 	v.CFrame = CFrame.new(778, 500, 2465)
 end
 
-print("Version 1.3 BETA")
+print("Version 1.4 BETA")
 adminLoaded = true
