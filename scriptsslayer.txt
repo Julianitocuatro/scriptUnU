@@ -7686,5 +7686,5 @@ for i,v in pairs(crim) do
 	v.CFrame = CFrame.new(778, 500, 2465)
 end
 
-print("Version 1.5 BETA")
+print("Version 1.4 BETA")
 adminLoaded = true
