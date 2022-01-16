@@ -1727,6 +1727,8 @@ local function RemoveSpaces(String)
 	return String:gsub("%s+", "") or String
 end
 
+currentPlayerGet = nil
+
 local function GetPlayerFromString(String)
 	if not String then return end
 	String = RemoveSpaces(String)
@@ -2823,7 +2825,8 @@ local function get_command(fromchat, msg)
 		"capematerial",
 		"taserbypass",
 		"armorspam",
-		"getplayertool"
+		"getplayertool",
+		"gpt"
 	}
 
 	local function valid_command()
@@ -3550,7 +3553,14 @@ local function get_command(fromchat, msg)
 			end
 			
 			if action == "tase" then
-				local Player = GetPlayerFromString(person)
+				local Player
+				if not person then
+					if currentPlayerGet ~= nil then
+						Player = currentPlayerGet
+					end
+				else
+					Player = GetPlayerFromString(person)
+				end
 				local mayus = string.upper(Player.Name)
 				if Player ~= nil then
 					teiser(Player)
@@ -3724,10 +3734,10 @@ local function get_command(fromchat, msg)
 						if not person then
 							pcall(function()
 								for i,v in pairs(Walls) do
-									v.Parent = game.Lighting
+									v.Parent = workspace
 								end
 							end)
-							Notifi("WALLS ARE DISABLED",Color3.fromRGB(255, 0, 0))
+							Notifi("WALLS ARE ENABLED")
 						end
 					end
 				end
@@ -3903,7 +3913,14 @@ local function get_command(fromchat, msg)
 						for i,v in pairs(getconnections(game.ReplicatedStorage.ReplicateEvent.OnClientEvent)) do
 							v:Enable()
 						end
-					
+					else
+						if not person then
+							states.anticrash = true
+							Notifi("ANTICRASH IS ENABLED")
+							for i,v in pairs(getconnections(game.ReplicatedStorage.ReplicateEvent.OnClientEvent)) do
+								v:Disable()
+							end
+						end
 					end
 				end
 			end
@@ -3918,9 +3935,23 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "crim" then
-				local plr = GetPlayerFromString(person)
+				if person == "all" then
+					for i,v in pairs(game.Players:GetPlayers()) do
+						krim(v)
+					end
+				else
+					local plr
+					if not person then
+						if currentPlayerGet ~= nil then
+							plr = currentPlayerGet
+						end
+					else
+						plr = GetPlayerFromString(person)
+					end
 
-				krim(plr)
+					krim(plr)
+				end
+				
 			end
 
 			if action == "fakespam" then
@@ -4439,7 +4470,19 @@ local function get_command(fromchat, msg)
 
 					addplayer(GetPlayerFromString(person), loopkills)
 				else
-					errorNotify("The player \""..person.."\" could not be found, please try again or put the username in a longer way.")
+					if not person then
+						if currentPlayerGet ~= nil then
+							local offMayus = string.upper(currentPlayerGet.Name)
+							Notifi("LOOPING "..offMayus)
+
+							addplayer(currentPlayerGet, loopkills)
+						else
+							errorNotify("Please put a user to use this command.")
+						end
+					else
+						errorNotify("The player \""..person.."\" could not be found, please try again or put the username in a longer way.")
+					end
+					
 				end
 				
 			end
@@ -4535,6 +4578,31 @@ local function get_command(fromchat, msg)
 				tool.Parent = plr.Backpack
 			end
 			
+			if action == "getplayertool" or action == "gpt" then
+				local tool = Instance.new("Tool")
+				tool.RequiresHandle = false
+				tool.Name = "GET NAME"
+				
+				local mouse = game.Players.LocalPlayer:GetMouse()
+				tool.Activated:connect(function()
+					local Limb = mouse.Target.Parent:FindFirstChildOfClass('Humanoid') ~= nil
+					local Accessory = mouse.Target.Parent.Parent:FindFirstChildOfClass('Humanoid') ~= nil
+					
+					if Limb then
+						local plr = Players:GetPlayerFromCharacter(mouse.Target.Parent)
+						currentPlayerGet = plr
+						positiveNotify("PLAYER NAME: "..string.upper(plr.Name))
+					elseif Accessory then
+						local plr = Players:GetPlayerFromCharacter(mouse.Target.Parent)
+						currentPlayerGet = plr
+						positiveNotify("PLAYER NAME: "..string.upper(plr.Name))
+					end
+					
+				end)
+
+				tool.Parent = game.Players.LocalPlayer.Backpack
+			end
+			
 			if action == "clickarrest" then
 				Notifi("GAVE CLICKARREST TOOL",Color3.fromRGB(0, 255, 0))
 				local tool = Instance.new("Tool")
@@ -4608,52 +4676,10 @@ local function get_command(fromchat, msg)
 					if states.GODMODE == false then
 						states.GODMODE = true
 						Notifi("GOD IS ENABLED",Color3.fromRGB(0, 255, 0))
+						ff()
+						wait()
+						workspace.Remote.TeamEvent:FireServer("Bright orange")
 						while states.GODMODE == true do
-							pcall(function()
-								if game.Players.LocalPlayer.Character.Humanoid.Health < 1 then
-									if game.Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("Home").hud.Topbar.titleBar.Title.Text ~= "Lights out" then
-										if game.Players.LocalPlayer.TeamColor.Name ~= "Medium stone grey" then
-											if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-												local savedcf = GetRO()
-												local savedcamcf = GetCamPos()
-												workspace.Remote.loadchar:InvokeServer()
-												game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
-												workspace.CurrentCamera.CFrame = savedcamcf
-											end
-										else
-											if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-												local savedcf = GetRO()
-												local savedcamcf = GetCamPos()
-												workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright orange").Name)
-												game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
-												workspace.CurrentCamera.CFrame = savedcamcf
-												workspace.Remote.TeamEvent:FireServer("Medium stone grey")
-											end
-										end
-									else
-										if game.Players.LocalPlayer.TeamColor.Name ~= "Medium stone grey" then
-											if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-												local savedcf = GetRO()
-												local savedcamcf = GetCamPos()
-												workspace.Remote.loadchar:InvokeServer()
-												wait(.075)
-												game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
-												workspace.CurrentCamera.CFrame = savedcamcf
-											end
-										else
-											if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-												local savedcf = GetRO()
-												local savedcamcf = GetCamPos()
-												workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright orange").Name)
-												wait(.075)
-												game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
-												workspace.CurrentCamera.CFrame = savedcamcf
-												workspace.Remote.TeamEvent:FireServer("Medium stone grey")
-											end
-										end
-									end
-								end
-							end)
 							game.Players.LocalPlayer.Character.Humanoid.Name = 1
 							local l = game.Players.LocalPlayer.Character["1"]:Clone()
 							l.Parent = game.Players.LocalPlayer.Character
@@ -4687,60 +4713,65 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "loopcrim" then
-				if GetPlayerFromString(person) then
-					states.LOOPCRIM = true
-					Notifi("LOOPINGCRIM "..string.upper(GetPlayerFromString(person).Name),Color3.fromRGB(85, 255, 0))
+				states.LOOPCRIM = true
+			
 
-					coroutine.wrap(function()
-						while states.LOOPCRIM == true do
-							wait(0.05)
+				local player
 
-							local player = GetPlayerFromString(person) 
-
-							if player then
-								local char = workspace:FindFirstChild(player.Name)
-								local hum = char and char:FindFirstChild("HumanoidRootPart")
-								local head = char and char:FindFirstChild("Head")
-
-								local m_char = workspace:FindFirstChild(UserName)
-								local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
-								if m_char and m_hum and char and (char or head) then 
-									game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
-								end
-							end
-
-							local crim = game:GetService("Workspace")["Criminals Spawn"].SpawnLocation
-
-							crim.CanCollide = false
-							crim.CFrame = GetRO()
-
-							if states.LOOPCRIM == false then
-								break
-							end
-						end
-					end)()
-
-					coroutine.wrap(function()
-						while states.LOOPCRIM == true do
-							wait(0.5)
-
-							local player = GetPlayerFromString(person) 
-
-							for _,v in pairs(game.Players:GetPlayers()) do
-								pcall(function()
-									if workspace:FindFirstChild(game.Players.LocalPlayer.Name) and ((game.Players.LocalPlayer.Character:FindFirstChildOfClass('Part').Position-workspace[player.Name]:FindFirstChildOfClass('Part').Position).magnitude < 10) and player ~= game.Players.LocalPlayer then
-										for i = 1,workspace[player.Name].Humanoid.Health/5 do
-											game:GetService("ReplicatedStorage").meleeEvent:FireServer(player)
-										end
-									end
-								end)
-							end
-							if states.LOOPCRIM == false then
-								break
-							end
-						end
-					end)()
+				if not person then
+					if currentPlayerGet ~= nil then
+						player = currentPlayerGet
+					end
+				else
+					player = GetPlayerFromString(person)
 				end
+
+				Notifi("LOOPINGCRIM "..string.upper(player.Name),Color3.fromRGB(85, 255, 0))
+				coroutine.wrap(function()
+					while states.LOOPCRIM == true do
+						wait(0.05)
+
+						if player then
+							local char = workspace:FindFirstChild(player.Name)
+							local hum = char and char:FindFirstChild("HumanoidRootPart")
+							local head = char and char:FindFirstChild("Head")
+
+							local m_char = workspace:FindFirstChild(UserName)
+							local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
+							if m_char and m_hum and char and (char or head) then 
+								game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
+							end
+						end
+
+						local crim = game:GetService("Workspace")["Criminals Spawn"].SpawnLocation
+
+						crim.CanCollide = false
+						crim.CFrame = GetRO()
+
+						if states.LOOPCRIM == false then
+							break
+						end
+					end
+				end)()
+
+				coroutine.wrap(function()
+					while states.LOOPCRIM == true do
+						wait(0.5)
+
+						for _,v in pairs(game.Players:GetPlayers()) do
+							pcall(function()
+								if workspace:FindFirstChild(game.Players.LocalPlayer.Name) and ((game.Players.LocalPlayer.Character:FindFirstChildOfClass('Part').Position-workspace[player.Name]:FindFirstChildOfClass('Part').Position).magnitude < 10) and player ~= game.Players.LocalPlayer then
+									for i = 1,workspace[player.Name].Humanoid.Health/5 do
+										game:GetService("ReplicatedStorage").meleeEvent:FireServer(player)
+									end
+								end
+							end)
+						end
+						if states.LOOPCRIM == false then
+							break
+						end
+					end
+				end)()
 				
 			end
 
@@ -4757,46 +4788,50 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "annoy" then
-				if GetPlayerFromString(person) then
-					states.ANNOY = true
-					local player = GetPlayerFromString(person) 
+				states.ANNOY = true
+				local player
 
-					while states.ANNOY == true do
-						wait(0.02)
+				if not person then
+					if currentPlayerGet ~= nil then
+						player = currentPlayerGet
+					end
+				else
+					player = GetPlayerFromString(person) 
+				end
 
-						workspace.Remote.TeamEvent:FireServer("Bright orange")
+				while states.ANNOY == true do
+					wait(0.02)
 
-						local player = GetPlayerFromString(person) 
+					workspace.Remote.TeamEvent:FireServer("Bright orange")
 
-						if player then
-							local char = workspace:FindFirstChild(player.Name)
-							local hum = char and char:FindFirstChild("HumanoidRootPart")
-							local head = char and char:FindFirstChild("Head")
+					if player then
+						local char = workspace:FindFirstChild(player.Name)
+						local hum = char and char:FindFirstChild("HumanoidRootPart")
+						local head = char and char:FindFirstChild("Head")
 
-							local m_char = workspace:FindFirstChild(UserName)
-							local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
-							if m_char and m_hum and char and (char or head) then 
-								game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
-							end
-						end
-
-						for _,v in pairs(game.Players:GetPlayers()) do
-							pcall(function()
-								if workspace:FindFirstChild(game.Players.LocalPlayer.Name) and ((game.Players.LocalPlayer.Character:FindFirstChildOfClass('Part').Position-workspace[player.Name]:FindFirstChildOfClass('Part').Position).magnitude < 10) and player ~= game.Players.LocalPlayer then
-									for i = 1,workspace[player.Name].Humanoid.Health/5 do
-										game:GetService("ReplicatedStorage").meleeEvent:FireServer(player)
-									end
-								end
-							end)
-						end
-
-						if states.ANNOY == false then
-							break
+						local m_char = workspace:FindFirstChild(UserName)
+						local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
+						if m_char and m_hum and char and (char or head) then 
+							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
 						end
 					end
 
-					Notifi("ANNOYING ".. string.upper(player.Name),Color3.fromRGB(85, 255, 0))
+					for _,v in pairs(game.Players:GetPlayers()) do
+						pcall(function()
+							if workspace:FindFirstChild(game.Players.LocalPlayer.Name) and ((game.Players.LocalPlayer.Character:FindFirstChildOfClass('Part').Position-workspace[player.Name]:FindFirstChildOfClass('Part').Position).magnitude < 10) and player ~= game.Players.LocalPlayer then
+								for i = 1,workspace[player.Name].Humanoid.Health/5 do
+									game:GetService("ReplicatedStorage").meleeEvent:FireServer(player)
+								end
+							end
+						end)
+					end
+
+					if states.ANNOY == false then
+						break
+					end
 				end
+
+				Notifi("ANNOYING ".. string.upper(player.Name),Color3.fromRGB(85, 255, 0))
 			end
 
 			if action == "unannoy" then
@@ -4805,22 +4840,29 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "view" then
-				if GetPlayerFromString(person) then
-					local Plr = GetPlayerFromString(person)
-					if Plr ~= nil then
-						states.VIEWING = Plr
+				local Plr
+				
+				if not person then
+					if currentPlayerGet ~= nil then
+						Plr = currentPlayerGet
 					end
-
-					while wait() do
-						if states.VIEWING ~= nil then
-							pcall(function()
-								workspace.CurrentCamera.CameraSubject = workspace[states.VIEWING.Name]
-							end)
-						end
-					end
-
-					Notifi("VIEWING "..string.upper(Plr.Name))
+				else
+					Plr = GetPlayerFromString(person)
 				end
+				
+				if Plr ~= nil then
+					states.VIEWING = Plr
+				end
+
+				while wait() do
+					if states.VIEWING ~= nil then
+						pcall(function()
+							workspace.CurrentCamera.CameraSubject = workspace[states.VIEWING.Name]
+						end)
+					end
+				end
+
+				Notifi("VIEWING "..string.upper(Plr.Name))
 			end
 
 			if action == "unview" then
@@ -4856,18 +4898,33 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "bring" then
-				if GetPlayerFromString(person) then
-					Notifi("BRINGING "..string.upper(GetPlayerFromString(person).Name))
-					local pl = GetPlayerFromString(person)
-					vr1ng(pl)
+				local Plr
+
+				if not person then
+					if currentPlayerGet ~= nil then
+						Plr = currentPlayerGet
+					end
+				else
+					Plr = GetPlayerFromString(person)
 				end
+				
+				Notifi("BRINGING "..string.upper(Plr.Name))
+				vr1ng(Plr)
 			end
 
 			if action == "arrest" then
-				if GetPlayerFromString(person) then
-					Notifi("ARRESTING "..string.upper(GetPlayerFromString(person).Name))
-					harrestatexd(GetPlayerFromString(person))
+				local plr
+				
+				if not person then
+					if currentPlayerGet ~= nil then
+						plr = currentPlayerGet
+					end
+				else
+					plr = GetPlayerFromString(person)
 				end
+				
+				Notifi("ARRESTING "..string.upper(plr.Name))
+				harrestatexd(plr)
 			end
 
 			if action == "end" then
@@ -5088,7 +5145,15 @@ local function get_command(fromchat, msg)
 					
 					Notifi("TELEPORTED TO "..xuwu..", "..yuwu..", "..zuwu, Color3.fromRGB(0, 255, 0))
 				else
-					local player = GetPlayerFromString(person) 
+					local player
+					if not person then
+						if currentPlayerGet ~= nil then
+							player = currentPlayerGet
+						end
+					else
+						player = GetPlayerFromString(person)
+					end
+					
 					if player then
 						local char = workspace:FindFirstChild(player.Name)
 						local hum = char and char:FindFirstChild("HumanoidRootPart")
@@ -5107,31 +5172,36 @@ local function get_command(fromchat, msg)
 			end
 
 			if action == "looptp" then
-				if GetPlayerFromString(person) then
-					local player = GetPlayerFromString(person) 
-					Notifi("LOOPING TP "..string.upper(GetPlayerFromString(person)), Color3.fromRGB(0, 255, 0))
-					states.LoopTP = true
-					while states.LoopTP == true do
-						wait(0.01)
+				local player
+				if not person then
+					if currentPlayerGet ~= nil then
+						player = currentPlayerGet
+					end
+				else
+					player = GetPlayerFromString(person)
+				end
 
-						if player then
-							local char = workspace:FindFirstChild(player.Name)
-							local hum = char and char:FindFirstChild("HumanoidRootPart")
-							local head = char and char:FindFirstChild("Head")
+				Notifi("LOOPING TP "..string.upper(player.Name), Color3.fromRGB(0, 255, 0))
+				states.LoopTP = true
+				while states.LoopTP == true do
+					wait(0.01)
 
-							local m_char = workspace:FindFirstChild(UserName)
-							local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
-							if m_char and m_hum and char and (char or head) then 
-								game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
-							end
-						end
+					if player then
+						local char = workspace:FindFirstChild(player.Name)
+						local hum = char and char:FindFirstChild("HumanoidRootPart")
+						local head = char and char:FindFirstChild("Head")
 
-						if states.LoopTP == false then
-							break
+						local m_char = workspace:FindFirstChild(UserName)
+						local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
+						if m_char and m_hum and char and (char or head) then 
+							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
 						end
 					end
+
+					if states.LoopTP == false then
+						break
+					end
 				end
-				
 			end
 
 			if action == "autoguns" or action == "aguns" then
@@ -5144,6 +5214,12 @@ local function get_command(fromchat, msg)
 					if person == "off" then
 						states.AUTOGUNS = false
 						Notifi("AUTOGUNS IS DISABLED", Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							getGans()
+							states.AUTOGUNS = true
+							Notifi("AUTOGUNS IS ENABLED", Color3.fromRGB(0, 255, 0))
+						end
 					end
 				end
 			end
