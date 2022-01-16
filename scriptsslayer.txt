@@ -4707,6 +4707,39 @@ local function get_command(fromchat, msg)
 					if person == "off" then
 						states.GODMODE = false
 						Notifi("GOD IS DISABLED",Color3.fromRGB(255, 0, 0))
+					else
+						if not person then
+							if states.GODMODE == false then
+								states.GODMODE = true
+								Notifi("GOD IS ENABLED",Color3.fromRGB(0, 255, 0))
+								ff()
+								wait()
+								workspace.Remote.TeamEvent:FireServer("Bright orange")
+								while states.GODMODE == true do
+									game.Players.LocalPlayer.Character.Humanoid.Name = 1
+									local l = game.Players.LocalPlayer.Character["1"]:Clone()
+									l.Parent = game.Players.LocalPlayer.Character
+									l.Name = "Humanoid"
+									wait(0.1)
+									game.Players.LocalPlayer.Character["1"]:Destroy()
+									game.Workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character
+									game.Players.LocalPlayer.Character.Animate.Disabled = true
+									game.Players.LocalPlayer.Character.Animate.Disabled = true
+									game.Players.LocalPlayer.Character.Humanoid.DisplayDistanceType = "None"
+									wait(5)
+									local lastPos = GetRO()
+									local lastCam = workspace.CurrentCamera.CFrame
+									game:GetService("Workspace").Remote.loadchar:InvokeServer()
+									game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPos
+									workspace.CurrentCamera.CFrame = lastCam
+									game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+
+									if states.GODMODE == false then
+										break
+									end
+								end
+							end
+						end
 					end
 				end
 
@@ -7653,5 +7686,5 @@ for i,v in pairs(crim) do
 	v.CFrame = CFrame.new(778, 500, 2465)
 end
 
-print("Version 1.4 BETA")
+print("Version 1.5 BETA")
 adminLoaded = true
