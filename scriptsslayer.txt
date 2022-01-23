@@ -4676,9 +4676,6 @@ local function get_command(fromchat, msg)
 					if states.GODMODE == false then
 						states.GODMODE = true
 						Notifi("GOD IS ENABLED",Color3.fromRGB(0, 255, 0))
-						ff()
-						wait()
-						workspace.Remote.TeamEvent:FireServer("Bright orange")
 						while states.GODMODE == true do
 							game.Players.LocalPlayer.Character.Humanoid.Name = 1
 							local l = game.Players.LocalPlayer.Character["1"]:Clone()
@@ -4712,9 +4709,6 @@ local function get_command(fromchat, msg)
 							if states.GODMODE == false then
 								states.GODMODE = true
 								Notifi("GOD IS ENABLED",Color3.fromRGB(0, 255, 0))
-								ff()
-								wait()
-								workspace.Remote.TeamEvent:FireServer("Bright orange")
 								while states.GODMODE == true do
 									game.Players.LocalPlayer.Character.Humanoid.Name = 1
 									local l = game.Players.LocalPlayer.Character["1"]:Clone()
@@ -6090,7 +6084,9 @@ ABSV = {
 	"RompeOrthos",
 	"Rjein39",
 	"Dexn1s",
-	"alcalestrevictor"
+	"alcalestrevictor",
+	"Sony360RealityAudio",
+	"DERECJFROTS"
 }
 
 HDP = {
