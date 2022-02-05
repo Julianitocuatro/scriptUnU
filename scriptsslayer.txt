@@ -57,6 +57,7 @@ local Separat = Instance.new("Frame")
 local Cor = Instance.new("UICorner")
 local CloseButton = Instance.new("TextButton")
 local Ner = Instance.new("UICorner")
+local FadeFrameFake = Instance.new("Frame")
 
 --Properties:
 
@@ -372,7 +373,7 @@ Output.Parent = Quemeves
 Output.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Output.BackgroundTransparency = 1.000
 Output.Position = UDim2.new(0.006, 0,0.478, 0)
-Output.Size = UDim2.new(0, 224,0, 211)
+Output.Size = UDim2.new(0, 1344, 0, 211)
 Output.ClipsDescendants = true
 
 OutputMsg.Name = "OutputMsg"
@@ -388,10 +389,15 @@ OutputMsg.TextSize = 17.000
 OutputMsg.TextStrokeTransparency = 1
 OutputMsg.TextXAlignment = Enum.TextXAlignment.Left
 OutputMsg.TextYAlignment = Enum.TextYAlignment.Top
-OutputMsg.TextScaled = true
 
 UIListLayout_3.Parent = Output
 UIListLayout_3.SortOrder = Enum.SortOrder.LayoutOrder
+
+FadeFrameFake.Name = "FadeFrameFake"
+FadeFrameFake.Parent = Quemeves
+FadeFrameFake.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+FadeFrameFake.BackgroundTransparency = 1.000
+FadeFrameFake.Size = UDim2.new(0, 1929, 0, 1500)
 
 -- States properties/Configs:
 local states = {}
@@ -408,6 +414,8 @@ states.COLOR_GUNS = false
 states.BETTERLIGHT = false
 states.CAPE = false
 -- FIGHTING
+states.INFAMMO = false
+states.SEATS = true
 states.WALLS = true
 states.AUTORESPAWN = false
 states.AUTOGUNS = false
@@ -553,6 +561,7 @@ for i,v in pairs(crim) do
 end
 
 local fadeFrame = game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("Home"):WaitForChild("fadeFrame")
+fadeFrame.Visible = false
 
 oldAmbien = game.Lighting.Ambient
 oldBri = game.Lighting.Brightness
@@ -766,10 +775,11 @@ local function respawn()
 		local lastPos = GetRO()
 		local lastCam = workspace.CurrentCamera.CFrame
 	    game:GetService("Workspace").Remote.loadchar:InvokeServer()
-		wait()
 		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPos
-		workspace.CurrentCamera.CFrame = lastCam
 		game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+		workspace.CurrentCamera.CFrame = lastCam
+		wait()
+		workspace.CurrentCamera.CFrame = lastCam
 	end)
 end
 
@@ -886,11 +896,11 @@ local loopkills = {}
 local spams = {}
 
 function chatNotify(text)
-	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Magnus]: "..text; Color = Colorf.BackgroundColor3; Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
+	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[System]: "..text; Color = Colorf.BackgroundColor3; Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
 end
 
 function negativeNotify(text)
-	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Magnus]: "..text; Color = Color3.fromRGB(206, 0, 0); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
+	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[System]: "..text; Color = Color3.fromRGB(206, 0, 0); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
 end
 
 function errorNotify(text)
@@ -899,7 +909,7 @@ end
 
 
 function positiveNotify(text)
-	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Magnus]: "..text; Color = Color3.fromRGB(0, 255, 0); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
+	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[System]: "..text; Color = Color3.fromRGB(0, 255, 0); Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
 end
 
 function CustomNotify(text1, text)
@@ -1089,11 +1099,18 @@ slots[2] = "Remington 870"
 
 if OwnSwat then
 	slots[3] = "AK-47"
+	slots[4] = "M9"
 else
 	slots[3] = "M9"
+	slots[4] = "nil"
 end
 
-slots[4] = "M9"
+slots[5] = "nil"
+slots[6] = "nil"
+slots[7] = "nil"
+slots[8] = "nil"
+slots[9] = "nil"
+slots[10] = "nil"
 
 local function kill1(Player, isInLoopkill)
 	pcall(function()
@@ -1179,6 +1196,32 @@ local function kill1(Player, isInLoopkill)
 	end)
 end
 
+local function getGuninSlot(slot)
+	if slot > 10 then return end
+	if slots[slot] == "M4A1" or slots[slot] == "AK-47" or slots[slot] == "M9" or slots[slot] == "Remington 870" then
+		game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[slot]].ITEMPICKUP)
+	elseif game.Players.LocalPlayer.TeamColor.Name == "Bright blue" then
+		local gun = game.Players.LocalPlayer:FindFirstChild("Taser") or game.Players.LocalPlayer:FindFirstChild("Handcuffs")
+		if gun then
+			if slots[slot] == "nil" then
+				gun.Parent = game.Players.LocalPlayer.Backpack
+			end
+		else
+			if slots[slot] == "nil" then
+				local fakeTool = Instance.new("Tool")
+				fakeTool.Name = "FakeTool"
+				fakeTool.Parent = game.Players.LocalPlayer:WaitForChild("Backpack")
+			end
+		end
+	else
+		if slots[slot] == "nil" then
+			local fakeTool = Instance.new("Tool")
+			fakeTool.Name = "FakeTool"
+			fakeTool.Parent = game.Players.LocalPlayer:WaitForChild("Backpack")
+		end
+	end
+end
+
 local function getGans()
 	coroutine.wrap(function()
 		if game.Players.LocalPlayer.TeamColor.Name == "Bright blue" then
@@ -1188,23 +1231,45 @@ local function getGans()
 				game.Players.LocalPlayer.Character:FindFirstChild("M9"):Destroy()
 			end
 			if (game.Players.LocalPlayer.Backpack:FindFirstChild("Taser")) then
-				game.Players.LocalPlayer.Backpack.Taser:Destroy()
+				game.Players.LocalPlayer.Backpack:FindFirstChild("Taser").Parent = game.Players.LocalPlayer
 			end
 			if (game.Players.LocalPlayer.Backpack:FindFirstChild("Handcuffs")) then
-				game.Players.LocalPlayer.Backpack.Handcuffs:Destroy()
+				game.Players.LocalPlayer.Backpack:FindFirstChild("Handcuffs").Parent = game.Players.LocalPlayer
 			end
 
-			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[1]].ITEMPICKUP)
-			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[2]].ITEMPICKUP)
-			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[3]].ITEMPICKUP)
-			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[4]].ITEMPICKUP)
+			getGuninSlot(1)
+			getGuninSlot(2)
+			getGuninSlot(3)
+			getGuninSlot(4)
+			getGuninSlot(5)
+			getGuninSlot(6)
+			getGuninSlot(7)
+			getGuninSlot(8)
+			getGuninSlot(9)
+			getGuninSlot(10)
+			for i,v in pairs(game.Players.LocalPlayer:WaitForChild("Backpack"):GetChildren()) do
+				if v.Name == "FakeTool" then
+					v:Destroy()
+				end
+			end
 			
 			
 		else
-			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[1]].ITEMPICKUP)
-			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[2]].ITEMPICKUP)
-			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[3]].ITEMPICKUP)
-			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[4]].ITEMPICKUP)
+			getGuninSlot(1)
+			getGuninSlot(2)
+			getGuninSlot(3)
+			getGuninSlot(4)
+			getGuninSlot(5)
+			getGuninSlot(6)
+			getGuninSlot(7)
+			getGuninSlot(8)
+			getGuninSlot(9)
+			getGuninSlot(10)
+			for i,v in pairs(game.Players.LocalPlayer:WaitForChild("Backpack"):GetChildren()) do
+				if v.Name == "FakeTool" then
+					v:Destroy()
+				end
+			end
 		end	
 	end)()
 end
@@ -1213,14 +1278,21 @@ local function setgunslot(gun, slotnumber)
 	local errors = false
 	if not gun then Notify("Gun not found", red) errors = true end
 	if not slotnumber then Notify("Missing slot number", red) errors = true end
-	if slotnumber > 4 then Notify("Max slot number", red) errors = true end
+	if slotnumber > 10 then Notify("Max slot number: 10", red) errors = true end
 	if gun == "M4A1" and OwnSwat ~= true then Notify("You don't own swat gamepass", red) errors = true end
 	
 	if errors == true then return end
 	
 	if gun == "M4A1" or gun == "Remington 870" or gun == "AK-47" or gun == "M9" then
-		slots[slotnumber] = gun
-		Notify("New slot "..gun..": "..slotnumber, green)
+		local find = table.find(slots, gun)
+		if find then
+			slots[tonumber(find)] = "nil"
+			slots[slotnumber] = gun
+		    Notify("New slot "..gun..": "..slotnumber, green)
+		else
+			slots[slotnumber] = gun
+		    Notify("New slot "..gun..": "..slotnumber, green)
+		end
 	end
 end
 
@@ -6813,6 +6885,11 @@ local function teleport(Player, Player2)
 	workspace.Remote.loadchar:InvokeServer()
 	UseCommand = true
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+
+	Bruh.CFrame = CFrame.new(778, 500, 2465)
+	Bruh.Size = Vector3.new(6, 0.2, 6)
+	Bruh.Transparency = 0
+	Crim:Destroy()
 end
 
 local function teleportCrim(Player, Player2)
@@ -6929,8 +7006,15 @@ local function team(g1, g2, g3)
 	
 	if searching or g1 and not g2 and not g3 then
 		if searching == "Guards" or g1 == "g" then
-			workspace.Remote.TeamEvent:FireServer("Bright blue")
-			Notify("Team changed to: GUARDS", green)
+			local players = GetPlayersInTeam("Guards")
+	        if #players > 7 then
+				refreshTeam(BrickColor.new("Bright blue").Name)
+				Notify("Team changed to: GUARDS", green)
+			else
+				workspace.Remote.TeamEvent:FireServer("Bright blue")
+				Notify("Team changed to: GUARDS", green)
+			end
+			
 		end
 		
 		if searching == "Inmates" or g1 == "i" then
@@ -7333,6 +7417,14 @@ coroutine.wrap(function()
     end
 end)()
 
+local function gunstate(gun, num, state)
+	if gun == "M9" then Notify("M9 is not supported", red) return end
+	if gun == "AK-47" or arg1 == "M4A1" or gun == "Remington 870" and state then
+		require(game.Players.LocalPlayer.Backpack:FindFirstChild(gun):FindFirstChild("GunStates"))[state] = num
+	end
+end
+
+
 -- COMMAND FUNCTIONS
 
 local function get_command(fromchat, msg)
@@ -7402,6 +7494,9 @@ local function get_command(fromchat, msg)
 		"aguns",
 		"autolock",
 		"alock",
+		"lock",
+		"unlock",
+		"seats",
 		"view",
 		"unview",
 		"ts",
@@ -7424,6 +7519,8 @@ local function get_command(fromchat, msg)
 		"walkspeed",
 		"jp",
 		"jumppower",
+        "gt",
+        "gravity",
 		"onepunch",
 		"op",
 		"spy",
@@ -7478,7 +7575,9 @@ local function get_command(fromchat, msg)
 		"coploop",
 		"cl",
 		"walls",
-		"sky"
+		"sky",
+		"firerate",
+		"infammo"
 
 	}
 	
@@ -7529,6 +7628,26 @@ local function get_command(fromchat, msg)
 			end
 			-- FIGHTING
 
+			if arg1 == "firerate" then
+				local gun = GetNameFromList(arg2, items)
+				if not gun then Notify("Gun not found", red) return end
+				if not tonumber(arg3) then Notify("Missing number", red) return end
+				gunstate(gun, arg3, "FireRate")
+			end
+
+			if arg1 == "infammo" then
+				setstate("infammo", arg2)
+			end
+
+			if arg1 == "antilag" then
+				for _, v in pairs(game:GetDescendants()) do
+					pcall(function()
+						v.Material = Enum.Material.Plastic
+					end)
+				end
+				Notify("ANTILAG is enabled", green)
+			end
+
 			if arg1 == "walls" then
 				setstate("walls", arg2)
 
@@ -7552,6 +7671,10 @@ local function get_command(fromchat, msg)
 				else
 					Notify("Missing number", red)
 				end
+			end
+
+			if arg1 == "seats" then
+				setstate("seats", arg2)
 			end
 
 			if arg1 == "auto" or arg1 == "autore" or arg1 == "autorespawn" then
@@ -7582,13 +7705,28 @@ local function get_command(fromchat, msg)
 
 			if arg1 == "autolock" or arg1 == "alock" then
 				setstate("autolock", arg2)
-				game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
-			    game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
-				game.Players.LocalPlayer.CharacterAdded:connect(function()
-					game.Workspace:WaitForChild(game.Players.LocalPlayer.Name)
-					game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
-				end)
+                if states.AUTOLOCK == true then
+                    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
+                    game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
+                else
+                    if states.AUTOLOCK == false then
+                        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
+                        game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = false
+                    end
+                end
+				
 			end
+
+            if arg1 == "lock" then
+                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
+                game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
+            end
+
+			
+            if arg1 == "unlock" then
+                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+                game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = false
+            end
 
 			if arg1 == "autoguns" or arg1 == "aguns" then
 				setstate("autoguns", arg2)
@@ -7745,7 +7883,11 @@ local function get_command(fromchat, msg)
 			end
 
 			if arg1 == "givefood" then
+				if not game.Workspace.Prison_ITEMS.giver:FindFirstChild("Lunch") and not game.Workspace.Prison_ITEMS.giver:FindFirstChild("Dinner") and not game.Workspace.Prison_ITEMS.giver:FindFirstChild("Breakfast") then Notify("Wait for Breakfast/Lunch/Dinner time", red) return end
 				if game.Workspace.Prison_ITEMS.giver:FindFirstChild("Lunch") or game.Workspace.Prison_ITEMS.giver:FindFirstChild("Dinner") or game.Workspace.Prison_ITEMS.giver:FindFirstChild("Breakfast") and GetPlayerFromString(arg2) then
+					pcall(function()
+						game.Players.LocalPlayer.Character:FindFirstChild("Humanoid"):UnequipTools()
+					end)
 					pcall(function()
 						game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.giver.Lunch.ITEMPICKUP)
 					end)
@@ -7789,6 +7931,7 @@ local function get_command(fromchat, msg)
 			end
 
 			if arg1 == "giveshield" then
+				if OwnSwat ~= true then Notify("You don't own swat gamepass", red) return end
 				if GetPlayerFromString(arg2) then
 					local pos = GetRO()
 					local oldteam = game.Players.LocalPlayer.TeamColor.Color
@@ -7860,6 +8003,13 @@ local function get_command(fromchat, msg)
 					Notify("Walkspeed changed to "..Walkspeed, green)
 				end
 			end
+
+            if arg1 == "gt" or arg1 == "gravity" then
+                if tonumber(arg2) then
+                    workspace.Gravity = arg2
+                    Notify("Gravity changed to "..arg2, green)
+                end
+            end
 
 			if arg1 == "heart" then
 				player = GetPlayerFromString(arg2)
@@ -8093,6 +8243,7 @@ local function get_command(fromchat, msg)
 			if arg1 == "capecolor" then
 				if tonumber(arg2) and tonumber(arg3) and tonumber(arg4) then
 					capeColor = Color3.fromRGB(arg2, arg3, arg4)
+					Notify("New cape color: "..arg2.." "..arg3.." "..arg4)
 				end
 			end
 
@@ -8101,7 +8252,8 @@ local function get_command(fromchat, msg)
 					Material = GetNameFromList(arg2, allMaterials)
 					if Material then
 						capeMaterial = Enum.Material[Material]
-						Notify("New material "..Material)
+						Notify("New material: "..Material)
+						respawn()
 					end
 				end
 			end
@@ -8187,10 +8339,6 @@ local function get_command(fromchat, msg)
 					if states.AUTOLOCK == true then
 						game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
 						game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
-						game.Players.LocalPlayer.CharacterAdded:connect(function()
-							game.Workspace:WaitForChild(game.Players.LocalPlayer.Name)
-							game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
-						end)
 					end
 				end)()
 				coroutine.wrap(function()
@@ -8631,10 +8779,13 @@ end)
 
 local allcmds = {
 	"re/respawn",
+    "lock",
+	"unlock",
+	"seats <on/off>",
 	"team/t <team>",
 	"copyteam <player>",
 	"guns",
-	"gunorder <gun> <1/4>",	
+	"gunorder <gun> <1/10>",	
 	"ws/walkspeed <num>",
 	"jp/jumppower <num>",
 	"gt/gravity <num>",
@@ -8644,10 +8795,9 @@ local allcmds = {
 	"bring <player>",
 	"arrest <player>",
 	"view <player>",
+	"unview",
 	"antiarmorspam <on/off>",
 	"antisalag <on/off>",
-	"unview",
-	"lock",
 	"colorguns/cg <rgb>",
 	"rejoin/rj",
 	"count",
@@ -8685,6 +8835,21 @@ local allcmds = {
 	"ff <on/off>",
 	"anticrim <on/off>",
 	"loopcrim <player>",
+	"playernotify <on/off>",
+	"notifications <on/off>",
+	"xyz <name>",
+	"clicktp",
+	"motionblur <on/off>",
+	"betterlight <on/off>",
+	"fastspawn <on/off>",
+	"damagesounds/ds <on/off>",
+	"cape <on/off>",
+	"capecolor <rgb>",
+	"capematerial <material>",
+	"armorspam <on/off>",
+	"antiinvis <on/off>",
+	"antiafk <on/off>>",
+	"antilag",
 	"base",
 	"pvp",
 	"mountain",
@@ -8702,21 +8867,6 @@ local allcmds = {
 	"down",
 	"secretzone",
 	"city",
-	"playernotify <on/off>",
-	"notifications <on/off>",
-	"xyz <name>",
-	"clicktp",
-	"motionblur <on/off>",
-	"betterlight <on/off>",
-	"fastspawn <on/off>",
-	"damagesounds/ds <on/off>",
-	"cape <on/off>",
-	"capecolor <rgb>",
-	"capematerial <material>",
-	"armorspam <on/off>",
-	"antiinvis <on/off>",
-	"antiafk <on/off>>",
-	"antilag"
 }
 
 function IsEven(num)
@@ -8789,21 +8939,6 @@ coroutine.wrap(function()
 	end
 	
 end)()
-
-UIS.InputBegan:connect(function(input, process)
-	if process then return end
-	if input.KeyCode == Enum.KeyCode.Z then
-		if states.FORCEFIELD == true then
-			ff()
-		else
-			respawn()
-
-			if states.AUTOGUNS == false then
-				getGans()
-			end
-		end
-	end
-end)
 
 -- GOD MODE
 
@@ -9010,10 +9145,6 @@ game.Players.LocalPlayer.CharacterAdded:connect(function()
 	if states.AUTOLOCK == true then
 		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
 		game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
-		game.Players.LocalPlayer.CharacterAdded:connect(function()
-			game.Workspace:WaitForChild(game.Players.LocalPlayer.Name)
-			game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
-		end)
 	end
 end)
 -- ANTIABUSERS
@@ -9163,7 +9294,7 @@ end)()
 
 -- SPAM ARREST
 coroutine.wrap(function()
-	while wait(0.05) do
+	while wait(0.03) do
 		if states.SPAM_ARRESTING ~= nil then
 			pcall(function()
 				if states.SPAM_ARRESTING.TeamColor.Name == "Bright orange" then
@@ -9289,6 +9420,49 @@ coroutine.wrap(function()
 	end)
 end)()
 
+-- SEATS
+
+coroutine.wrap(function()
+	while wait() do
+		if states.SEATS == false then
+			for i,v in pairs(game.Workspace:GetDescendants()) do
+				if v.ClassName == "Seat" then
+					v.Disabled = true
+				end
+			end
+
+		elseif states.SEATS == true then
+			for i,v in pairs(game.Workspace:GetDescendants()) do
+				if v.ClassName == "Seat" then
+					v.Disabled = false
+				end
+			end
+
+		end
+	end
+
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if states.INFAMMO == true then
+			pcall(function()
+				for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+					if v:FindFirstChild("GunStates") then
+						local gun = require(v.GunStates)
+						gun["MaxAmmo"] = math.huge
+						gun["StoredAmmo"] = math.huge
+						gun["AmmoPerClip"] = math.huge
+						gun["CurrentAmmo"] = math.huge
+						gun["ReloadTime"] = 0
+					end
+				end
+			end)
+		end
+	end
+
+end)()
+
 -- VISUAL EFFECTS
 
 game.Players.LocalPlayer.CharacterAdded:connect(function(player)
@@ -9333,7 +9507,29 @@ game.Players.PlayerRemoving:connect(function(plr)
 	end
 end)
 
-fadeFrame.Visible = false
+-- FadeFrame FPS UNLOCKER GLITCH
+
+game.Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("Home").intro.Content.menus.teamsGui.Guards.Button.MouseButton1Down:connect(function()
+	local players = GetPlayersInTeam("Guards")
+	if #players > 7 then return end
+	tweenservice:Create(FadeFrameFake, TweenInfo.new(1), {BackgroundTransparency = 0}):Play()
+	wait(1)
+	tweenservice:Create(FadeFrameFake, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
+end)
+
+game.Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("Home").intro.Content.menus.teamsGui.Prisoners.Button.MouseButton1Down:connect(function()
+	tweenservice:Create(FadeFrameFake, TweenInfo.new(1), {BackgroundTransparency = 0}):Play()
+	wait(1)
+	tweenservice:Create(FadeFrameFake, TweenInfo.new(1), {BackgroundTransparency = 1}):Play()
+end)
+
+game.Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("Home").hud.MenuButton.MenuFrame.respawn.MouseButton1Down:connect(function()
+	tweenservice:Create(FadeFrameFake, TweenInfo.new(0.7), {BackgroundTransparency = 0}):Play()
+	wait(1)
+	tweenservice:Create(FadeFrameFake, TweenInfo.new(0.7), {BackgroundTransparency = 1}):Play()
+end)
+
+
 
 -- ENDING SCRIPT
 
