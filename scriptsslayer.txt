@@ -7675,6 +7675,22 @@ local function get_command(fromchat, msg)
 
 			if arg1 == "seats" then
 				setstate("seats", arg2)
+				wait()
+				if states.SEATS == false then
+					for i,v in pairs(game.Workspace:GetDescendants()) do
+						if v.ClassName == "Seat" then
+							v.Disabled = true
+						end
+					end
+		
+				elseif states.SEATS == true then
+					for i,v in pairs(game.Workspace:GetDescendants()) do
+						if v.ClassName == "Seat" then
+							v.Disabled = false
+						end
+					end
+		
+				end
 			end
 
 			if arg1 == "auto" or arg1 == "autore" or arg1 == "autorespawn" then
@@ -9418,29 +9434,6 @@ coroutine.wrap(function()
 			end)
 		end
 	end)
-end)()
-
--- SEATS
-
-coroutine.wrap(function()
-	while wait() do
-		if states.SEATS == false then
-			for i,v in pairs(game.Workspace:GetDescendants()) do
-				if v.ClassName == "Seat" then
-					v.Disabled = true
-				end
-			end
-
-		elseif states.SEATS == true then
-			for i,v in pairs(game.Workspace:GetDescendants()) do
-				if v.ClassName == "Seat" then
-					v.Disabled = false
-				end
-			end
-
-		end
-	end
-
 end)()
 
 coroutine.wrap(function()
