@@ -4,6 +4,19 @@ if POISON_LOADED then
 	return
 end
 
+local UserId = game.Players.LocalPlayer.UserId
+local UserName = game.Players.LocalPlayer.Name
+
+local WhitelistTable = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostS12331/whitelist/main/table",true))();
+local whitelisted = false
+for i,v in pairs(WhitelistTable) do
+	if v == UserId then
+		whitelisted = true
+	end
+end
+
+if whitelisted == false then return end
+
 pcall(function() getgenv().POISON_LOADED  = true end)
 
 local ADMINLOADED = false
@@ -568,10 +581,6 @@ oldEv = game.Lighting.EnvironmentDiffuseScale
 oldOA = game.Lighting.OutdoorAmbient 
 oldSs = game.Lighting.ShadowSoftness
 oldex = game.Lighting.ExposureCompensation 
-
-local UserId = game.Players.LocalPlayer.UserId
-
-local UserName = game.Players.LocalPlayer.Name
 
 OwnSwat = false
 
@@ -5388,6 +5397,7 @@ local function get_command(fromchat, msg)
 		"bri",
 		"antisalag",
 		"to",
+		"goto",
 		"arrestaura",
 		"anticrim",
 		"antiinvis",
@@ -6566,7 +6576,7 @@ local function get_command(fromchat, msg)
 				setstate("GOD_MODE", arg2)
 			end
 
-			if arg1 == "to" then
+			if arg1 == "to" or arg1 == "goto" then
 				player = GetPlayerFromString(arg2)
 				if player then 
 					local char = workspace:FindFirstChild(player.Name)
