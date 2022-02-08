@@ -11,6 +11,7 @@ local ADMINLOADED = false
 -- Instances:
 
 local Quemeves = Instance.new("ScreenGui")
+local FadeFrameFake = Instance.new("Frame")
 local Welcome = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
 local Title = Instance.new("TextLabel")
@@ -57,12 +58,18 @@ local Separat = Instance.new("Frame")
 local Cor = Instance.new("UICorner")
 local CloseButton = Instance.new("TextButton")
 local Ner = Instance.new("UICorner")
-local FadeFrameFake = Instance.new("Frame")
 
 --Properties:
 
 Quemeves.Name = "Quemeves"
 Quemeves.Parent = game.CoreGui
+
+
+FadeFrameFake.Name = "FadeFrameFake"
+FadeFrameFake.Parent = Quemeves
+FadeFrameFake.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+FadeFrameFake.BackgroundTransparency = 1.000
+FadeFrameFake.Size = UDim2.new(0, 1929, 0, 1500)
 
 -- Logs
 
@@ -161,7 +168,7 @@ Title.BackgroundTransparency = 1.000
 Title.Position = UDim2.new(0.0157012958, 0, -0.00293530524, 0)
 Title.Size = UDim2.new(0, 57, 0, 22)
 Title.Font = Enum.Font.FredokaOne
-Title.Text = "aunnotienenombre"
+Title.Text = "GHXST"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextSize = 15.000
 Title.TextTransparency = 1
@@ -207,7 +214,7 @@ TextLabel.BackgroundTransparency = 1.000
 TextLabel.Position = UDim2.new(0.25, 0, 0.170293137, 0)
 TextLabel.Size = UDim2.new(0, 200, 0, 15)
 TextLabel.Font = Enum.Font.ArialBold
-TextLabel.Text = "Welcome to aunnotienenombre ADMIN!"
+TextLabel.Text = "Welcome to GHXST ADMIN!"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextSize = 15.000
 TextLabel.TextTransparency = 1
@@ -393,12 +400,6 @@ OutputMsg.TextYAlignment = Enum.TextYAlignment.Top
 UIListLayout_3.Parent = Output
 UIListLayout_3.SortOrder = Enum.SortOrder.LayoutOrder
 
-FadeFrameFake.Name = "FadeFrameFake"
-FadeFrameFake.Parent = Quemeves
-FadeFrameFake.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-FadeFrameFake.BackgroundTransparency = 1.000
-FadeFrameFake.Size = UDim2.new(0, 1929, 0, 1500)
-
 -- States properties/Configs:
 local states = {}
 -- INTERNAL UI
@@ -414,7 +415,7 @@ states.COLOR_GUNS = false
 states.BETTERLIGHT = false
 states.CAPE = false
 -- FIGHTING
-states.INFAMMO = false
+states.INFINITE_AMMO = false
 states.SEATS = true
 states.WALLS = true
 states.AUTORESPAWN = false
@@ -422,7 +423,7 @@ states.AUTOGUNS = false
 states.AUTOLOCK = false
 states.ANTISHIELD = false
 states.COPLOOP = false
-states.FAST_PUNCH = true
+states.FAST_PUNCH = false
 states.ONE_PUNCH = false
 states.DAMAGE_SOUNDS = false
 states.IS_COUNTING = false
@@ -449,13 +450,13 @@ states.ARREST_AURA = false
 states.BLACKLIST = true
 states.FORCEFIELD = false
 states.ANTI_CRASH = false
-states.ANTI_INVIS = false
+states.ANTI_INVISIBLE = false
 states.ANTIBRING_NO_ROOT = false
 states.LOOP_COPY_TEAM = nil
 states.CURSORID = "rbxassetid://3355815697"
 states.CURSOR = false
 -- ANTILAG CONFIGS
-states.ANTISALAG = false
+states.ANTI_SPAM_ARREST_LAG = false
 states.ANTIARMORSPAM = false
 states.ANTILAG = false
 -- COMMAND CONFIGS
@@ -496,9 +497,6 @@ for i,v in pairs(game:GetService("Workspace"):WaitForChild("Prison_Fences"):GetC
 	table.insert(wallParts,{v,v.Parent})
 end
 for i,v in pairs(game:GetService("Workspace"):WaitForChild("Prison_OuterWall"):GetChildren()) do 
-	table.insert(wallParts,{v,v.Parent})
-end
-for i,v in pairs(game:GetService("Workspace"):WaitForChild("Doors"):GetChildren()) do 
 	table.insert(wallParts,{v,v.Parent})
 end
 for i,v in pairs(game:GetService("Workspace"):WaitForChild("Prison_Administration"):GetChildren()) do 
@@ -554,10 +552,10 @@ local function setcolorguns(num,num2,num3)
 end
 
 local crim = game:GetService("Workspace"):WaitForChild("Criminals Spawn"):GetChildren()
+local spawnlocations = {}
 
 for i,v in pairs(crim) do
-	v.CFrame = CFrame.new(778, 500, 2465)
-	v.AllowTeamChangeOnTouch = false
+	table.insert(spawnlocations, v)
 end
 
 local fadeFrame = game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("Home"):WaitForChild("fadeFrame")
@@ -1025,6 +1023,17 @@ local function arrest2(plr, times)
 	end
 end
 
+local function removeguion(string1)
+	local str = string1
+	local newStr, replaced = string.gsub(str, "_", " ")
+	return newStr
+end
+
+local function mayusfirst(str)
+	string1 = string.lower(str)
+	return removeguion((string1:gsub("^%l", string.upper)))
+end
+
 local function setstate(state, arg, force)
 	if not state then return end
 	
@@ -1050,27 +1059,27 @@ local function setstate(state, arg, force)
 
 		if arg == "on" then
 			if states[stateusing] == true then
-				Notify(stateusing.." already enabled")
+				Notify(mayusfirst(stateusing)..": already enabled")
 			else
 				states[stateusing] = true
-				Notify(stateusing.." enabled", green)
+				Notify(mayusfirst(stateusing)..": enabled", green)
 			end
 		else
 			if arg == "off" then
 				if states[stateusing] == false then
-					Notify(stateusing.." already disabled")
+					Notify(mayusfirst(stateusing)..": already disabled")
 				else
-					Notify(stateusing.." disabled", red)
+					Notify(mayusfirst(stateusing)..": disabled", red)
 					states[stateusing] = false
 				end
 			else
 				if not arg then
 					if states[stateusing] == false or states[stateusing] == nil or not states[stateusing] then
 						states[stateusing] = true
-						Notify(stateusing.." enabled", green)
+						Notify(mayusfirst(stateusing)..": enabled", green)
 					else
 						if states[stateusing] == true then
-							Notify(stateusing.." disabled", red)
+							Notify(mayusfirst(stateusing)..": disabled", red)
 							states[stateusing] = false
 						end
 					end
@@ -1200,6 +1209,9 @@ local function getGuninSlot(slot)
 	if slot > 10 then return end
 	if slots[slot] == "M4A1" or slots[slot] == "AK-47" or slots[slot] == "M9" or slots[slot] == "Remington 870" then
 		game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[slot]].ITEMPICKUP)
+		if slots[slot] == "AK-47" then
+			require(game.Players.LocalPlayer.Backpack:FindFirstChild("AK-47"):FindFirstChild("GunStates"))["FireRate"] = 0.09
+		end
 	elseif game.Players.LocalPlayer.TeamColor.Name == "Bright blue" then
 		local gun = game.Players.LocalPlayer:FindFirstChild("Taser") or game.Players.LocalPlayer:FindFirstChild("Handcuffs")
 		if gun then
@@ -1279,6 +1291,7 @@ local function setgunslot(gun, slotnumber)
 	if not gun then Notify("Gun not found", red) errors = true end
 	if not slotnumber then Notify("Missing slot number", red) errors = true end
 	if slotnumber > 10 then Notify("Max slot number: 10", red) errors = true end
+	if slotnumber < 1 then Notify("Min slot number: 1", red) errors = true end
 	if gun == "M4A1" and OwnSwat ~= true then Notify("You don't own swat gamepass", red) errors = true end
 	
 	if errors == true then return end
@@ -1336,2109 +1349,7 @@ local function arrest5(player)
 end
 
 local function arrest4(player)
-	if player.TeamColor.Name ~= "Really red" and player.TeamColor.Name ~= "Bright orange" or GetDistance(game.Players.LocalPlayer, player) > 6 then return end
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
-	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	if player.Character and player.TeamColor.Name ~= "Really red" and player.TeamColor.Name ~= "Bright orange" or GetDistance(game.Players.LocalPlayer, player) > 6 then return end
 	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
 	workspace.Remote.arrest:InvokeServer(player.Character.Head)
@@ -6885,11 +4796,6 @@ local function teleport(Player, Player2)
 	workspace.Remote.loadchar:InvokeServer()
 	UseCommand = true
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
-
-	Bruh.CFrame = CFrame.new(778, 500, 2465)
-	Bruh.Size = Vector3.new(6, 0.2, 6)
-	Bruh.Transparency = 0
-	Crim:Destroy()
 end
 
 local function teleportCrim(Player, Player2)
@@ -6953,6 +4859,44 @@ local function teleportCrim(Player, Player2)
 	Bruh.Transparency = 0
 	Crim:Destroy()
 end
+
+local function criminpos(Player)
+	if Player == nil then return end
+	local savedcf = GetRO()
+	workspace.Remote.loadchar:InvokeServer()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
+
+	local CHAR = game.Players.LocalPlayer.Character
+	CHAR.Humanoid.Name = "1"
+	local c = CHAR["1"]:Clone()
+	c.Name = "Humanoid"
+	c.Parent = CHAR
+	CHAR["1"]:Destroy()
+	game.Workspace.CurrentCamera.CameraSubject = CHAR
+	CHAR.Animate.Disabled = true
+	wait()
+	CHAR.Animate.Disabled = false
+	CHAR.Humanoid.DisplayDistanceType = "None"
+	local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
+	tool.Parent = CHAR
+	local STOP = 0
+	repeat wait()
+		STOP = STOP + 1
+		Player.Character:FindFirstChild("HumanoidRootPart").CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+		spawnlocations[1].CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+		spawnlocations[1].Transparency = 1
+		spawnlocations[1].CanCollide = false
+	until (Player.TeamColor.Name == "Really red" or not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not Player.Character:FindFirstChild("Torso") or not Player.Character:FindFirstChild("Torso").Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
+	workspace.Remote.loadchar:InvokeServer()
+	UseCommand = true
+	
+	Bruh.CFrame = CFrame.new(778, 500, 2465)
+	Bruh.Size = Vector3.new(6, 0.2, 6)
+	Bruh.Transparency = 0
+	Crim:Destroy()
+end
+
 
 local function refreshTeam(color)
 	local position = workspace:FindFirstChild(game.Players.LocalPlayer.Name).HumanoidRootPart.CFrame
@@ -7029,7 +4973,7 @@ local function team(g1, g2, g3)
 		
 		if searching == "Criminals" or g1 == "c" then
 			local lastPos = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").position
-			LCS = game.Workspace["Criminals Spawn"].SpawnLocation
+			LCS = spawnlocations[2]
 			LCS.CanCollide = false
 			LCS.Size = Vector3.new(51.05, 24.12, 54.76)
 			LCS.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
@@ -7210,30 +5154,20 @@ local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 
 local function DamageIndicator(player)
-	if not player or tonumber(math.floor(player.Character.Humanoid.Health)) == 0 or player == nil then return end
+	if not player or player == nil or not player.Character then return end
 	coroutine.wrap(function()
 		local doing = true
 		local clone = HitBackground:Clone()
 	    clone.Parent = Quemeves
 		clone.Position = UDim2.new(0,Mouse.X-80,0,Mouse.Y-100)
 	    local hitnum = clone:WaitForChild("TextLabel")
-		if tonumber(math.floor(player.Character.Humanoid.Health)) == 0 then
-			hitnum.Visible = false
-		end
-		if tonumber(math.floor(player.Character.Humanoid.Health)) < 60 and tonumber(math.floor(player.Character.Humanoid.Health)) > 30 then
-			hitnum.TextColor3 = Color3.fromRGB(255, 174, 56)
-		end
-
-		if tonumber(math.floor(player.Character.Humanoid.Health)) < 30 then
-			hitnum.TextColor3 = Color3.fromRGB(255, 0, 0)
-		end
-		hitnum.Text = tonumber(math.floor(player.Character.Humanoid.Health))
+		hitnum.Text = "10"
 		
 	    hitnum:TweenPosition(
 		    UDim2.new(0.996, 0, -0.513, 0),
 		    Enum.EasingDirection.InOut,
 		    Enum.EasingStyle.Linear,
-		    2,
+		    1.5,
 		    true
 	    )
 
@@ -7292,20 +5226,8 @@ Bindable.Event:Connect(function(bullets, gun)
     end
     
     if ShotHit then
-		if states.HIT_MARKER == true and not loopkills[playerselected.UserId] then
+		if states.DAMAGE_INDICATORS == true and not loopkills[playerselected.UserId] then
 			createSoundEffect("rbxassetid://1347140027", 1)
-			coroutine.wrap(function()
-				local Clone = Hitmarker:Clone()
-				Clone.Position = UDim2.new(0,Mouse.X,0,Mouse.Y)
-				Clone.Parent = IAPortable
-				Clone.Rotation = math.random(0,90)
-		
-				game:GetService('Debris'):AddItem(Clone, 0.05)
-				wait()
-				Clone:Destroy()
-			
-			end)()
-			wait(0.3)
 			DamageIndicator(playerselected)
 		end
     end
@@ -7333,28 +5255,6 @@ coroutine.wrap(function()
 	
 			Cursor.Position = UDim2.new(0,Mouse.X,0,Mouse.Y)
 			Cursor.Visible = true
-
-			local Target = Mouse.Target
-			local Limb = Target.Parent:FindFirstChildOfClass('Humanoid')
-			local Accessory = Target.Parent.Parent:FindFirstChildOfClass('Humanoid')
-			
-			if Limb then
-				local Player = Players:GetPlayerFromCharacter(Target.Parent)
-				if Player.TeamColor == LocalPlayer.TeamColor then
-					Cursor.ImageColor3 = Color3.fromRGB(0,255,0)
-				else
-					Cursor.ImageColor3 = Color3.fromRGB(255,0,0)
-				end
-			elseif Accessory then
-				local Player = Players:GetPlayerFromCharacter(Target.Parent.Parent)
-				if Player.TeamColor == LocalPlayer.TeamColor then
-					Cursor.ImageColor3 = Color3.fromRGB(0,255,0)
-				else
-					Cursor.ImageColor3 = Color3.fromRGB(255,0,0)
-				end
-			else
-				Cursor.ImageColor3 = Color3.fromRGB(255,255,255)
-			end
 		else
 			UserInputService.MouseIconEnabled = true
 			Cursor.Visible = false
@@ -7365,7 +5265,6 @@ end)()
 
 local function copyteam(player)
 	if player ~= nil then
-		if states.ANTITEAMS == true and player.TeamColor.Name == "Really red" or player.TeamColor.Name == "Bright orange" or player.TeamColor.Name == "Bright blue" or player.TeamColor.Name == "Medium stone grey" then return end
 		refreshTeam(player.TeamColor.Color)
 	end
 end
@@ -7478,6 +5377,7 @@ local function get_command(fromchat, msg)
 		"get",
 		"crim",
         "sa",
+		"spamarrest",
 		"unsa",
 		"antishield",
 		"ashield",
@@ -7542,29 +5442,32 @@ local function get_command(fromchat, msg)
 		"loopcrim",
 		"looptp",
 		"base",
-	    "pvp",
-	    "mountain",
-	    "cells",
-	    "yard",
-	    "roof",
-	    "cafe",
-	    "nex",
-	    "armory",
-	    "back",
+		"pvp",
+		"mountain",
+		"cells",
+		"yard",
+		"roof",
+		"cafe",
+		"nex",
+		"armory",
+		"back",
 		"wall",
-	    "tower",
-	    "garage",
-	    "backcafe",
-	    "cell",
-	    "down",
-	    "secretzone",
-	    "city",
+		"tower",
+		"garage",
+		"backcafe",
+		"cell",
+		"sit",
+		"down",
+		"secretzone",
+		"city",
+		"flag",
+		"neutralzone",
 		"fling",
 		"heart",
 		"antibring",
 		"ab",
 		"skid",
-		"hitmarker",
+		"damageindicators",
 		"getfood",
 		"givefood",
 		"giveshield",
@@ -7577,7 +5480,10 @@ local function get_command(fromchat, msg)
 		"walls",
 		"sky",
 		"firerate",
-		"infammo"
+		"infammo",
+		"crim2",
+		"avoidbring",
+		"avb"
 
 	}
 	
@@ -7636,16 +5542,16 @@ local function get_command(fromchat, msg)
 			end
 
 			if arg1 == "infammo" then
-				setstate("infammo", arg2)
+				setstate("infinite_ammo", arg2)
 			end
 
-			if arg1 == "antilag" then
+			if arg1 == "antilag" then 
 				for _, v in pairs(game:GetDescendants()) do
 					pcall(function()
 						v.Material = Enum.Material.Plastic
 					end)
 				end
-				Notify("ANTILAG is enabled", green)
+				Notify("Antilag is permanently enabled", green)
 			end
 
 			if arg1 == "walls" then
@@ -7697,8 +5603,8 @@ local function get_command(fromchat, msg)
 				setstate("autorespawn", arg2)
 			end
 
-			if arg1 == "hitmarker" then
-				setstate("hit_marker", arg2)
+			if arg1 == "damageindicators" then
+				setstate("damage_indicators", arg2)
 			end
 			
 			if arg1 == "getfood" then
@@ -7773,7 +5679,7 @@ local function get_command(fromchat, msg)
 				setstate("antishield", arg2)
 			end
 
-			if arg1 == "bri" then
+			if arg1 == "bri" or arg1 == "brightness" then
 				if tonumber(arg2) then
 					game.Lighting.Brightness = tonumber(arg2)
 					game.Lighting.Ambient = Color3.fromRGB(tonumber(arg2),tonumber(arg2),tonumber(arg2))
@@ -7887,14 +5793,49 @@ local function get_command(fromchat, msg)
 				goTo(-770, 11, 1491)
 			end
 
+			if arg1 == "tower" then
+				goTo(822, 130, 2570)
+			end
+
+			if arg1 == "garage" then
+				goTo(614, 98, 2480)
+			end
+
+			if arg1 == "backcafe" then
+				goTo(984, 98, 2218)
+			end
+
+			if arg1 == "cell" then
+				goTo(877, 99, 2440)
+			end
+
+			if arg1 == "down" then
+				goTo(917, 78, 2389)
+			end
+
+			if arg1 == "city" then
+				goTo(-259, 54, 2484)
+			end
+
+			if arg1 == "flag" then
+				goTo(725, 130, 2518)
+			end
+
+			if arg1 == "neutralzone" then
+				goTo(881, 27, 2347)
+			end
+
+			if arg1 == "sit" then
+				game.Players.LocalPlayer.Character.Humanoid.Sit = true
+			end
+
 			if arg1 == "sky" then
 				local player = GetPlayerFromString(arg2)
-				local pos = GetRO()
 				if player then
+					local position = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 					goTo(769, 4000, 2457)
 					teleport(player, game.Players.LocalPlayer)
-					wait()
-					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = position
 				end
 			end
 
@@ -8016,7 +5957,7 @@ local function get_command(fromchat, msg)
 				local WalkSpeed = tonumber(arg2)
 				if WalkSpeed ~= nil then
 					game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = WalkSpeed
-					Notify("Walkspeed changed to "..Walkspeed, green)
+					Notify("Walkspeed changed to "..WalkSpeed, green)
 				end
 			end
 
@@ -8276,12 +6217,58 @@ local function get_command(fromchat, msg)
 
 			-- ANTIABUSERS COMMANDS
 
+			if arg1 == "crim2" then
+				local player = GetPlayerFromString(arg2)
+				if player then
+					local savedpos = GetRO()
+					local savedteam = game.Players.LocalPlayer.TeamColor.Color
+					local get = player.Character:FindFirstChild("HumanoidRootPart") or player.Character:FindFirstChild("Torso")
+					local stop = 0
+					game.Players.LocalPlayer.Character.Humanoid.Name = 1
+				    local l = game.Players.LocalPlayer.Character["1"]:Clone()
+				    l.Parent = game.Players.LocalPlayer.Character
+				    l.Name = "Humanoid"
+				    wait(0.1)
+				    game.Players.LocalPlayer.Character["1"]:Destroy()
+				    game.Workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character
+				    game.Players.LocalPlayer.Character.Animate.Disabled = true
+				    game.Players.LocalPlayer.Character.Animate.Disabled = true
+				    game.Players.LocalPlayer.Character.Humanoid.DisplayDistanceType = "None"
+					repeat wait()
+						stop = stop + 1
+						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = get.CFrame
+						spawnlocations[4].CFrame = get.CFrame
+						spawnlocations[4].Transparency = 1
+						spawnlocations[4].CanCollide = false
+
+						pcall(function()
+							if workspace:FindFirstChild(game.Players.LocalPlayer.Name) and ((game.Players.LocalPlayer.Character:FindFirstChildOfClass('Part').Position-workspace[player.Name]:FindFirstChildOfClass('Part').Position).magnitude < 10) and player ~= game.Players.LocalPlayer then
+								for i = 1,workspace[player.Name].Humanoid.Health/5 do
+									game:GetService("ReplicatedStorage").meleeEvent:FireServer(player)
+								end
+							end
+						end)
+					until (not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or player.TeamColor.Name == "Really red" or stop > 100)
+					wait()
+					spawnlocations[4].CFrame = CFrame.new(778, 500, 2465)
+	                spawnlocations[4].AllowTeamChangeOnTouch = false
+					wait(0.5)
+					refreshTeam(savedteam)
+					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedpos
+					
+				end
+			end
+
 			if arg1 == "antibringnoroot" or arg1 == "abnoroot" or arg1 == "abnr" then
 				setstate("ANTIBRING_NO_ROOT", arg2)
 			end
 
 			if arg1 == "ab" or arg1 == "antibring" then
 				setstate("ANTIBRING", arg2)
+			end
+
+			if arg1 == "avoidbring" or arg1 == "avb" then
+				setstate("AVOIDBRING", arg2)
 			end
 
 			if arg1 == "annoy" then
@@ -8314,11 +6301,8 @@ local function get_command(fromchat, msg)
 					if arg2 == "off" or not arg2 then
 						states.LOOP_CRIM = nil
 						wait(0.5)
-						local crim = game:GetService("Workspace"):WaitForChild("Criminals Spawn"):GetChildren()
-                        for i,v in pairs(crim) do
-	                        v.CFrame = CFrame.new(778, 500, 2465)
-	                        v.AllowTeamChangeOnTouch = false
-                        end
+						spawnlocations[3].CFrame = CFrame.new(778, 500, 2465)
+	                    spawnlocations[3].AllowTeamChangeOnTouch = false
 					end
 				end
 			end
@@ -8335,7 +6319,7 @@ local function get_command(fromchat, msg)
 			end
 
 			if arg1 == "antiinvis" then
-				setstate("anti_invis", arg2)
+				setstate("anti_invisible", arg2)
 			end
 			
 			if arg1 == "antifling" then
@@ -8348,7 +6332,7 @@ local function get_command(fromchat, msg)
 				setstate("AUTOGUNS", arg1, true)
 				setstate("AUTORESPAWN", arg1, true)
 				setstate("AUTOLOCK", arg1, true)
-				setstate("ANTISALAG", arg1, true)
+				setstate("ANTI_SPAM_ARREST_LAG", arg1, true)
 				setstate("ANTIARMORSPAM", arg1, true)
 				Notify("STATES enabled", green)
 				coroutine.wrap(function()
@@ -8368,7 +6352,7 @@ local function get_command(fromchat, msg)
 				setstate("AUTOGUNS", arg1, true)
 				setstate("AUTORESPAWN", arg1, true)
 				setstate("AUTOLOCK", arg1, true)
-				setstate("ANTISALAG", arg1, true)
+				setstate("ANTI_SPAM_ARREST_LAG", arg1, true)
 				setstate("ANTIARMORSPAM", arg1, true)
 				Notify("STATES disabled", red)
 			end
@@ -8530,17 +6514,16 @@ local function get_command(fromchat, msg)
 
 			if arg1 == "anticrash" then
 				setstate("ANTICRASH", arg2)
+				wait()
 				if states.ANTICRASH == true then
 					for i,v in pairs(getconnections(game.ReplicatedStorage.ReplicateEvent.OnClientEvent)) do
 						v:Disable()
 					end
-				end
-
-				if states.ANTICRASH == false then
+				else
 					for i,v in pairs(getconnections(game.ReplicatedStorage.ReplicateEvent.OnClientEvent)) do
 						v:Enable()
 					end
-				end
+				end	
 			end
 
 			if arg1 == "end" then
@@ -8635,14 +6618,16 @@ local function get_command(fromchat, msg)
 				Notify("Unviewing", red)
 			end
 
-            if arg1 == "sa" then
+            if arg1 == "sa" or arg1 == "spamarrest" then
 				if arg2 then
 					if arg2 == "off" then
 						states.SPAM_ARRESTING = nil
+						Notify("Spam arresting: OFF", red)
 					else
 						states.GOD_MODE = true
 						states.ANTITEAMS = true
 						states.SPAM_ARRESTING = GetPlayerFromString(arg2)
+						Notify("Spam arresting: "..GetPlayerFromString(arg2).Name.." @"..GetPlayerFromString(arg2).DisplayName, green)
 					end
 				end
             end
@@ -8669,7 +6654,7 @@ local function get_command(fromchat, msg)
 
 			-- ANTILAG COMMANDS
 			if arg1 == "antisalag" then
-				setstate("antisalag", arg2)
+				setstate("ANTI_SPAM_ARREST_LAG", arg2)
 			end
 		end
 	end
@@ -8683,6 +6668,8 @@ game.Players.LocalPlayer.Chatted:Connect(function(msg)
 	get_command(true, msg)
 end)
 
+-- GIVE-ADMIN
+
 -- UI SCRIPTING
 
 local cmdopenpos = UDim2.new(0, 0, 0.94040513, 0)
@@ -8693,7 +6680,7 @@ local commandclosepos = UDim2.new(-0.192, 0, 0.730631649, 0)
 
 UIS.InputBegan:connect(function(input, process)
 	if input.UserInputType == Enum.UserInputType.Keyboard then
-		if input.KeyCode == Enum.KeyCode.Return then
+		if input.KeyCode == Enum.KeyCode.Return and states.CMDBAR == true then
 			get_command(false)
 			wait(0.03)
 			TextBox.Text = " "
@@ -8770,7 +6757,11 @@ UIS.InputBegan:connect(function(input, process)
 	end
 	-- Output
 	if input.KeyCode == Enum.KeyCode.P then
-		print("ola")
+		if Output.Visible == true then
+			Output.Visible = false
+		else
+			Output.Visible = true
+		end
 	end
 end)
 
@@ -8802,10 +6793,14 @@ local allcmds = {
 	"copyteam <player>",
 	"guns",
 	"gunorder <gun> <1/10>",	
-	"ws/walkspeed <num>",
-	"jp/jumppower <num>",
-	"gt/gravity <num>",
-	"bri <number>",
+	"autorespawn/auto <on/off>",
+	"autolock/alock <on/off>",
+	"autoguns/aguns <on/off>",
+	"antishield <on/off>",
+	"walkspeed/ws <num>",
+	"jumppower/jp <num>",
+	"gravity/gt <num>",
+	"brightness/bri <number>",
 	"end",
 	"coploop/cl <on/off>",
 	"bring <player>",
@@ -8819,25 +6814,16 @@ local allcmds = {
 	"count",
 	"on",
 	"off",
-	"theme <rgb>",
-	"load <exploit>",
-	"to/goto <player>",
-	"looptp <player>",
-	"unlooptp",
-	"hitsound <on/off>",
+	"goto/to <player>",
+	"damageindicators <on/off>",
 	"cursor <id>",
 	"cursorsize <num>",
 	"arrestaura <on/off>",
-	"autorespawn/auto <on/off>",
-	"autolock <on/off>",
-	"autoguns <on/off>",
-	"antishield <on/off>",
-	"invisible <player>",
-	"visible <player>",
+	"ally <player>",
+	"enemy <player>",
 	"doors <on/off>",
 	"antibring <on/off>",
 	"ts/timestop",
-	"fakespam <on/off>",
 	"admin <player>",
 	"unadmin <player>",
 	"sound <old/off/def>",
@@ -8845,23 +6831,13 @@ local allcmds = {
 	"unannoy",
 	"kill/k <player>",
 	"loopkill/lk <player>",
-	"lkall",
-	"unloopkill/unlk",
+	"unloopkill/unlk <player>",
 	"god <on/off>",
-	"ff <on/off>",
 	"anticrim <on/off>",
 	"loopcrim <player>",
-	"playernotify <on/off>",
-	"notifications <on/off>",
-	"xyz <name>",
 	"clicktp",
-	"motionblur <on/off>",
 	"betterlight <on/off>",
 	"fastspawn <on/off>",
-	"damagesounds/ds <on/off>",
-	"cape <on/off>",
-	"capecolor <rgb>",
-	"capematerial <material>",
 	"armorspam <on/off>",
 	"antiinvis <on/off>",
 	"antiafk <on/off>>",
@@ -8883,6 +6859,7 @@ local allcmds = {
 	"down",
 	"secretzone",
 	"city",
+	"wall"
 }
 
 function IsEven(num)
@@ -8966,7 +6943,7 @@ coroutine.wrap(function()
 				local l = game.Players.LocalPlayer.Character["1"]:Clone()
 				l.Parent = game.Players.LocalPlayer.Character
 				l.Name = "Humanoid"
-				wait(0.1)
+				wait()
 				game.Players.LocalPlayer.Character["1"]:Destroy()
 				game.Workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character
 				game.Players.LocalPlayer.Character.Animate.Disabled = true
@@ -8992,6 +6969,27 @@ coroutine.wrap(function()
 			pcall(function()
 				game.Players.LocalPlayer.Character:WaitForChild("Animate").toolnone.ToolNoneAnim.AnimationId = ""
 			end)
+		end
+	end)
+end)()
+
+coroutine.wrap(function()
+	game:GetService("RunService").Stepped:connect(function()
+		if states.AVOIDBRING == true then
+			for i,v in pairs(game.Players:GetPlayers()) do
+				if not v.Character:FindFirstChild("Humanoid") and v.Character:FindFirstChildWhichIsA("Tool") and v ~= game.Players.LocalPlayer then
+					game.Players.LocalPlayer.Character.Humanoid.Name = 1
+				    local l = game.Players.LocalPlayer.Character["1"]:Clone()
+				    l.Parent = game.Players.LocalPlayer.Character
+				    l.Name = "Humanoid"
+				    wait()
+				    game.Players.LocalPlayer.Character["1"]:Destroy()
+			        game.Workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character
+				    game.Players.LocalPlayer.Character.Animate.Disabled = true
+				    game.Players.LocalPlayer.Character.Animate.Disabled = true
+				    game.Players.LocalPlayer.Character.Humanoid.DisplayDistanceType = "None"
+				end
+			end
 		end
 	end)
 end)()
@@ -9078,7 +7076,7 @@ end)()
 
 coroutine.wrap(function()
 	while wait() do
-		if states.ANTI_INVIS then
+		if states.ANTI_INVISIBLE then
 			for _,v in pairs(game:GetService("Players"):GetPlayers()) do
 				if v ~= game.Players.LocalPlayer then
 					pcall(function()
@@ -9179,31 +7177,24 @@ end)()
 
 coroutine.wrap(function()
 	while wait() do
-		if states.HEART ~= nil then
+		if states.HEART ~= nil and states.HEART.Character:FindFirstChild("Humanoid") and states.HEART.Character:FindFirstChild("Humanoid").Health < 1 and not states.HEART.Character:FindFirstChild("ForceField") and not game.Players.LocalPlayer.Character:FindFirstChild("ForceField") then
 			pcall(function()
-				if states.HEART.Character.Humanoid.Health < 1 then
-					pcall(function()
-						game.Players.LocalPlayer.Character:BreakJoints()
-					end)
-				end
+				game.Players.LocalPlayer.Character:BreakJoints()
 			end)
 		end
 	end
 end)()
 
 coroutine.wrap(function()
-	while wait(1) do
-		if states.HEART ~= nil then
+	while wait() do
+		if game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid").Health < 1 and not game.Players.LocalPlayer.Character:FindFirstChild("ForceField") then
 			pcall(function()
-				if game.Players.LocalPlayer.Character.Humanoid.Health < 1 then
-					pcall(function()
-						kill1(states.HEART)
-					end)
-				end
+				kill1(states.HEART, true)
 			end)
 		end
 	end
 end)()
+
 
 coroutine.wrap(function()
 	while wait() do
@@ -9226,16 +7217,6 @@ coroutine.wrap(function()
 				pcall(function()
 					refreshTeam(Color3.fromRGB(0, 0, 0))
 				end)
-				coroutine.wrap(function()
-					local crim = game:GetService("Workspace"):WaitForChild("Criminals Spawn"):GetChildren()
-
-					for i,v in pairs(crim) do
-						pcall(function()
-							v.CFrame = CFrame.new(778, 500, 2465)
-							v.AllowTeamChangeOnTouch = false
-						end)
-					end
-				end)()
 			end
 		end
 	end
@@ -9294,7 +7275,7 @@ end)()
 
 coroutine.wrap(function()
 	game:GetService("RunService").Stepped:Connect(function()
-		if states.ANTISALAG == true then
+		if states.ANTI_SPAM_ARREST_LAG == true then
 			pcall(function()
 				for i,player in pairs(game.Players:GetPlayers()) do
 					for i, part in pairs(player.Character:GetDescendants()) do
@@ -9318,9 +7299,20 @@ coroutine.wrap(function()
 					teleport(states.SPAM_ARRESTING, game.Players.LocalPlayer)
 				else
 					if states.SPAM_ARRESTING.TeamColor.Name ~= "Really red" then
-						teleportCrim(states.SPAM_ARRESTING, game.Players.LocalPlayer)
+						criminpos(states.SPAM_ARRESTING)
 					end
 				end
+			end)
+		end
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if states.SPAM_ARRESTING ~= nil then
+			pcall(function()
+				local get = states.SPAM_ARRESTING.Character:FindFirstChild("HumanoidRootPart") or states.SPAM_ARRESTING.Character:FindFirstChild("Torso")
+				get.CFrame = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid").CFrame
 			end)
 		end
 	end
@@ -9399,9 +7391,10 @@ coroutine.wrap(function()
 				end
 
 
-				local crim = game:GetService("Workspace")["Criminals Spawn"].SpawnLocation
+				local crim = spawnlocations[3]
 				crim.CanCollide = false
 				crim.CFrame = GetRO()
+				crim.Transparency = 1
 			end)
 		end
 	end
@@ -9437,8 +7430,20 @@ coroutine.wrap(function()
 end)()
 
 coroutine.wrap(function()
+	game:GetService("RunService").Stepped:connect(function()
+		if states.FAST_PUNCH == true then
+			pcall(function()
+				getsenv(game.Players.LocalPlayer.Character.ClientInputHandler).cs.isFighting = false
+			end)
+		end
+	
+	end)
+
+end)()
+
+coroutine.wrap(function()
 	while wait() do
-		if states.INFAMMO == true then
+		if states.INFINITE_AMMO == true then
 			pcall(function()
 				for _,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
 					if v:FindFirstChild("GunStates") then
@@ -9527,5 +7532,5 @@ end)
 -- ENDING SCRIPT
 
 wait(1)
-Notify("Welcome to aunnotienenombre Admin", green)
+Notify("Welcome to GHXST Admin", green)
 ADMINLOADED = true
