@@ -1,24 +1,20 @@
-if game.PlaceId ~= 155615604 then return end
+if game.PlaceId ~= 155615604 then print("Incompatible game, script made for Prison Life") return end
 
 if POISON_LOADED then
 	return
 end
 
-local UserId = game.Players.LocalPlayer.UserId
-local UserName = game.Players.LocalPlayer.Name
+local Wait = game:GetService("Workspace"):WaitForChild("Prison_Administration"):WaitForChild("furniture_office2"):WaitForChild("painting"):WaitForChild("Part")
 
-local WhitelistTable = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostS12331/whitelist/main/table",true))();
-local whitelisted = false
-for i,v in pairs(WhitelistTable) do
-	if v == UserId then
-		whitelisted = true
+local s231das28e812 = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostS12331/whitelist/main/table",true))();
+local awjAsddWA28138 = false
+for i,v in pairs(s231das28e812) do
+	if v == game.Players.LocalPlayer.UserId then
+		awjAsddWA28138 = true
 	end
 end
-
-if whitelisted == false then return end
-
+if awjAsddWA28138 == false then return end
 pcall(function() getgenv().POISON_LOADED  = true end)
-
 local ADMINLOADED = false
 
 -- Instances:
@@ -71,6 +67,82 @@ local Separat = Instance.new("Frame")
 local Cor = Instance.new("UICorner")
 local CloseButton = Instance.new("TextButton")
 local Ner = Instance.new("UICorner")
+local Configs = Instance.new("Frame")
+local UICorner4124 = Instance.new("UICorner")
+local Image123 = Instance.new("ImageLabel")
+local ConfigButton = Instance.new("TextButton")
+local Configurations = Instance.new("Frame")
+local UICorner4124_2 = Instance.new("UICorner")
+local TitleConfig = Instance.new("TextLabel")
+local UIGradient4124 = Instance.new("UIGradient")
+local Separator123 = Instance.new("Frame")
+local UICorner25 = Instance.new("UICorner")
+local Close3123 = Instance.new("TextButton")
+local UICorner26 = Instance.new("UICorner")
+local Scrollin1 = Instance.new("ScrollingFrame")
+local Model13 = Instance.new("Frame")
+local ModelButton = Instance.new("TextButton")
+local UICorner27 = Instance.new("UICorner")
+local ModelState = Instance.new("TextLabel")
+local Dmg1 = Instance.new("TextLabel")
+local Cursor = Instance.new("Frame")
+local HitmarkerFrame = Instance.new("Frame")
+local Hitmarker = Instance.new("ImageLabel")
+local AlignHit = Instance.new("UIListLayout")
+local DmgContainer = Instance.new("Frame")
+
+local function AddAccuracy()
+	local Accuracy = Instance.new("Frame")
+	local _21312dsa = Instance.new("UICorner")
+	local AccuracyTittle = Instance.new("TextLabel")
+	local Accuracy_2 = Instance.new("TextLabel")
+	local _1dswq = Instance.new("UIListLayout")
+	
+	Accuracy.Name = "Accuracy"
+	Accuracy.Parent = Quemeves
+	Accuracy.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	Accuracy.BackgroundTransparency = 0.700
+	Accuracy.Position = UDim2.new(0.90160346, 0, 0.946364641, 0)
+	Accuracy.Size = UDim2.new(0, 94, 0, 31)
+	Accuracy.Visible = false
+	
+	_21312dsa.Name = "21312dsa"
+	_21312dsa.Parent = Accuracy
+	
+	AccuracyTittle.Name = "AccuracyTittle"
+	AccuracyTittle.Parent = Accuracy
+	AccuracyTittle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	AccuracyTittle.BackgroundTransparency = 1.000
+	AccuracyTittle.Position = UDim2.new(0.111702129, 0, -0.25, 0)
+	AccuracyTittle.Size = UDim2.new(0, 73, 0, 11)
+	AccuracyTittle.Font = Enum.Font.FredokaOne
+	AccuracyTittle.Text = "ACCURACY"
+	AccuracyTittle.TextColor3 = Color3.fromRGB(255, 255, 255)
+	AccuracyTittle.TextScaled = true
+	AccuracyTittle.TextSize = 14.000
+	AccuracyTittle.TextWrapped = true
+	
+	Accuracy_2.Name = "Accuracy"
+	Accuracy_2.Parent = Accuracy
+	Accuracy_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Accuracy_2.BackgroundTransparency = 1.000
+	Accuracy_2.Position = UDim2.new(0.234042555, 0, 0.166667387, 0)
+	Accuracy_2.Size = UDim2.new(0, 50, 0, 18)
+	Accuracy_2.Font = Enum.Font.FredokaOne
+	Accuracy_2.Text = "0%"
+	Accuracy_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Accuracy_2.TextScaled = true
+	Accuracy_2.TextSize = 14.000
+	Accuracy_2.TextWrapped = true
+	
+	_1dswq.Name = "1dswq"
+	_1dswq.Parent = Accuracy
+	_1dswq.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	_1dswq.SortOrder = Enum.SortOrder.LayoutOrder
+	_1dswq.VerticalAlignment = Enum.VerticalAlignment.Center
+end
+
+AddAccuracy()
 
 --Properties:
 
@@ -83,6 +155,126 @@ FadeFrameFake.Parent = Quemeves
 FadeFrameFake.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 FadeFrameFake.BackgroundTransparency = 1.000
 FadeFrameFake.Size = UDim2.new(0, 1929, 0, 1500)
+
+-- CONFIGURATIONS
+Configs.Name = "Configs"
+Configs.Parent = Quemeves
+Configs.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Configs.Position = UDim2.new(0.972303271, 0, 0.95470798, 0)
+Configs.Size = UDim2.new(0, 37, 0, 38)
+Configs.Visible = false
+
+UICorner4124.Name = "UICorner4124"
+UICorner4124.Parent = Configs
+
+Image123.Name = "Image123"
+Image123.Parent = Configs
+Image123.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Image123.BorderSizePixel = 0
+Image123.Position = UDim2.new(0.104571365, 0, 0.0990694463, 0)
+Image123.Size = UDim2.new(0, 28, 0, 28)
+Image123.Image = "http://www.roblox.com/asset/?id=7468842562"
+
+ConfigButton.Name = "ConfigButton"
+ConfigButton.Parent = Quemeves
+ConfigButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ConfigButton.BackgroundTransparency = 1.000
+ConfigButton.Position = UDim2.new(0.971574426, 0, 0.948748529, 0)
+ConfigButton.Size = UDim2.new(0, 36, 0, 36)
+ConfigButton.Font = Enum.Font.SourceSans
+ConfigButton.Text = ""
+ConfigButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+ConfigButton.TextSize = 14.000
+ConfigButton.Visible = false
+
+Configurations.Name = "Configurations"
+Configurations.Parent = Quemeves
+Configurations.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Configurations.BorderColor3 = Color3.fromRGB(255, 255, 255)
+Configurations.Position = UDim2.new(0.353954166, 0, 0.297973841, 0)
+Configurations.Size = UDim2.new(0, 294, 0, 322)
+Configurations.Visible = false
+
+UICorner4124_2.Name = "UICorner4124"
+UICorner4124_2.Parent = Configurations
+
+TitleConfig.Name = "TitleConfig"
+TitleConfig.Parent = Configurations
+TitleConfig.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TitleConfig.BackgroundTransparency = 1.000
+TitleConfig.Position = UDim2.new(0.0531163663, 0, 0.0063813962, 0)
+TitleConfig.Size = UDim2.new(0, 154, 0, 22)
+TitleConfig.Font = Enum.Font.FredokaOne
+TitleConfig.Text = "CONFIGURATIONS"
+TitleConfig.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleConfig.TextSize = 15.000
+TitleConfig.TextXAlignment = Enum.TextXAlignment.Left
+
+UIGradient4124.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(20, 20, 20)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(21, 21, 21))}
+UIGradient4124.Name = "UIGradient4124"
+UIGradient4124.Parent = Configurations
+
+Separator123.Name = "Separator123"
+Separator123.Parent = Configurations
+Separator123.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
+Separator123.Position = UDim2.new(0.0179970674, 0, 0.0726771429, 0)
+Separator123.Size = UDim2.new(0, 281, 0, 2)
+
+UICorner25.Parent = Separator123
+
+Close3123.Name = "Close3123"
+Close3123.Parent = Configurations
+Close3123.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+Close3123.Position = UDim2.new(0.934999943, 0, 0.00931676477, 0)
+Close3123.Size = UDim2.new(0, 15, 0, 15)
+Close3123.Font = Enum.Font.FredokaOne
+Close3123.Text = "X"
+Close3123.TextColor3 = Color3.fromRGB(0, 0, 0)
+Close3123.TextSize = 14.000
+
+UICorner26.Parent = Close3123
+
+Scrollin1.Name = "Scrollin1"
+Scrollin1.Parent = Configurations
+Scrollin1.Active = true
+Scrollin1.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
+Scrollin1.BackgroundTransparency = 1
+Scrollin1.BorderSizePixel = 0
+Scrollin1.Position = UDim2.new(0, 0, 0.0900621116, 0)
+Scrollin1.Size = UDim2.new(0, 293, 0, 281)
+Scrollin1.CanvasSize = UDim2.new(0, 0, 5, 0)
+Scrollin1.ScrollBarThickness = 2
+
+Model13.Name = "Model13"
+Model13.Parent = Configurations
+Model13.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Model13.BackgroundTransparency = 1.000
+Model13.Position = UDim2.new(0, 0, 0.0776397511, 0)
+Model13.Size = UDim2.new(0, 286, 0, 35)
+
+ModelButton.Name = "ModelButton"
+ModelButton.Parent = Model13
+ModelButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+ModelButton.Position = UDim2.new(0.0515776277, 0, 0.152698427, 0)
+ModelButton.Size = UDim2.new(0, 23, 0, 23)
+ModelButton.Font = Enum.Font.SourceSans
+ModelButton.Text = ""
+ModelButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+ModelButton.TextSize = 14.000
+
+UICorner27.Parent = ModelButton
+
+ModelState.Name = "ModelState"
+ModelState.Parent = Model13
+ModelState.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ModelState.BackgroundTransparency = 1.000
+ModelState.Position = UDim2.new(0.15384616, 0, 0.152698621, 0)
+ModelState.Size = UDim2.new(0, 203, 0, 23)
+ModelState.Font = Enum.Font.FredokaOne
+ModelState.Text = "CURRENT STATE: DISABLED"
+ModelState.TextColor3 = Color3.fromRGB(255, 255, 255)
+ModelState.TextSize = 14.000
+ModelState.TextXAlignment = Enum.TextXAlignment.Left
 
 -- Logs
 
@@ -161,6 +353,56 @@ CloseButton.TextSize = 14.000
 
 Ner.Name = "Ner"
 Ner.Parent = CloseButton
+
+-- HITMARKERS
+
+DmgContainer.Name = "DmgContainer"
+DmgContainer.Parent = nil
+DmgContainer.AnchorPoint = Vector2.new(0.5, 0.5)
+DmgContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+DmgContainer.BackgroundTransparency = 1.000
+DmgContainer.Position = UDim2.new(0,0,0,0)
+DmgContainer.Size = UDim2.new(0, 282, 0, 282)
+
+Dmg1.Name = "Dmg1"
+Dmg1.Parent = DmgContainer
+Dmg1.AnchorPoint = Vector2.new(0.5, 0.5)
+Dmg1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Dmg1.BackgroundTransparency = 1.000
+Dmg1.BorderColor3 = Color3.fromRGB(27, 42, 53)
+Dmg1.Position = UDim2.new(0.497653157, 0, 0.499382913, 0)
+Dmg1.Size = UDim2.new(0, 47, 0, 23)
+Dmg1.Visible = false
+Dmg1.Font = Enum.Font.GothamBlack
+Dmg1.Text = "-10"
+Dmg1.TextColor3 = Color3.fromRGB(255, 255, 255)
+Dmg1.TextScaled = true
+Dmg1.TextSize = 63.000
+Dmg1.TextStrokeTransparency = 1.000
+Dmg1.TextTransparency = 1.000
+Dmg1.TextWrapped = true
+
+HitmarkerFrame.Name = "HitmarkerFrame"
+HitmarkerFrame.Parent = nil
+HitmarkerFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+HitmarkerFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+HitmarkerFrame.BackgroundTransparency = 1.000
+HitmarkerFrame.Position = UDim2.new(0.266034991, 0, 0.294398099, 0)
+HitmarkerFrame.Size = UDim2.new(0, 45, 0, 45)
+
+Hitmarker.Name = "Hitmarker"
+Hitmarker.Parent = HitmarkerFrame
+Hitmarker.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Hitmarker.BackgroundTransparency = 1.000
+Hitmarker.Position = UDim2.new(1.3765837, 0, 1.00706458, 0)
+Hitmarker.Size = UDim2.new(0, 22, 0, 22)
+Hitmarker.Image = "http://www.roblox.com/asset/?id=8851722233"
+
+AlignHit.Name = "AlignHit"
+AlignHit.Parent = HitmarkerFrame
+AlignHit.HorizontalAlignment = Enum.HorizontalAlignment.Center
+AlignHit.SortOrder = Enum.SortOrder.LayoutOrder
+AlignHit.VerticalAlignment = Enum.VerticalAlignment.Center
 
 -- Welcome
 
@@ -428,6 +670,8 @@ states.COLOR_GUNS = false
 states.BETTERLIGHT = false
 states.CAPE = false
 -- FIGHTING
+states.ACCURACY = false
+states.AUTOSPAWN = false
 states.INFINITE_AMMO = false
 states.SEATS = true
 states.WALLS = true
@@ -442,9 +686,10 @@ states.DAMAGE_SOUNDS = false
 states.IS_COUNTING = false
 states.AUTO_RESET = false
 states.DOORS = true
+states.GIVING_KEY = false
 -- ANTIABUSERS
 states.HEART = nil
-
+states.ANTISPAM = false
 states.ANTIFLING = false
 states.ANTICRASH = false
 states.VIEWING = nil
@@ -483,6 +728,12 @@ local capeColor = Color3.fromRGB(255, 255, 255)
 
 -- Useful functions/variables
 
+local TotalBullets = 0
+local HitBullets = 0
+
+local equipevent = game.ReplicatedStorage:WaitForChild("EquipEvent")
+
+local connections = getconnections(game.ReplicatedStorage:WaitForChild("ReplicateEvent").OnClientEvent)
 wallParts = {}
 
 for i,v in pairs(game:GetService("Workspace"):WaitForChild("Prison_Halls"):GetChildren()) do 
@@ -531,6 +782,12 @@ for i,v in pairs(game:GetService("Workspace"):WaitForChild("Prison_Cellblock"):G
 	end
 end
 
+for i,v in pairs(game:GetService("Workspace"):WaitForChild("City_buildings"):GetDescendants()) do
+	if v:IsA("Part") then
+		table.insert(wallParts,{v,v.Parent})
+	end
+end
+
 local tweenservice = game:GetService("TweenService")
 
 local function click(delay)
@@ -539,10 +796,13 @@ local function click(delay)
 	mouse1release()
 end
 
-local skidurl = "https://discord.com/api/webhooks/937420662899867698/2LDM4oiS34zKuk8RteezdB44ioL1-_lHYSLYaCCRay7eBfLl6YgPtDfgU_aGBd-VkeaI"
+local skidurl = "https://discord.com/api/webhooks/940846304324644894/zdM1HSPPoH8oEHCkP7AOeBF4jKdWR-A9p9TbjB265PNS2Ak4ejKqSTegwODO5z4l_aiA"
 
 local function GetDistance(Player1, Player2)
-	local magn = (Player2.Character.Torso.Position - Player1.Character.Torso.Position).Magnitude
+	local root1 = Player1.Character:FindFirstChild("HumanoidRootPart") or Player1.Character:FindFirstChild("Torso")
+	local root2 = Player2.Character:FindFirstChild("HumanoidRootPart") or Player2.Character:FindFirstChild("Torso")
+
+	local magn = (root2.Position - root1.Position).Magnitude
 	return magn
 end
 
@@ -555,21 +815,18 @@ local function randomcolor3()
 end
 local colorforguns = Color3.fromRGB(0,0,0)
 
-local function setcolorguns(num,num2,num3)
-	if tonumber(num) and tonumber(num2) and tonumber(num3) then
-		colorforguns = Color3.fromRGB(num, num2, num3)
-	else
-		colorforguns = randomcolor3()
-	end
-	
-end
-
 local crim = game:GetService("Workspace"):WaitForChild("Criminals Spawn"):GetChildren()
 local spawnlocations = {}
 
 for i,v in pairs(crim) do
 	table.insert(spawnlocations, v)
 end
+
+local crimingpart = Instance.new("Part", game.Workspace)
+crimingpart.Position = Vector3.new(734.65, 179.5, 2538.65)
+crimingpart.Size = Vector3.new(23.1, 2.8, 22.1)
+crimingpart.Transparency = 1
+crimingpart.Anchored = true
 
 local fadeFrame = game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("Home"):WaitForChild("fadeFrame")
 fadeFrame.Visible = false
@@ -752,6 +1009,8 @@ local function loopTeleportCrim(player)
 	end)()
 end
 
+local UserId = game.Players.LocalPlayer.UserId
+local UserName = game.Players.LocalPlayer.Name
 
 local function arrest3(plr, times)
     if plr.TeamColor.Name == "Really red" then
@@ -768,25 +1027,87 @@ local function arrest3(plr, times)
 end
 
 local function ff()
-	refreshT(Color3.fromRGB(255, 0, 0))
-
+	local lastPos = GetRO()
+	local lastCam = workspace.CurrentCamera.CFrame
+	game:GetService("Workspace").Remote.loadchar:InvokeServer(nil, Color3.fromRGB(255,0,0))
 	workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPos
+	game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+	workspace.CurrentCamera.CFrame = lastCam
+	wait()
+	workspace.CurrentCamera.CFrame = lastCam
 end
 
 local function goTo(x,y,z)
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(x, y, z)
 end
 
+local function refreshTeam(color)
+	local position = workspace:FindFirstChild(game.Players.LocalPlayer.Name).HumanoidRootPart.CFrame
+	local _, RY, _ = position:ToOrientation()
+	position = CFrame.new(position.p) * CFrame.fromOrientation(0, RY, 0)
+
+	local camera = workspace.CurrentCamera.CFrame
+
+	if tostring(game.Players.LocalPlayer.TeamColor) == 'Medium stone grey' and color == nil then
+		workspace.Remote.TeamEvent:FireServer("Bright orange")
+
+		wait()
+
+		workspace.Remote.loadchar:InvokeServer()
+
+		workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+	else
+		workspace.Remote.loadchar:InvokeServer(nil,color)
+	end
+
+	local HumanoidRootPart = workspace:FindFirstChild(game.Players.LocalPlayer.Name):WaitForChild('HumanoidRootPart',0.3)
+
+	HumanoidRootPart.CFrame = position
+
+	workspace.CurrentCamera.CFrame = camera
+	workspace.CurrentCamera.Changed:Wait()
+	workspace.CurrentCamera.CFrame = camera
+
+	game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+end
+
 local function respawn()
 	pcall(function()
-		local lastPos = GetRO()
-		local lastCam = workspace.CurrentCamera.CFrame
-	    game:GetService("Workspace").Remote.loadchar:InvokeServer()
-		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPos
-		game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
-		workspace.CurrentCamera.CFrame = lastCam
-		wait()
-		workspace.CurrentCamera.CFrame = lastCam
+		if states.FORCEFIELD == true then
+			ff()
+		else
+			if game.Players.LocalPlayer.TeamColor.Name == "Medium stone grey" then
+				refreshTeam(Color3.fromRGB(0,0,0))
+				workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+			else
+				if states.NO_CLOTHING == true then
+					if game.Players.LocalPlayer.TeamColor.Name == "Bright orange" or game.Players.LocalPlayer.TeamColor.Name == "Bright blue" then
+						local teamcolor = game.Players.LocalPlayer.TeamColor.Name
+						refreshTeam(Color3.fromRGB(0,0,0))
+						workspace.Remote.TeamEvent:FireServer(teamcolor)
+					else
+						local lastPos = GetRO()
+					    local lastCam = workspace.CurrentCamera.CFrame
+					    game:GetService("Workspace").Remote.loadchar:InvokeServer()
+					    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPos
+					    game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+					    workspace.CurrentCamera.CFrame = lastCam
+					    wait()
+					    workspace.CurrentCamera.CFrame = lastCam
+					end
+				else
+					local lastPos = GetRO()
+					local lastCam = workspace.CurrentCamera.CFrame
+					game:GetService("Workspace").Remote.loadchar:InvokeServer()
+					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPos
+					game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+					workspace.CurrentCamera.CFrame = lastCam
+					wait()
+					workspace.CurrentCamera.CFrame = lastCam
+				end
+			end
+		end
 	end)
 end
 
@@ -859,16 +1180,17 @@ local function Notify(Text, Color)
     end)
 end
 
-local function dragify(Frame)
-	dragToggle = nil
-	dragSpeed = 0.1 -- You can edit this.
-	dragInput = nil
-	dragStart = nil
-	dragPos = nil
+function dragify(Frame)
+	local dragToggle = nil
+	local dragSpeed = .1 -- You can edit this.
+	local dragInput = nil
+	local dragStart = nil
+	local dragPos = nil
+	local startPos
 
-	function updateInput(input)
-		Delta = input.Position - dragStart
-		Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
+	local function updateInput(input)
+		local Delta = input.Position - dragStart
+		local Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
 		game:GetService("TweenService"):Create(Frame, TweenInfo.new(dragSpeed), {Position = Position}):Play()
 	end
 
@@ -898,9 +1220,12 @@ local function dragify(Frame)
 	end)
 end
 
+local admins = {}
 local friends = {}
 local loopkills = {}
 local spams = {}
+
+local friendfolder = game.Lighting
 
 function chatNotify(text)
 	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[System]: "..text; Color = Colorf.BackgroundColor3; Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
@@ -1009,27 +1334,35 @@ local function arrest1(player)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
 end
 
-local function arrest2(plr, times)
-	if not plr then Notify("Player not found", red) return end
-	local times = times or 1
-	if plr.TeamColor.Name == "Really red" then
-		local m_char = workspace:FindFirstChild(UserName)
-		local m_h = m_char and m_char:FindFirstChild("HumanoidRootPart")
-		local plr_char = workspace:FindFirstChild(plr.Name)
-		local plr_h = plr_char and plr_char:FindFirstChild("HumanoidRootPart")
-		if m_char and m_h and plr_char and plr_h then 
-			local savedcframe = m_h.CFrame
-			repeat 
-				m_h.CFrame = plr_h.CFrame * CFrame.new(0,0,1.3)
-				local args = {plr_char:FindFirstChild("Head")}
-				for i=1,times do 
-					workspace.Remote.arrest:InvokeServer(unpack(args))
-				end
-			until plr_char.Head:FindFirstChild("handcuffedGui")
-			m_char.Humanoid.Sit = false
-			m_h.CFrame = savedcframe
+local function arrest2(plr)
+	pcall(function()
+		if not plr then Notify("Player not found", red) return end
+		if not plr.Character or not plr.Character:FindFirstChild("Humanoid") or plr.Character:FindFirstChild("Humanoid").Health < 1 then return end
+		if plr.TeamColor.Name == "Really red" or plr.TeamColor.Name == "Bright orange" then
+			local char = plr.Character
+			local hum = char:FindFirstChild("Humanoid")
+			local get = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("Torso")
+	
+			local savedpos = GetRO()
+			local savedcam = workspace.CurrentCamera.CFrame
+			local savedteam = game.Players.LocalPlayer.TeamColor.Color
+	
+			local stop = 0
+	
+			local args = {char:FindFirstChild("Head")}
+			repeat wait(.1)
+				stop = stop + 1
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = get.CFrame
+				workspace.Remote.arrest:InvokeServer(unpack(args))
+			until char.Head:FindFirstChild("handcuffedGui") or not char or not hum or hum.Health < 1 or stop > 10
+			game.Players.LocalPlayer.Character.Humanoid.Sit = false
+			wait()
+			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedpos
+			workspace.CurrentCamera.CFrame = savedcam
+			wait()
+			workspace.CurrentCamera.CFrame = savedcam
 		end
-	end
+	end)
 end
 
 local function removeguion(string1)
@@ -1068,7 +1401,7 @@ local function setstate(state, arg, force)
 
 		if arg == "on" then
 			if states[stateusing] == true then
-				Notify(mayusfirst(stateusing)..": already enabled")
+				Notify(mayusfirst(stateusing)..": already enabled", green)
 			else
 				states[stateusing] = true
 				Notify(mayusfirst(stateusing)..": enabled", green)
@@ -1076,7 +1409,7 @@ local function setstate(state, arg, force)
 		else
 			if arg == "off" then
 				if states[stateusing] == false then
-					Notify(mayusfirst(stateusing)..": already disabled")
+					Notify(mayusfirst(stateusing)..": already disabled", red)
 				else
 					Notify(mayusfirst(stateusing)..": disabled", red)
 					states[stateusing] = false
@@ -1146,64 +1479,21 @@ local function kill1(Player, isInLoopkill)
 			Gun:FindFirstChild("Handle"):Destroy()
 		end
 
-		local FireEvent = {
-			[1] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
-			}, [2] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
-			}, [3] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
-			}, [4] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
-			}, [5] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
-			}, [6] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
-			}, [7] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
-			}, [8] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
-			}, [9] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
-			}, [10] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
-			}, [11] = {
+		local FireEvent = {}
+		coroutine.wrap(function()
+			for i = 1,30 do
+				game.ReplicatedStorage.ReloadEvent:FireServer(Gun)
+				wait(.5)
+			end
+		end)()
+		for i = 1,15 do
+			FireEvent[#FireEvent+1] = {
 				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
 				["Distance"] = 0, 
 				["Cframe"] = CFrame.new(), 
 				["Hit"] = workspace[Player.Name].Head
 			}
-		}
+		end
 		game:GetService("ReplicatedStorage").ShootEvent:FireServer(FireEvent, Gun)
 
 		Gun.Parent = game.Players.LocalPlayer.Character
@@ -1330,7 +1620,7 @@ local function unloopkill(arg)
 	else
 		if GetPlayerFromString(arg) then
 			removeplayer(GetPlayerFromString(arg), loopkills)
-			Notify("Unlooping "..GetPlayerFromString(arg).Name, green)
+			Notify("Unlooping "..GetPlayerFromString(arg).Name, red)
 		else
 			Notify("Player not found", red) return
 		end
@@ -1345,7 +1635,7 @@ local function loopkill(arg)
 	else
 		if GetPlayerFromString(arg) then
 			addplayer(GetPlayerFromString(arg), loopkills)
-			Notify("Looping "..GetPlayerFromString(arg).Name)
+			Notify("Looping "..GetPlayerFromString(arg).Name, green)
 		else
 			Notify("Player not found", red) return
 		end
@@ -1353,12 +1643,12 @@ local function loopkill(arg)
 end
 
 local function arrest5(player)
-	if player.TeamColor.Name ~= "Really red" and player.TeamColor.Name ~= "Bright orange" or GetDistance(game.Players.LocalPlayer, player) > 10 then return end
+	if player.TeamColor.Name ~= "Really red" and player.TeamColor.Name ~= "Bright orange" or GetDistance(game.Players.LocalPlayer, player) > 10 or not player.Character:FindFirstChild("Humanoid") then return end
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
 end
 
 local function arrest4(player)
-	if player.Character and player.TeamColor.Name ~= "Really red" and player.TeamColor.Name ~= "Bright orange" or GetDistance(game.Players.LocalPlayer, player) > 6 then return end
+	if player.Character and player.TeamColor.Name ~= "Really red" and player.TeamColor.Name ~= "Bright orange" or GetDistance(game.Players.LocalPlayer, player) > 10 or not player.Character:FindFirstChild("Humanoid") then return end
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
 	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
@@ -1675,113 +1965,377 @@ local function arrest4(player)
 	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
 	workspace.Remote.arrest:InvokeServer(player.Character.Head)
+end
+
+local function sky(Player)
+	pcall(function()
+		local savedcf = GetRO()
+		workspace.Remote.loadchar:InvokeServer()
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(769, 4000, 2457)
+		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
+		if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
+			workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
+		end
+		local CHAR = game.Players.LocalPlayer.Character
+		CHAR.Humanoid.Name = "1"
+		local c = CHAR["1"]:Clone()
+		c.Name = "Humanoid"
+		c.Parent = CHAR
+		CHAR["1"]:Destroy()
+		game.Workspace.CurrentCamera.CameraSubject = CHAR
+		CHAR.Animate.Disabled = true
+		wait()
+		CHAR.Animate.Disabled = false
+		CHAR.Humanoid.DisplayDistanceType = "None"
+		local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
+		tool.Parent = CHAR
+		local STOP = 0
+		repeat wait(.1)
+			STOP = STOP + 1
+			local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
+			get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.75)
+		until (not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
+		for i = 1,10 do
+			wait()
+			UseCommand = true
+			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Player2.Character.HumanoidRootPart.CFrame
+		end
+		workspace.Remote.loadchar:InvokeServer()
+		UseCommand = true
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+	end)
 end
 
 local function teleport(Player, Player2)
 	if Player == nil or Player2 == nil then return end
-	local savedcf = GetRO()
-	workspace.Remote.loadchar:InvokeServer()
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
-	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
-	if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
-		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
-	end
-	local CHAR = game.Players.LocalPlayer.Character
-	CHAR.Humanoid.Name = "1"
-	local c = CHAR["1"]:Clone()
-	c.Name = "Humanoid"
-	c.Parent = CHAR
-	CHAR["1"]:Destroy()
-	game.Workspace.CurrentCamera.CameraSubject = CHAR
-	CHAR.Animate.Disabled = true
-	wait()
-	CHAR.Animate.Disabled = false
-	CHAR.Humanoid.DisplayDistanceType = "None"
-	local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
-	tool.Parent = CHAR
-	local STOP = 0
-	local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
-	repeat wait(.1)
-		STOP = STOP + 1
-		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.75)
-	until (not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
-	for i = 1,10 do
+		local savedcf = GetRO()
+		workspace.Remote.loadchar:InvokeServer()
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
+		if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
+			workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
+		end
+		local CHAR = game.Players.LocalPlayer.Character
+		CHAR.Humanoid.Name = "1"
+		local c = CHAR["1"]:Clone()
+		c.Name = "Humanoid"
+		c.Parent = CHAR
+		CHAR["1"]:Destroy()
+		game.Workspace.CurrentCamera.CameraSubject = CHAR
+		CHAR.Animate.Disabled = true
 		wait()
+		CHAR.Animate.Disabled = false
+		CHAR.Humanoid.DisplayDistanceType = "None"
+		local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
+		tool.Parent = CHAR
+		local STOP = 0
+		repeat wait(.1)
+			STOP = STOP + 1
+			local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
+			get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.75)
+		until (not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
+		for i = 1,10 do
+			wait()
+			UseCommand = true
+			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Player2.Character.HumanoidRootPart.CFrame
+		end
+		workspace.Remote.loadchar:InvokeServer()
 		UseCommand = true
-		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Player2.Character.HumanoidRootPart.CFrame
-	end
-	workspace.Remote.loadchar:InvokeServer()
-	UseCommand = true
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+end
+
+local function givefood(player)
+	pcall(function()
+		if not game.Workspace.Prison_ITEMS.giver:FindFirstChild("Lunch") and not game.Workspace.Prison_ITEMS.giver:FindFirstChild("Dinner") and not game.Workspace.Prison_ITEMS.giver:FindFirstChild("Breakfast") then Notify("Wait for Breakfast/Lunch/Dinner time", red) return end
+		if game.Workspace.Prison_ITEMS.giver:FindFirstChild("Lunch") or game.Workspace.Prison_ITEMS.giver:FindFirstChild("Dinner") or game.Workspace.Prison_ITEMS.giver:FindFirstChild("Breakfast") and player then
+			pcall(function()
+				game.Players.LocalPlayer.Character:FindFirstChild("Humanoid"):UnequipTools()
+			end)
+			pcall(function()
+				game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.giver.Lunch.ITEMPICKUP)
+			end)
+			pcall(function()
+				game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.giver.Dinner.ITEMPICKUP)
+			end)
+			pcall(function()
+				game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.giver.Breakfast.ITEMPICKUP)
+			end)
+			local tool = game.Players.LocalPlayer.Backpack:FindFirstChild("Breakfast") or game.Players.LocalPlayer.Character:FindFirstChild("Dinner") or game.Players.LocalPlayer.Backpack:FindFirstChild("Dinner") or game.Players.LocalPlayer.Character:FindFirstChild("Breakfast") or game.Players.LocalPlayer.Backpack:FindFirstChild("Lunch") or game.Players.LocalPlayer.Character:FindFirstChild("Lunch")
+			if tool then
+				
+				local pos = GetRO()
+				local CHAR = game.Players.LocalPlayer.Character
+				CHAR.Humanoid.Name = "1"
+				local c = CHAR["1"]:Clone()
+				c.Name = "Humanoid"
+				c.Parent = CHAR
+				CHAR["1"]:Destroy()
+				game.Workspace.CurrentCamera.CameraSubject = CHAR
+				CHAR.Animate.Disabled = true
+				wait()
+				CHAR.Animate.Disabled = false
+				CHAR.Humanoid.DisplayDistanceType = "None"
+				wait()
+				tool.Parent = game.Players.LocalPlayer.Character
+				local STOP = 0
+	
+				local get = player.Character:FindFirstChild("HumanoidRootPart") or player.Character:FindFirstChild("Torso")
+				repeat wait(.1)
+					STOP = STOP + 1
+					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = get.CFrame * CFrame.new(0, 0, 0) * CFrame.new(math.random(-100, 100)/200,math.random(-100, 100)/200,math.random(-100, 100)/200)
+				until (not game.Players.LocalPlayer.Character:FindFirstChild("Dinner") and not game.Players.LocalPlayer.Character:FindFirstChild("Breakfast") and not game.Players.LocalPlayer.Character:FindFirstChild("Lunch") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500) and STOP > 3
+	
+				workspace.Remote.loadchar:InvokeServer()
+				wait()
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+			end
+		end
+	end)
+	
+end
+
+local function givekey(player)
+	pcall(function()
+		if player then
+			local pos = GetRO()
+			local oldteam = game.Players.LocalPlayer.TeamColor.Color
+	
+			local get = player.Character:FindFirstChild("HumanoidRootPart") or player.Character:FindFirstChild("Torso")
+	
+			workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright blue").Name)
+
+			repeat wait(.1)
+				game.Players.LocalPlayer.Character:BreakJoints()
+				workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright blue").Name)
+			until workspace.Prison_ITEMS.single:FindFirstChild("Key card")
+			wait()
+			workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single["Key card"].ITEMPICKUP)
+			local tool = game.Players.LocalPlayer.Backpack:FindFirstChild("Key card")
+	
+			if tool then
+				local CHAR = game.Players.LocalPlayer.Character
+				CHAR.Humanoid.Name = "1"
+				local c = CHAR["1"]:Clone()
+				c.Name = "Humanoid"
+				c.Parent = CHAR
+				CHAR["1"]:Destroy()
+				game.Workspace.CurrentCamera.CameraSubject = CHAR
+				CHAR.Animate.Disabled = true
+				wait()
+				CHAR.Animate.Disabled = false
+				CHAR.Humanoid.DisplayDistanceType = "None"
+				wait()
+				tool.Parent = game.Players.LocalPlayer.Character
+				local STOP = 0
+	
+				repeat wait(.1)
+					STOP = STOP + 1
+					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = get.CFrame * CFrame.new(0, 0, 0) * CFrame.new(math.random(-100, 100)/200,math.random(-100, 100)/200,math.random(-100, 100)/200)
+				until (not game.Players.LocalPlayer.Character:FindFirstChild("Key card") or not game.Players.LocalPlayer.Character.HumanoidRootPart or player.Character:FindFirstChild("Humanoid").Health < 1 or not get or not get.Parent or STOP > 500) and STOP > 3
+	
+				workspace.Remote.loadchar:InvokeServer(nil, oldteam)
+				wait()
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+				 
+			end
+		end
+	end)
+end
+
+local function giveshield(player)
+	pcall(function()
+		if OwnSwat ~= true then Notify("You don't own swat gamepass", red) return end
+		if player then
+			local pos = GetRO()
+			local oldteam = game.Players.LocalPlayer.TeamColor.Color
+			workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright blue").Name)
+			pcall(function()
+				game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.giver["Riot Shield"].ITEMPICKUP)
+			end)
+			local tool = game.Players.LocalPlayer.Backpack:FindFirstChild("Riot Shield") or game.Players.LocalPlayer.Character:FindFirstChild("Riot Shield")
+			if tool then
+			
+				
+				local CHAR = game.Players.LocalPlayer.Character
+				CHAR.Humanoid.Name = "1"
+				local c = CHAR["1"]:Clone()
+				c.Name = "Humanoid"
+				c.Parent = CHAR
+				CHAR["1"]:Destroy()
+				game.Workspace.CurrentCamera.CameraSubject = CHAR
+				CHAR.Animate.Disabled = true
+				wait()
+				CHAR.Animate.Disabled = false
+				CHAR.Humanoid.DisplayDistanceType = "None"
+				wait()
+				tool.Parent = game.Players.LocalPlayer.Character
+				local STOP = 0
+	
+				local get = player.Character:FindFirstChild("HumanoidRootPart") or player.Character:FindFirstChild("Torso")
+				 repeat wait(.1)
+					STOP = STOP + 1
+					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = get.CFrame * CFrame.new(0, 0, 0) * CFrame.new(math.random(-100, 100)/200,math.random(-100, 100)/200,math.random(-100, 100)/200)
+				until (not game.Players.LocalPlayer.Character:FindFirstChild("Riot Shield") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500) and STOP > 3
+	
+				workspace.Remote.loadchar:InvokeServer(nil, oldteam)
+				wait(0.5)
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+			end
+		end
+	end)
+end
+
+local function givetaser(player)
+	pcall(function()
+		if player then
+			local pos = GetRO()
+			local oldteam = game.Players.LocalPlayer.TeamColor.Color
+			
+			workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright blue").Name)
+			wait()
+			local tool = game.Players.LocalPlayer.Backpack:WaitForChild("Taser") or game.Players.LocalPlayer.Character:WaitForChild("Taser")
+			if tool then
+				local CHAR = game.Players.LocalPlayer.Character
+				CHAR.Humanoid.Name = "1"
+				local c = CHAR["1"]:Clone()
+				c.Name = "Humanoid"
+				c.Parent = CHAR
+				CHAR["1"]:Destroy()
+				game.Workspace.CurrentCamera.CameraSubject = CHAR
+				CHAR.Animate.Disabled = true
+				wait()
+				CHAR.Animate.Disabled = false
+				CHAR.Humanoid.DisplayDistanceType = "None"
+				wait()
+				tool.Parent = game.Players.LocalPlayer.Character
+				local STOP = 0
+	
+				local get = player.Character:FindFirstChild("HumanoidRootPart") or player.Character:FindFirstChild("Torso")
+				repeat wait(.1)
+					STOP = STOP + 1
+					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = get.CFrame * CFrame.new(0, 0, 0) * CFrame.new(math.random(-100, 100)/200,math.random(-100, 100)/200,math.random(-100, 100)/200)
+				until (not game.Players.LocalPlayer.Character:FindFirstChild("Taser") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500) and STOP > 3
+	
+				workspace.Remote.loadchar:InvokeServer(nil, oldteam)
+				wait(0.5)
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+			end
+		end
+	end)
+	
+end
+
+local function givecuffs(player)
+	pcall(function()
+		if player then
+			local pos = GetRO()
+			local oldteam = game.Players.LocalPlayer.TeamColor.Color
+			local changed = false
+			if states.AUTOGUNS == true then
+				states.AUTOGUNS = false
+				changed = true
+			end
+			
+			workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright blue").Name)
+			wait()
+			local tool = game.Players.LocalPlayer.Backpack:WaitForChild("Handcuffs") or game.Players.LocalPlayer.Character:WaitForChild("Handcuffs")
+			if tool then
+				local CHAR = game.Players.LocalPlayer.Character
+				CHAR.Humanoid.Name = "1"
+				local c = CHAR["1"]:Clone()
+				c.Name = "Humanoid"
+				c.Parent = CHAR
+				CHAR["1"]:Destroy()
+				game.Workspace.CurrentCamera.CameraSubject = CHAR
+				CHAR.Animate.Disabled = true
+				wait()
+				CHAR.Animate.Disabled = false
+				CHAR.Humanoid.DisplayDistanceType = "None"
+				wait()
+				tool.Parent = game.Players.LocalPlayer.Character
+				local STOP = 0
+	
+				local get = player.Character:FindFirstChild("HumanoidRootPart") or player.Character:FindFirstChild("Torso")
+				repeat wait(.1)
+					STOP = STOP + 1
+					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = get.CFrame * CFrame.new(0, 0, 0) * CFrame.new(math.random(-100, 100)/200,math.random(-100, 100)/200,math.random(-100, 100)/200)
+				until (not game.Players.LocalPlayer.Character:FindFirstChild("Handcuffs") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500) and STOP > 3
+	
+				workspace.Remote.loadchar:InvokeServer(nil, oldteam)
+				wait(0.5)
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+			end
+		end
+	end)
+	
+end
+
+local function newcrim(player)
+	if player == nil then return end
+	local char = player.Character
+	local get = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("Torso")
+	local hum = char:FindFirstChild("Humanoid")
+
+	repeat wait()
+		local position = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,-0.75)
+		hum.Health = 0
+		get.CFrame = position
+		spawnlocations[1].CFrame = position * CFrame.new(0,0.75,0)
+		spawnlocations[1].Transparency = 1
+		spawnlocations[1].CanCollide = false
+	until player.TeamColor.Name == "Really red"
 end
 
 local function teleportCrim(Player, Player2)
 	if Player == nil or Player2 == nil then return end
-	local savedcf = GetRO()
-	workspace.Remote.loadchar:InvokeServer()
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
-	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
-	if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
-		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
-	end
-	local CHAR = game.Players.LocalPlayer.Character
-	CHAR.Humanoid.Name = "1"
-	local c = CHAR["1"]:Clone()
-	c.Name = "Humanoid"
-	c.Parent = CHAR
-	CHAR["1"]:Destroy()
-	
-	local Crim = Instance.new("Part")
-	Crim.Name = "plr"
-	Crim.Parent = workspace
-	Crim.Anchored = true
-	Crim.Archivable = true
-	Crim.CFrame = CFrame.new(9e99, 9e99, 9e99)
-	Bruh = game.Workspace["Criminals Spawn"].SpawnLocation
-	wait(0.1)
-	Crim.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-	Crim.Transparency = 1
-	Crim.Anchored = true
-	Crim.CanCollide = false   
-	Bruh = game.Workspace["Criminals Spawn"].SpawnLocation
-	Bruh.CanCollide = false
-	Bruh.Size = Vector3.new(51.05, 24.12, 54.76)
-	Bruh.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-	Bruh.Transparency = 1
-	
-	game.Workspace.CurrentCamera.CameraSubject = CHAR
-	CHAR.Animate.Disabled = true
-	wait()
-	CHAR.Animate.Disabled = false
-	CHAR.Humanoid.DisplayDistanceType = "None"
-	local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
-	tool.Parent = CHAR
-	local STOP = 0
-	local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
-	repeat wait(.1)
-		STOP = STOP + 1
-		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.75)
-	until (Player.TeamColor.Name == "Really red" or not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
-	for i = 1,10 do
+		local savedcf = GetRO()
+		workspace.Remote.loadchar:InvokeServer()
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
+		if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
+			workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
+		end
+		local CHAR = game.Players.LocalPlayer.Character
+		CHAR.Humanoid.Name = "1"
+		local c = CHAR["1"]:Clone()
+		c.Name = "Humanoid"
+		c.Parent = CHAR
+		CHAR["1"]:Destroy()
+		
+		game.Workspace.CurrentCamera.CameraSubject = CHAR
+		CHAR.Animate.Disabled = true
 		wait()
+		CHAR.Animate.Disabled = false
+		CHAR.Humanoid.DisplayDistanceType = "None"
+		local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
+		tool.Parent = CHAR
+		local STOP = 0
+		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
+		repeat wait(.1)
+			STOP = STOP + 1
+			get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.75)
+			spawnlocations[7].CFrame = get.CFrame
+			spawnlocations[7].CanCollide = false
+			spawnlocations[7].Transparency = 1
+		until (Player.TeamColor.Name == "Really red" or not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
+		for i = 1,10 do
+			wait()
+			UseCommand = true
+			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Player2.Character.HumanoidRootPart.CFrame
+		end
+		workspace.Remote.loadchar:InvokeServer()
 		UseCommand = true
-		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Player2.Character.HumanoidRootPart.CFrame
-	end
-	workspace.Remote.loadchar:InvokeServer()
-	UseCommand = true
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+		
+		spawnlocations[7].CFrame = CFrame.new(0,0,0)
+		spawnlocations[7].CanCollide = true
+		spawnlocations[7].Transparency = 0
 	
-	Bruh.CFrame = CFrame.new(778, 500, 2465)
-	Bruh.Size = Vector3.new(6, 0.2, 6)
-	Bruh.Transparency = 0
-	Crim:Destroy()
 end
 
-local function criminpos(Player)
-	if Player == nil then return end
-	workspace.Remote.loadchar:InvokeServer()
-	wait()
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(917, 78, 2389)
+local function criminpos(Player, pos)
+	if Player == nil or not Player.Character then return end
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
 	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
 	if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
 		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
@@ -1800,52 +2354,49 @@ local function criminpos(Player)
 	local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
 	tool.Parent = CHAR
 	local STOP = 0
-	repeat wait()
+	repeat wait(.05)
 		STOP = STOP + 1
 		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
 		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-		spawnlocations[1].CFrame = GetRO()
-		spawnlocations[1].Transparency = 1
-		spawnlocations[1].CanCollide = false
+		spawnlocations[6].CFrame = get.CFrame
+		spawnlocations[6].CanCollide = true
+		spawnlocations[6].Transparency = 1
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
 	until (Player.TeamColor.Name == "Really red" or not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not Player.Character:FindFirstChild("Torso") or not Player.Character:FindFirstChild("Torso").Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
 	workspace.Remote.loadchar:InvokeServer()
 	UseCommand = true
-	
-	Bruh.CFrame = CFrame.new(778, 500, 2465)
-	Bruh.Size = Vector3.new(6, 0.2, 6)
-	Bruh.Transparency = 0
-	Crim:Destroy()
+
+	spawnlocations[6].CFrame = CFrame.new(0,0,0)
 end
 
-
-local function refreshTeam(color)
-	local position = workspace:FindFirstChild(game.Players.LocalPlayer.Name).HumanoidRootPart.CFrame
-	local _, RY, _ = position:ToOrientation()
-	position = CFrame.new(position.p) * CFrame.fromOrientation(0, RY, 0)
-
-	local camera = workspace.CurrentCamera.CFrame
-
-	if tostring(game.Players.LocalPlayer.TeamColor) == 'Medium stone grey' and color == nil then
-		workspace.Remote.TeamEvent:FireServer("Bright orange")
-
-		wait()
-
-		workspace.Remote.loadchar:InvokeServer()
-
-		workspace.Remote.TeamEvent:FireServer("Medium stone grey")
-	else
-		workspace.Remote.loadchar:InvokeServer(nil,color)
+local function bringinpos(Player, pos)
+	if Player == nil then return end
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
+	if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
+		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
 	end
-
-	local HumanoidRootPart = workspace:FindFirstChild(game.Players.LocalPlayer.Name):WaitForChild('HumanoidRootPart',0.3)
-
-	HumanoidRootPart.CFrame = position
-
-	workspace.CurrentCamera.CFrame = camera
-	workspace.CurrentCamera.Changed:Wait()
-	workspace.CurrentCamera.CFrame = camera
-
-	game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+	local CHAR = game.Players.LocalPlayer.Character
+	CHAR.Humanoid.Name = "1"
+	local c = CHAR["1"]:Clone()
+	c.Name = "Humanoid"
+	c.Parent = CHAR
+	CHAR["1"]:Destroy()
+	game.Workspace.CurrentCamera.CameraSubject = CHAR
+	CHAR.Animate.Disabled = true
+	wait()
+	CHAR.Animate.Disabled = false
+	CHAR.Humanoid.DisplayDistanceType = "None"
+	local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
+	tool.Parent = CHAR
+	local STOP = 0
+	repeat wait(.05)
+		STOP = STOP + 1
+		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
+		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+	until (not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not Player.Character:FindFirstChild("Torso") or not Player.Character:FindFirstChild("Torso").Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
+	workspace.Remote.loadchar:InvokeServer()
+	UseCommand = true
 end
 
 local function getPalette(g1, g2, g3)
@@ -2053,15 +2604,6 @@ Cursor.Size = UDim2.new(0, 256, 0, 256)
 Cursor.Image = "rbxassetid://3355815697"
 Cursor.ScaleType = Enum.ScaleType.Fit
 
-Hitmarker.Name = "Hitmarker"
-Hitmarker.AnchorPoint = Vector2.new(0.5, 0.5)
-Hitmarker.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Hitmarker.BackgroundTransparency = 1.000
-Hitmarker.BorderColor3 = Color3.fromRGB(27, 42, 53)
-Hitmarker.Position = UDim2.new(0.5, 0, 0.5, 0)
-Hitmarker.Size = UDim2.new(0, 45, 0, 45)
-Hitmarker.Image = "rbxassetid://890801299"
-
 local SoundService = game:GetService("SoundService")
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local UserInputService = game:GetService('UserInputService')
@@ -2087,7 +2629,7 @@ local function DamageIndicator(player)
 		    UDim2.new(0.996, 0, -0.513, 0),
 		    Enum.EasingDirection.InOut,
 		    Enum.EasingStyle.Linear,
-		    1.5,
+		    2.5,
 		    true
 	    )
 
@@ -2109,48 +2651,191 @@ local function createSoundEffect(id, volume)
         sound.SoundId = id
         sound.Volume = volume or 1
         SoundService:PlayLocalSound(sound)
-        sound.Ended:Wait()
+        sound.Ended:Wait(0.5)
         sound:Destroy()
     end)()
 end
 
 local Bindable = Instance.new('BindableEvent')
 
+local function hitmarker()
+	coroutine.wrap(function()
+		local doing = true
+
+		local Clone = HitmarkerFrame:Clone()
+		local NewHit = Clone:WaitForChild("Hitmarker")
+		
+		Clone.Position = UDim2.new(0,Mouse.X,0,Mouse.Y)
+		Clone.Parent = Quemeves
+		NewHit.Size = UDim2.new(0, 22, 0, 22) 
+		Clone.Visible = true
+		
+		game:GetService("RunService").Stepped:connect(function()
+			if doing == true then
+				pcall(function()
+					Clone.Position = UDim2.new(0,Mouse.X,0,Mouse.Y)
+				end)
+			end
+		end)
+		
+		tweenservice:Create(NewHit, TweenInfo.new(0.1), {ImageTransparency = 0}):Play()
+		NewHit:TweenSize(
+			UDim2.new(0, 28, 0, 28),
+			Enum.EasingDirection.InOut,
+			Enum.EasingStyle.Quad,
+			0.05,
+			true
+		)
+		wait(0.07)
+		tweenservice:Create(NewHit, TweenInfo.new(0.1), {ImageTransparency = 1}):Play()
+		wait(0.3)
+		wait(0.3)
+		doing = false
+		Clone:Destroy()
+	end)()
+end
+
+local function damageIndicator(hit, gun, player)
+	coroutine.wrap(function()
+		if not hit then return end
+		local damage = 0
+
+		if gun.Name == "AK-47" then
+			damage = 11
+		else
+			if gun.Name == "Remington 870" then
+				damage = 15
+			else
+				if gun.Name == "M9" then
+					damage = 10
+				else
+					if gun.Name == "M4A1" then
+						damage = 11
+					end
+				end
+			end
+		end
+		local head = false
+
+		if hit.Name == "Head" then
+			head = true
+		end
+
+
+		if hit.Name ~= "HumanoidRootPart" and hit.Name ~= "Head" and hit.Name ~= "Left Arm" and hit.Name ~= "Left Leg" and hit.Name ~= "Right Arm" and hit.Name ~= "Right Leg" and hit.Name ~= "Torso" then
+			hit = player.Character:FindFirstChild("Torso")
+		end
+		local gui = Instance.new("BillboardGui", hit)
+		local uilist = Instance.new("UIListLayout", gui)
+		uilist.HorizontalAlignment = Enum.HorizontalAlignment.Center
+		uilist.SortOrder = Enum.SortOrder.LayoutOrder
+		uilist.VerticalAlignment = Enum.VerticalAlignment.Center
+		gui.Size = UDim2.new(0,300,0,300)
+		gui.AlwaysOnTop = true
+		gui.ClipsDescendants = false
+		local init = UDim2.new(0.498, 0,0.499, 0)
+		local finalsize = UDim2.new(0, 47, 0, 23)
+		local newdmg = DmgContainer:Clone()
+		newdmg.Parent = gui
+		
+		local Positions = {
+			UDim2.new(0.767, 0, 0.389, 0),
+			UDim2.new(0.65, 0, 0.755, 0),
+			UDim2.new(0.201, 0, 0.356, 0),
+			UDim2.new(0.272, 0, 0.753, 0),
+			UDim2.new(0.743, 0, 0.173, 0),
+			UDim2.new(0.165, 0, 0.496, 0),
+			UDim2.new(0.502, 0, 0.205, 0)
+		}
+	
+		local posi = Positions[math.random(1, #Positions)]
+		
+		local clone = newdmg:WaitForChild("Dmg1")
+		clone.Text = "-"..damage
+		if head == true then
+			clone.TextColor3 = Color3.fromRGB(255,0,0)
+		end
+		clone.Position = init
+		clone.Visible = true
+		
+		coroutine.wrap(function()
+			wait(0.15)
+			clone.TextTransparency = 0
+			clone.TextStrokeTransparency = 0.5
+		end)()
+		
+		clone:TweenPosition(
+			posi,
+			Enum.EasingDirection.InOut,
+			Enum.EasingStyle.Quad,
+			0.45,
+			true
+		)
+		wait(0.55)
+		clone:TweenSize(
+			UDim2.new(0, 0, 0, 0),
+			Enum.EasingDirection.InOut,
+			Enum.EasingStyle.Linear,
+			0.2,
+			true
+		)
+		wait(0.3)
+		newdmg:Destroy()
+	end)()
+	
+end
+
+
 Bindable.Event:Connect(function(bullets, gun)
-    local ShotHit = false
+	local ShotHit = false
 	local playerselected = nil
+	for i,v in pairs(bullets) do
+		TotalBullets = TotalBullets + 1
+		local Hit
+		for _,bullet in pairs(bullets) do
+			Hit = bullet.Hit
+	
+			local Limb = Hit.Parent:FindFirstChildOfClass('Humanoid') ~= nil
+			local Accessory = Hit.Parent.Parent:FindFirstChildOfClass('Humanoid') ~= nil
+	
+			if Limb then
+				local Player = Players:GetPlayerFromCharacter(Hit.Parent)
+				playerselected = Player
+	
+				if Player.TeamColor ~= LocalPlayer.TeamColor then
+					ShotHit = true
+					break
+				end
+			elseif Accessory then
+				local Player = Players:GetPlayerFromCharacter(Hit.Parent.Parent)
+				playerselected = Player
+				
+				if Player.TeamColor ~= LocalPlayer.TeamColor then
+					ShotHit = true
+					break
+				end
+			end
+		end
+		local head = false
+		if Hit.Name == "Head" then
+			head = true
+		end
+		
+		if ShotHit then
+			HitBullets = HitBullets + 1
+			if states.DAMAGE_INDICATORS == true and not loopkills[playerselected.UserId] then
+				hitmarker()
+				damageIndicator(Hit, gun, playerselected)
+			end
+		end
+	end
 
-    for _,bullet in pairs(bullets) do
-        local Hit = bullet.Hit
-
-        local Limb = Hit.Parent:FindFirstChildOfClass('Humanoid') ~= nil
-        local Accessory = Hit.Parent.Parent:FindFirstChildOfClass('Humanoid') ~= nil
-
-        if Limb then
-            local Player = Players:GetPlayerFromCharacter(Hit.Parent)
-			playerselected = Player
-
-            if Player.TeamColor ~= LocalPlayer.TeamColor then
-                ShotHit = true
-                break
-            end
-        elseif Accessory then
-            local Player = Players:GetPlayerFromCharacter(Hit.Parent.Parent)
-			playerselected = Player
-            
-            if Player.TeamColor ~= LocalPlayer.TeamColor then
-                ShotHit = true
-                break
-            end
-        end
-    end
-    
-    if ShotHit then
+	if ShotHit then
 		if states.DAMAGE_INDICATORS == true and not loopkills[playerselected.UserId] then
 			createSoundEffect("rbxassetid://1347140027", 1)
-			DamageIndicator(playerselected)
 		end
-    end
+		
+	end
 end)
 
 local OldNameCall
@@ -2168,20 +2853,41 @@ end)
 local CursorVisibility = false
 local MouseEnabled = true
 
-coroutine.wrap(function()
-	RunService.RenderStepped:Connect(function()
-		if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") and states.CURSOR == true then
-			UserInputService.MouseIconEnabled = false
-	
-			Cursor.Position = UDim2.new(0,Mouse.X,0,Mouse.Y)
-			Cursor.Visible = true
-		else
-			UserInputService.MouseIconEnabled = true
-			Cursor.Visible = false
-		end
-	end)
-	
-end)()
+RunService.RenderStepped:Connect(function()
+	if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") and states.CURSOR == true then
+		UserInputService.MouseIconEnabled = false
+
+		Cursor.Position = UDim2.new(0,Mouse.X,0,Mouse.Y)
+		Cursor.Visible = true
+	else
+		UserInputService.MouseIconEnabled = true
+		Cursor.Visible = false
+	end
+end)
+
+RunService.RenderStepped:Connect(function()
+    local Target = Mouse.Target
+    local Limb = Target.Parent:FindFirstChildOfClass('Humanoid')
+    local Accessory = Target.Parent.Parent:FindFirstChildOfClass('Humanoid')
+    
+    if Limb then
+        local Player = Players:GetPlayerFromCharacter(Target.Parent)
+        if Player.TeamColor == LocalPlayer.TeamColor then
+            Cursor.ImageColor3 = Color3.fromRGB(0,255,0)
+        else
+            Cursor.ImageColor3 = Color3.fromRGB(255,0,0)
+        end
+    elseif Accessory then
+        local Player = Players:GetPlayerFromCharacter(Target.Parent.Parent)
+        if Player.TeamColor == LocalPlayer.TeamColor then
+            Cursor.ImageColor3 = Color3.fromRGB(0,255,0)
+        else
+            Cursor.ImageColor3 = Color3.fromRGB(255,0,0)
+        end
+    else
+        Cursor.ImageColor3 = Color3.fromRGB(255,255,255)
+    end
+end)
 
 local function copyteam(player)
 	if player ~= nil then
@@ -2191,8 +2897,9 @@ end
 -- UI STARTING
 
 dragify(Welcome)
-
+dragify(Configurations)
 dragify(Logs)
+dragify(Quemeves:WaitForChild("Accuracy"))
 
 tweenservice:Create(Welcome, TweenInfo.new(0.3), {BackgroundTransparency = 0}):Play()
 wait(0.3)
@@ -2243,6 +2950,15 @@ local function gunstate(gun, num, state)
 	end
 end
 
+local function setcolorguns(num,num2,num3)
+	if tonumber(num) and tonumber(num2) and tonumber(num3) then
+		states.COLOR_GUNS = Color3.fromRGB(num, num2, num3)
+		Notify("Color guns changed to: "..num..", "..num2..", "..num3, Color3.fromRGB(num, num2, num3))
+	else
+		states.COLOR_GUNS = randomcolor3()
+	end
+	
+end
 
 -- COMMAND FUNCTIONS
 
@@ -2279,6 +2995,7 @@ local function get_command(fromchat, msg)
 		"auto",
 		"autore",
 		"autorespawn",
+		"autospawn",
 		"guns",
 		"gunorder",
 		"re",
@@ -2389,8 +3106,12 @@ local function get_command(fromchat, msg)
 		"ab",
 		"skid",
 		"damageindicators",
+		"di",
 		"getfood",
 		"givefood",
+		"givekey",
+		"givetaser",
+		"givecuffs",
 		"giveshield",
 		"antibringnoroot",
 		"abnoroot",
@@ -2404,7 +3125,20 @@ local function get_command(fromchat, msg)
 		"infammo",
 		"crim2",
 		"avoidbring",
-		"avb"
+		"avb",
+		"ally",
+		"enemy",
+		"lag",
+		"breakteams",
+		"invisible",
+		"antispam",
+		"testingcrim",
+		"ff",
+		"noclothing",
+		"ra",
+		"resetaccuracy",
+		"accuracy",
+		"acc"
 
 	}
 	
@@ -2445,6 +3179,79 @@ local function get_command(fromchat, msg)
 				setstate("notifications", arg2)
 			end
 
+			if arg1 == "accuracy" or arg1 == "acc" then
+				setstate("accuracy", arg2)
+				if states.ACCURACY == false then
+					Quemeves:WaitForChild("Accuracy").Visible = false
+				else
+					if states.ACCURACY == true then
+						Quemeves:WaitForChild("Accuracy").Visible = true
+					end
+				end
+			end
+
+			if arg1 == "ra" or arg1 == "resetaccuracy" then
+				HitBullets = 0
+				TotalBullets = 0
+				Notify("Accuracy reseted", green)
+			end
+
+			if arg1 == "antispam" then
+				setstate("antispam", arg2)
+			end
+
+			if arg1 == "ally" then
+				local plr = GetPlayerFromString(arg2)
+				if plr then
+					addplayer(plr, friends)
+					Notify(string.upper(GetPlayerFromString(arg2).Name).." IS NOT VISIBLE", red)
+				end
+			end
+
+			if arg1 == "enemy" then
+				local plr = GetPlayerFromString(arg2)
+				if plr then
+					removeplayer(plr, friends)
+					Notify(string.upper(GetPlayerFromString(arg2).Name).." IS VISIBLE", green)
+					for i,v in pairs(game.Lighting:GetChildren()) do
+						if v:IsA("Model") and v:FindFirstChild("Humanoid") and v:FindFirstChild("Humanoid").Health > 0 then
+							v.Parent = game.Workspace
+						end
+					end
+				end
+			end
+
+			if arg1 == "noclothing" then
+				setstate("no_clothing", arg2)
+			end
+
+			if arg1 == "breakteams" then
+				setstate("breakteams", arg2)
+			end
+
+			if arg1 == "invisible" then
+				local pos = GetRO()
+				local char = game.Players.LocalPlayer.Character
+				local root = char:FindFirstChild("HumanoidRootPart")
+
+				goTo(-147, -180, 2015)
+				wait(0.5)
+				char.Parent = nil
+				local newroot = root:Clone()
+				newroot.Parent = char
+				root:Destroy()
+				for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+					if v:IsA("Part") and v.Name ~= "HumanoidRootPart" then
+						pcall(function()
+							v.Transparency = 0.1
+						end)
+						
+					end
+				end
+				char.Parent = workspace
+				newroot.CFrame = pos
+			end
+
 			if arg1 == "playernotify" then
 				setstate("player_notifications", arg2)
 			end
@@ -2472,7 +3279,7 @@ local function get_command(fromchat, msg)
 						v.Material = Enum.Material.Plastic
 					end)
 				end
-				Notify("Antilag is permanently enabled", green)
+				Notify("Antilag: permanently enabled", green)
 			end
 
 			if arg1 == "walls" then
@@ -2522,9 +3329,19 @@ local function get_command(fromchat, msg)
 
 			if arg1 == "auto" or arg1 == "autore" or arg1 == "autorespawn" then
 				setstate("autorespawn", arg2)
+				if states.AUTORESPAWN == true then
+					states.AUTOSPAWN = false
+				end
 			end
 
-			if arg1 == "damageindicators" then
+			if arg1 == "autospawn" or arg1 == "aspawn" then
+				setstate("autospawn", arg2)
+				if states.AUTOSPAWN == true then
+					states.AUTORESPAWN = false
+				end
+			end
+
+			if arg1 == "damageindicators" or arg1 == "di" then
 				setstate("damage_indicators", arg2)
 			end
 			
@@ -2538,12 +3355,6 @@ local function get_command(fromchat, msg)
 				pcall(function()
 					game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.giver.Breakfast.ITEMPICKUP)
 				end)
-				
-				for i,v in pairs(game.Workspace:GetChildren()) do
-					if v:IsA("Tool") then
-						v.CFrame = GetRO()
-					end
-				end
 			end
 
 			if arg1 == "autolock" or arg1 == "alock" then
@@ -2553,7 +3364,7 @@ local function get_command(fromchat, msg)
                     game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
                 else
                     if states.AUTOLOCK == false then
-                        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
+                        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
                         game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = false
                     end
                 end
@@ -2563,12 +3374,16 @@ local function get_command(fromchat, msg)
             if arg1 == "lock" then
                 game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
                 game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
+
+				Notify("Player locked", green)
             end
 
 			
             if arg1 == "unlock" then
                 game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
                 game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = false
+
+				Notify("Player unlocked", red)
             end
 
 			if arg1 == "autoguns" or arg1 == "aguns" then
@@ -2616,6 +3431,16 @@ local function get_command(fromchat, msg)
 
 			if arg1 == "ff" or arg1 == "forcefield" or arg1 == "loopff" then
 				setstate("forcefield", arg2)
+
+				if states.FORCEFIELD == true then
+					ff()
+					while wait(7) do
+						ff()
+						if states.FORCEFIELD == false then
+							break
+						end
+					end
+				end
 			end
 			
 			if arg1 == "guns" then
@@ -2746,107 +3571,86 @@ local function get_command(fromchat, msg)
 				goTo(881, 27, 2347)
 			end
 
+			if arg1 == "testingcrim" then
+				newcrim(GetPlayerFromString(arg2))
+			end
+
 			if arg1 == "sit" then
 				game.Players.LocalPlayer.Character.Humanoid.Sit = true
 			end
 
 			if arg1 == "sky" then
-				local player = GetPlayerFromString(arg2)
-				if player then
-					local position = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-					goTo(769, 4000, 2457)
-					teleport(player, game.Players.LocalPlayer)
-					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = position
+				if arg2 == "all" then
+					for i,v in pairs(game.Players:GetPlayers()) do
+						if v ~= game.Players.LocalPlayer then
+							sky(v)
+						end
+					end
+				else
+					local player = GetPlayerFromString(arg2)
+					if player then
+						sky(player)
+					end
 				end
 			end
 
 			if arg1 == "givefood" then
-				if not game.Workspace.Prison_ITEMS.giver:FindFirstChild("Lunch") and not game.Workspace.Prison_ITEMS.giver:FindFirstChild("Dinner") and not game.Workspace.Prison_ITEMS.giver:FindFirstChild("Breakfast") then Notify("Wait for Breakfast/Lunch/Dinner time", red) return end
-				if game.Workspace.Prison_ITEMS.giver:FindFirstChild("Lunch") or game.Workspace.Prison_ITEMS.giver:FindFirstChild("Dinner") or game.Workspace.Prison_ITEMS.giver:FindFirstChild("Breakfast") and GetPlayerFromString(arg2) then
-					pcall(function()
-						game.Players.LocalPlayer.Character:FindFirstChild("Humanoid"):UnequipTools()
-					end)
-					pcall(function()
-						game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.giver.Lunch.ITEMPICKUP)
-					end)
-					pcall(function()
-						game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.giver.Dinner.ITEMPICKUP)
-					end)
-					pcall(function()
-						game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.giver.Breakfast.ITEMPICKUP)
-					end)
-					local tool = game.Players.LocalPlayer.Backpack:FindFirstChild("Breakfast") or game.Players.LocalPlayer.Character:FindFirstChild("Dinner") or game.Players.LocalPlayer.Backpack:FindFirstChild("Dinner") or game.Players.LocalPlayer.Character:FindFirstChild("Breakfast") or game.Players.LocalPlayer.Backpack:FindFirstChild("Lunch") or game.Players.LocalPlayer.Character:FindFirstChild("Lunch")
-					if tool then
-						
-						local pos = GetRO()
-						local CHAR = game.Players.LocalPlayer.Character
-	                    CHAR.Humanoid.Name = "1"
-						local c = CHAR["1"]:Clone()
-						c.Name = "Humanoid"
-						c.Parent = CHAR
-						CHAR["1"]:Destroy()
-						game.Workspace.CurrentCamera.CameraSubject = CHAR
-						CHAR.Animate.Disabled = true
-						wait()
-						CHAR.Animate.Disabled = false
-						CHAR.Humanoid.DisplayDistanceType = "None"
-						wait()
-						tool.Parent = game.Players.LocalPlayer.Character
-						local STOP = 0
-
-						local player = GetPlayerFromString(arg2)
-						local get = player.Character:FindFirstChild("HumanoidRootPart") or player.Character:FindFirstChild("Torso")
- 						repeat wait(.1)
-							STOP = STOP + 1
-							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = get.CFrame
-						until (not game.Players.LocalPlayer.Character:FindFirstChild("Dinner") and not game.Players.LocalPlayer.Character:FindFirstChild("Breakfast") and not game.Players.LocalPlayer.Character:FindFirstChild("Lunch") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500) and STOP > 3
-
-						workspace.Remote.loadchar:InvokeServer()
-						wait()
-						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+				if arg2 == "all" then
+					for i,v in pairs(game.Players:GetPlayers()) do
+						if v ~= game.Players.LocalPlayer then
+							givefood(v)
+						end
 					end
+				else
+					givefood(GetPlayerFromString(arg2))
+				end
+			end
+
+			if arg1 == "givekey" then
+				if arg2 == "all" then
+					for i,v in pairs(game.Players:GetPlayers()) do
+						if v ~= game.Players.LocalPlayer then
+							givekey(v)
+						end
+					end
+				else
+					givekey(GetPlayerFromString(arg2))
 				end
 			end
 
 			if arg1 == "giveshield" then
-				if OwnSwat ~= true then Notify("You don't own swat gamepass", red) return end
-				if GetPlayerFromString(arg2) then
-					local pos = GetRO()
-					local oldteam = game.Players.LocalPlayer.TeamColor.Color
-					workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright blue").Name)
-					pcall(function()
-						game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.giver["Riot Shield"].ITEMPICKUP)
-					end)
-					local tool = game.Players.LocalPlayer.Backpack:FindFirstChild("Riot Shield") or game.Players.LocalPlayer.Character:FindFirstChild("Riot Shield")
-					if tool then
-					
-						
-						local CHAR = game.Players.LocalPlayer.Character
-	                    CHAR.Humanoid.Name = "1"
-						local c = CHAR["1"]:Clone()
-						c.Name = "Humanoid"
-						c.Parent = CHAR
-						CHAR["1"]:Destroy()
-						game.Workspace.CurrentCamera.CameraSubject = CHAR
-						CHAR.Animate.Disabled = true
-						wait()
-						CHAR.Animate.Disabled = false
-						CHAR.Humanoid.DisplayDistanceType = "None"
-						wait()
-						tool.Parent = game.Players.LocalPlayer.Character
-						local STOP = 0
-
-						local player = GetPlayerFromString(arg2)
-						local get = player.Character:FindFirstChild("HumanoidRootPart") or player.Character:FindFirstChild("Torso")
- 						repeat wait(.1)
-							STOP = STOP + 1
-							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = get.CFrame
-						until (not game.Players.LocalPlayer.Character:FindFirstChild("Riot Shield") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500) and STOP > 3
-
-						workspace.Remote.loadchar:InvokeServer(nil, oldteam)
-						wait(0.5)
-						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+				if arg2 == "all" then
+					for i,v in pairs(game.Players:GetPlayers()) do
+						if v ~= game.Players.LocalPlayer then
+							giveshield(v)
+						end
 					end
+				else
+					giveshield(GetPlayerFromString(arg2))
+				end
+			end
+
+			if arg1 == "givetaser" then
+				if arg2 == "all" then
+					for i,v in pairs(game.Players:GetPlayers()) do
+						if v ~= game.Players.LocalPlayer then
+							givetaser(v)
+						end
+					end
+				else
+					givetaser(GetPlayerFromString(arg2))
+				end
+			end
+
+			if arg1 == "givecuffs" then
+				if arg2 == "all" then
+					for i,v in pairs(game.Players:GetPlayers()) do
+						if v ~= game.Players.LocalPlayer then
+							givecuffs(v)
+						end
+					end
+				else
+					givecuffs(GetPlayerFromString(arg2))
 				end
 			end
 			
@@ -2983,12 +3787,11 @@ local function get_command(fromchat, msg)
 			-- VISUAL EFFECTS
 
 			if arg1 == "colorguns" or arg1 == "cg" then
-				if tonumber(arg1) and tonumber(arg2) and tonumber(arg3) then
-					setstate("color_guns", "on", true)
-					setcolorguns(arg1, arg2, arg3)
+				if tonumber(arg2) and tonumber(arg3) and tonumber(arg4) then
+					setcolorguns(arg2, arg3, arg4)
 				else
-					if arg1 == "off" or arg1 == "on" then
-						setstate("color_guns", arg1)
+					if arg2 == "off" then
+						setstate("color_guns", arg2)
 					end
 				end
 			end
@@ -3186,6 +3989,11 @@ local function get_command(fromchat, msg)
 
 			if arg1 == "ab" or arg1 == "antibring" then
 				setstate("ANTIBRING", arg2)
+                if states.ANTIBRING == true then
+					equipevent.Parent = nil
+				elseif states.ANTIBRING == false then
+					equipevent.Parent = game.ReplicatedStorage
+				end
 			end
 
 			if arg1 == "avoidbring" or arg1 == "avb" then
@@ -3292,157 +4100,40 @@ local function get_command(fromchat, msg)
 
 			if arg1 == "ts" or arg1 == "timestop" then
 				while wait() do
-					coroutine.wrap(function()
-						pcall(function()
-							workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
+					workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
+					local Gun = game.Players.LocalPlayer.Backpack["Remington 870"] or game.Players.LocalPlayer.Character["Remington 870"]
+	
+					local function beamm()
+						local bullets = {}
 
-							local Gun = game.Players.LocalPlayer.Backpack["Remington 870"] or game.Players.LocalPlayer.Character["Remington 870"]
-
-							local args = {
-								[1] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [2] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [3] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [4] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [5] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [6] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [7] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [8] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [9] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [10] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [11] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [12] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [13] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [14] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [15] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [16] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [17] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [18] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [19] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [20] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [21] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [22] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [23] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [24] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}, [25] = {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge, 
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								}
-							}
-
-							game:GetService("ReplicatedStorage").ShootEvent:FireServer(args, Gun)
-						end)
-					end)()
+						for i = 1,10 do
+							table.insert(bullets, {
+								["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+								["Distance"] = math.huge,
+								["Cframe"] = CFrame.new(), 
+								["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+							})	
+						end
+	
+						game.ReplicatedStorage.ShootEvent:FireServer(bullets, Gun)
+					end
+	
+					game:GetService("RunService").Stepped:connect(function()
+						beamm()
+					end)
 				end
 			end
 
 			if arg1 == "anticrash" then
 				setstate("ANTICRASH", arg2)
 				wait()
-				if states.ANTICRASH == true then
-					for i,v in pairs(getconnections(game.ReplicatedStorage.ReplicateEvent.OnClientEvent)) do
-						v:Disable()
+				if states.ANTICRASH == false then
+					for i,v in pairs(connections) do
+						v:Enable()
 					end
 				else
-					for i,v in pairs(getconnections(game.ReplicatedStorage.ReplicateEvent.OnClientEvent)) do
-						v:Enable()
+					for i,v in pairs(connections) do
+						v:Disable()
 					end
 				end	
 			end
@@ -3513,7 +4204,15 @@ local function get_command(fromchat, msg)
 			end
 
 			if arg1 == "arrest" then
-				arrest2(GetPlayerFromString(arg2))
+				if arg2 == "all" then
+					for i,v in pairs(game.Players:GetPlayers()) do
+						if v ~= game.Players.LocalPlayer and v.TeamColor.Name == "Really red" then
+							arrest2(v)
+						end
+					end
+				else
+					arrest2(GetPlayerFromString(arg2))
+				end
 			end
 			
 			if arg1 == "bring" or arg1 == "get" then
@@ -3521,7 +4220,22 @@ local function get_command(fromchat, msg)
 			end
 			
 			if arg1 == "crim" then
-				teleportCrim(GetPlayerFromString(arg2), game.Players.LocalPlayer)
+				if arg2 == "all" then
+					for i,v in pairs(game.Players:GetPlayers()) do
+						if v ~= game.Players.LocalPlayer then
+							if v.TeamColor.Name ~= "Really red" then
+								local savedpos = GetRO()
+								goTo(734.65, 180.5, 2538.65)
+								pcall(function()
+									teleportCrim(v, game.Players.LocalPlayer)
+								end)
+								game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedpos
+							end
+						end
+					end
+				else
+					teleportCrim(GetPlayerFromString(arg2), game.Players.LocalPlayer)
+				end
 			end
 
 			if arg1 == "view" then
@@ -3545,9 +4259,8 @@ local function get_command(fromchat, msg)
 						states.SPAM_ARRESTING = nil
 						Notify("Spam arresting: OFF", red)
 					else
-						states.GOD_MODE = true
-						states.ANTITEAMS = true
 						states.SPAM_ARRESTING = GetPlayerFromString(arg2)
+						states.ANTITEAMS = true
 						Notify("Spam arresting: "..GetPlayerFromString(arg2).Name.." @"..GetPlayerFromString(arg2).DisplayName, green)
 					end
 				end
@@ -3590,6 +4303,45 @@ game.Players.LocalPlayer.Chatted:Connect(function(msg)
 end)
 
 -- GIVE-ADMIN
+local function AdminPlayerChatted(msg, Player)
+	local command = {}
+
+	for word in string.gmatch(msg, "%S+") do
+		table.insert(command, word)
+	end
+
+	local argum = command[1]
+
+	local arg1 = command[1]
+	local arg2 = command[2]
+	local arg3 = command[3]
+	local arg4 = command[4]
+	local arg5 = command[5]
+
+	local priv = string.sub(argum, 0,2)
+	if priv == "/w" then
+		local down1 = command[1]
+		local down2 = command[2]
+		arg1 = command[3]
+		arg2 = command[4]
+		arg3 = command[5]
+		arg4 = command[6]
+		arg5 = command[7]
+	end
+
+	local prefix = "."
+	local actions = {
+		"cmds"
+	}
+end
+
+local function CheckPermissions(Player)
+	Player.Chatted:Connect(function(Message)
+		if admins[Player.UserId] then
+			AdminPlayerChatted(Message, Player)
+		end
+	end)
+end
 
 -- UI SCRIPTING
 
@@ -3605,6 +4357,21 @@ UIS.InputBegan:connect(function(input, process)
 			get_command(false)
 			wait(0.03)
 			TextBox.Text = " "
+		end
+	end
+end)
+
+states.CHAT = true
+
+UIS.InputBegan:connect(function(input, process)
+	if process or ADMINLOADED == false then return end
+	if input.KeyCode == Enum.KeyCode.Z then
+		if states.CHAT == true then
+			game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Chat, false)
+			states.CHAT = false
+		else
+			game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
+			states.CHAT = true
 		end
 	end
 end)
@@ -3736,7 +4503,7 @@ local allcmds = {
 	"on",
 	"off",
 	"goto/to <player>",
-	"damageindicators <on/off>",
+	"damageindicators/di <on/off>",
 	"cursor <id>",
 	"cursorsize <num>",
 	"arrestaura <on/off>",
@@ -3762,6 +4529,7 @@ local allcmds = {
 	"armorspam <on/off>",
 	"antiinvis <on/off>",
 	"antiafk <on/off>>",
+	"antifling <on/off>",
 	"antilag",
 	"base",
 	"pvp",
@@ -3803,6 +4571,39 @@ end
 Scrolling.CanvasSize = UDim2.new(0,longestText,0,TextLabel.TextSize * #allcmds)
 
 -- LOOPS/AUTOMATICS/KEYBINDS
+
+states.TOPREVENT = false
+
+states.PREVENT = false
+-- numPercent = 100 * numHit / (numHit + numMiss)
+coroutine.wrap(function()
+	while wait() do
+		Quemeves:WaitForChild("Accuracy"):WaitForChild("Accuracy").Text = math.floor((HitBullets * 100) / TotalBullets).."%"
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if states.ANTISPAM == true then
+			for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+				if v.Name == "handcuffedGui" then
+					states.PREVENT = true
+					pcall(function()
+						workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+					end)
+				end
+			end
+		end
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if states.PREVENT == true then
+			workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+		end
+	end
+end)()
 
 coroutine.wrap(function()
 	while wait() do
@@ -3854,11 +4655,22 @@ coroutine.wrap(function()
 	
 end)()
 
+coroutine.wrap(function()
+	while wait() do
+		if states.GIVING_KEY == true then
+			pcall(function()
+				game.Workspace.Remote.ItemHandler:InvokeServer(Workspace.Prison_ITEMS.single["Key card"].ITEMPICKUP)
+			
+			end)
+		end
+	end
+
+end)()
 -- GOD MODE
 
 coroutine.wrap(function()
 	while wait() do
-		if states.GOD_MODE == true then
+		if states.GOD_MODE == true or states.SPAM_ARRESTING ~= nil then
 			pcall(function()
 				game.Players.LocalPlayer.Character.Humanoid.Name = 1
 				local l = game.Players.LocalPlayer.Character["1"]:Clone()
@@ -3871,12 +4683,6 @@ coroutine.wrap(function()
 				game.Players.LocalPlayer.Character.Animate.Disabled = true
 				game.Players.LocalPlayer.Character.Humanoid.DisplayDistanceType = "None"
 				game.Players.LocalPlayer.CharacterRemoving:Wait()
-				local savedcf = GetPos()
-				local savedcamcf = GetCamPos()
-				local savedteam = GetTeam()
-				workspace.Remote.loadchar:InvokeServer(nil, BrickColor.new(savedteam).Name)
-				workspace.CurrentCamera.CFrame = savedcamcf
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
 			end)
 		end
 	end
@@ -3915,32 +4721,18 @@ coroutine.wrap(function()
 	end)
 end)()
 
-local equipevent = game.ReplicatedStorage:WaitForChild("EquipEvent")
-coroutine.wrap(function()
-	while wait() do
-		if states.ANTIBRING == true then
-			pcall(function()
-				equipevent.Parent = nil
-			end)
-		else
-			pcall(function()
-				equipevent.Parent = game.ReplicatedStorage
-			end)
-		end
-	end
-end)()
-
 coroutine.wrap(function()
 	game:GetService("RunService").Stepped:connect(function()
 		if states.ANTIBRING == true then
-			pcall(function()
-				for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-					if v:IsA("Tool") then
+			for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+				if v:IsA("Tool") then
+					pcall(function()
 						game.Players.LocalPlayer.Character.Humanoid:UnequipTools()
+
 						v:Destroy()
-					end
+					end)
 				end
-			end)
+			end
 		end
 	end)
 end)()
@@ -4035,6 +4827,19 @@ end)()
 
 coroutine.wrap(function()
 	while wait() do
+		if states.BREAKTEAMS == true then
+			pcall(function()
+				workspace.Remote.TeamEvent:FireServer("Bright orange")
+				wait()
+		   workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+			end)
+		end
+	end
+	
+end)()
+
+coroutine.wrap(function()
+	while wait() do
 		if states.VIEWING ~= nil then
 			pcall(function()
 				workspace.CurrentCamera.CameraSubject = workspace[states.VIEWING.Name]
@@ -4046,31 +4851,40 @@ end)()
 --AUTORESPAWN
 coroutine.wrap(function()
 	while wait() do
-		if states.AUTORESPAWN == true then
-			pcall(function()
-				if game.Players.LocalPlayer.Character.Humanoid.Health < 1 then
-					respawn()
-				end
-			end)
+		if states.AUTORESPAWN == true and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+			if game.Players.LocalPlayer.Character:FindFirstChild("Humanoid").Health < 1 then
+				respawn()
+			end
+		end
+	end
+end)()
+
+--AUTOSPAWN
+
+coroutine.wrap(function()
+	while wait() do
+		if states.AUTOSPAWN == true and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+			if game.Players.LocalPlayer.Character:FindFirstChild("Humanoid").Health < 1 then
+				game:GetService("Workspace").Remote.loadchar:InvokeServer()
+			end
 		end
 	end
 end)()
 
 -- COPLOOP
 
-coroutine.wrap(function()
-	while wait() do
-		if states.COPLOOP == true then
-			pcall(function()
-				workspace.Remote.TeamEvent:FireServer("Bright blue")
-			end)
-		end
+game:GetService("RunService").Stepped:connect(function()
+	if states.COPLOOP == true then
+		pcall(function()
+			workspace.Remote.TeamEvent:FireServer("Bright blue")
+		end)
 	end
-end)()
+end)
 
 -- AUTOGUNS
 game.Players.LocalPlayer.CharacterAdded:connect(function()
 	if states.AUTOGUNS == true then
+		local char = game.Players.LocalPlayer.Character:WaitForChild("Torso")
 		getGans()
 	end
 end)
@@ -4084,7 +4898,7 @@ game.Players.LocalPlayer.CharacterAdded:connect(function()
 end)
 -- ANTIABUSERS
 coroutine.wrap(function()
-	while wait() do
+	while wait(0.2) do
 		for id,yes in pairs(loopkills) do
 			pcall(function()
 				if yes.player.Parent then 
@@ -4134,9 +4948,11 @@ end)()
 coroutine.wrap(function()
 	while wait() do
 		if states.ANTITEAMS == true then
-			if game.Players.LocalPlayer.TeamColor.Name == "Really red" or game.Players.LocalPlayer.TeamColor.Name == "Bright orange" or game.Players.LocalPlayer.TeamColor.Name == "Bright blue" or game.Players.LocalPlayer.TeamColor.Name == "Medium stone grey" then
+			if game.Players.LocalPlayer.TeamColor.Name == "Really red" or game.Players.LocalPlayer.TeamColor.Name == "Bright orange" then
 				pcall(function()
-					refreshTeam(Color3.fromRGB(0, 0, 0))
+	                game:GetService("Workspace").Remote.loadchar:InvokeServer(nil, Color3.fromRGB(0,0,0))
+		            goTo(917, 100, 2387)
+		            game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
 				end)
 			end
 		end
@@ -4148,7 +4964,9 @@ coroutine.wrap(function()
 		if states.ANTICRIM == true then
 			if game.Players.LocalPlayer.TeamColor.Name == "Really red" then
 				pcall(function()
-					refreshTeam(Color3.fromRGB(0, 0, 0))
+	                game:GetService("Workspace").Remote.loadchar:InvokeServer(nil, Color3.fromRGB(0,0,0))
+		            goTo(917, 100, 2387)
+		            game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
 				end)
 			end
 		end
@@ -4182,16 +5000,36 @@ coroutine.wrap(function()
 	end)
 end)()
 
+game:GetService("RunService").Stepped:connect(function()
+	if states.SPAM_ARRESTING ~= nil then
+		pcall(function()
+			arrest4(states.SPAM_ARRESTING)
+			arrest4(states.SPAM_ARRESTING)
+			arrest4(states.SPAM_ARRESTING)
+			arrest4(states.SPAM_ARRESTING)
+			arrest4(states.SPAM_ARRESTING)
+		end)
+	end
+end)
+
+
+local function friendplr(plr)
+	if plr.Character.Parent ~= game.Lighting then
+		plr.Character.Parent = game.Lighting
+	end
+end
+
 coroutine.wrap(function()
-	game:GetService("RunService").Stepped:connect(function()
-		if states.SPAM_ARRESTING ~= nil then
+	while wait() do
+		for id,yes in pairs(friends) do
 			pcall(function()
-				coroutine.wrap(function()
-					arrest4(states.SPAM_ARRESTING)
-				end)()
+				if yes.player.Parent then 
+					friendplr(yes.player)
+				end
 			end)
+			
 		end
-	end)
+	end
 end)()
 
 coroutine.wrap(function()
@@ -4199,9 +5037,11 @@ coroutine.wrap(function()
 		if states.ANTI_SPAM_ARREST_LAG == true then
 			pcall(function()
 				for i,player in pairs(game.Players:GetPlayers()) do
-					for i, part in pairs(player.Character:GetDescendants()) do
-						if part.Name == "handcuffedGui" then
-							part:Destroy()
+					if player ~= game.Players.LocalPlayer then
+						for i, part in pairs(player.Character:GetDescendants()) do
+							if part.Name == "handcuffedGui" then
+								part:Destroy()
+							end
 						end
 					end
 				end
@@ -4211,8 +5051,40 @@ coroutine.wrap(function()
 end)()
 
 -- SPAM ARREST
+
 coroutine.wrap(function()
-	while wait(0.03) do
+	while wait(.05) do
+		if states.SPAM_ARRESTING ~= nil then
+			if states.SPAM_ARRESTING ~= nil and states.SPAM_ARRESTING.TeamColor.Name ~= "Bright orange" and states.SPAM_ARRESTING.TeamColor.Name ~= "Really red" then
+				pcall(function()
+					local get = states.SPAM_ARRESTING.Character:FindFirstChild("HumanoidRootPart") or states.SPAM_ARRESTING.Character:FindFirstChild("Torso")
+					spawnlocations[6].CFrame = get.CFrame
+					spawnlocations[6].CanCollide = false
+					spawnlocations[6].Size = Vector3.new(0.1, 0.1, 0.1)
+				end)
+			else
+				pcall(function()
+					local get = states.SPAM_ARRESTING.Character:FindFirstChild("HumanoidRootPart") or states.SPAM_ARRESTING.Character:FindFirstChild("Torso")
+					spawnlocations[6].CFrame = CFrame.new(0,0,0)
+					spawnlocations[6].CanCollide = false
+				end)
+			end
+		end
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if states.SPAM_ARRESTING ~= nil then
+			pcall(function()
+				states.SPAM_ARRESTING.Character:FindFirstChild("Torso").Anchored = false
+			end)
+		end
+	end
+end)()
+
+coroutine.wrap(function()
+	while true do
 		if states.SPAM_ARRESTING ~= nil then
 			pcall(function()
 				if states.SPAM_ARRESTING.TeamColor.Name == "Bright orange" then
@@ -4220,27 +5092,18 @@ coroutine.wrap(function()
 					teleport(states.SPAM_ARRESTING, game.Players.LocalPlayer)
 				else
 					if states.SPAM_ARRESTING.TeamColor.Name ~= "Really red" then
-						criminpos(states.SPAM_ARRESTING)
+						criminpos(states.SPAM_ARRESTING, CFrame.new(917, 78, 2389))
 					end
 				end
 			end)
 		end
+
+		wait(0.5)
 	end
 end)()
 
 coroutine.wrap(function()
-	while wait() do
-		if states.SPAM_ARRESTING ~= nil then
-			pcall(function()
-				local get = states.SPAM_ARRESTING.Character:FindFirstChild("HumanoidRootPart") or states.SPAM_ARRESTING.Character:FindFirstChild("Torso")
-				get.CFrame = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid").CFrame
-			end)
-		end
-	end
-end)()
-
-coroutine.wrap(function()
-	while wait() do
+	while wait(.05) do
 		if states.SPAM_ARRESTING and states.SPAM_ARRESTING.TeamColor.Name == "Really red" then 
 			pcall(function()
 				local char = workspace:FindFirstChild(states.SPAM_ARRESTING.Name)
@@ -4376,6 +5239,67 @@ coroutine.wrap(function()
 						gun["ReloadTime"] = 0
 					end
 				end
+			end)
+		end
+	end
+
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if states.COLOR_GUNS ~= false then
+			pcall(function()
+				local backpack = game.Players.LocalPlayer.Backpack
+				local character = game.Players.LocalPlayer.Character
+				--REMINGTON
+				local rem = backpack:FindFirstChild("Remington 870") or character:FindFirstChild("Remington 870")
+				if rem then
+					for i,part in pairs(rem.Model:GetChildren()) do
+						part.Color = states.COLOR_GUNS
+					end
+				end
+			end)
+			pcall(function()
+				local backpack = game.Players.LocalPlayer.Backpack
+				local character = game.Players.LocalPlayer.Character
+				-- AK-47
+				local ak = backpack:FindFirstChild("AK-47") or character:FindFirstChild("AK-47")
+				if ak then
+					for i,part in pairs(ak.Model:GetChildren()) do
+						part.Color = states.COLOR_GUNS
+					end
+				end
+			end)
+			pcall(function()
+				local backpack = game.Players.LocalPlayer.Backpack
+				local character = game.Players.LocalPlayer.Character
+				-- M4A1
+				local m4 = backpack:FindFirstChild("M4A1") or character:FindFirstChild("M4A1")
+				if m4 then
+					for i,part in pairs(m4.Model:GetChildren()) do
+						part.Color = states.COLOR_GUNS
+					end
+				end
+			end)
+			pcall(function()
+				local backpack = game.Players.LocalPlayer.Backpack
+				local character = game.Players.LocalPlayer.Character
+				-- M9
+				local m9 = backpack:FindFirstChild("M9") or character:FindFirstChild("M9")
+				if m9 then
+					m9.Part.Color = states.COLOR_GUNS
+				end
+			end)
+		end
+	end
+	
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if states.INFINITE_AMMO == true then
+			pcall(function()
+				game.ReplicatedStorage.ReloadEvent:FireServer(game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool"))
 			end)
 		end
 	end
