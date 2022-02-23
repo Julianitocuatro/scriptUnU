@@ -647,7 +647,8 @@ OutputMsg.Size = UDim2.new(0, 224, 0, 16)
 OutputMsg.Font = Enum.Font.FredokaOne
 OutputMsg.Text = ""
 OutputMsg.TextColor3 = Color3.fromRGB(255, 102, 102)
-OutputMsg.TextSize = 17.000
+OutputMsg.TextSize = 13.000
+OutputMsg.TextStrokeTransparency = 0.8
 OutputMsg.TextStrokeTransparency = 1
 OutputMsg.TextXAlignment = Enum.TextXAlignment.Left
 OutputMsg.TextYAlignment = Enum.TextYAlignment.Top
@@ -670,6 +671,7 @@ states.COLOR_GUNS = false
 states.BETTERLIGHT = false
 states.CAPE = false
 -- FIGHTING
+states.SOUND = "new"
 states.ACCURACY = false
 states.AUTOSPAWN = false
 states.INFINITE_AMMO = false
@@ -1971,7 +1973,7 @@ local function sky(Player)
 	pcall(function()
 		local savedcf = GetRO()
 		workspace.Remote.loadchar:InvokeServer()
-		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(769, 4000, 2457)
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(769, 30000, 2457)
 		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
 		if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
 			workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
@@ -1995,11 +1997,6 @@ local function sky(Player)
 			local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
 			get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.75)
 		until (not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
-		for i = 1,10 do
-			wait()
-			UseCommand = true
-			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Player2.Character.HumanoidRootPart.CFrame
-		end
 		workspace.Remote.loadchar:InvokeServer()
 		UseCommand = true
 		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
@@ -2999,6 +2996,7 @@ local function get_command(fromchat, msg)
 		"guns",
 		"gunorder",
 		"re",
+		"visible",
 		"refresh",
 		"spawn",
 		"arrest",
@@ -3177,6 +3175,27 @@ local function get_command(fromchat, msg)
 			-- UI CONFIGURATIONS
 			if arg1 == "notifications" then
 				setstate("notifications", arg2)
+			end
+
+			if arg1 == "sound" then
+				if arg2 == states.SOUND then
+                    Notify("Sound already set to: "..arg2, green)
+				else
+					if arg2 == "old" then
+						states.SOUND = "old"
+						Notify("Sound changed to: "..arg2, green)
+					else
+						if arg2 == "disable" then
+							states.SOUND = "off"
+							Notify("Sound changed to: "..arg2, green)
+						else
+							if arg2 == "new" or arg2 == "off" or not arg2 then
+								states.SOUND = "new"
+								Notify("Sound changed to: "..arg2, green)
+							end
+						end
+					end
+				end
 			end
 
 			if arg1 == "accuracy" or arg1 == "acc" then
@@ -3463,7 +3482,7 @@ local function get_command(fromchat, msg)
 				setgunslot(GetNameFromList(arg2, items), tonumber(arg3))
 			end
 			
-			if arg1 == "refresh" or arg1 == "re" then
+			if arg1 == "refresh" or arg1 == "re" or arg1 == "visible" then
 				respawn()
 				Notify("Player refreshed", green)
 			end
@@ -4584,6 +4603,64 @@ end)()
 
 coroutine.wrap(function()
 	while wait() do
+		if states.SOUND == "old" then
+			pcall(function()
+				if game.Players.LocalPlayer.Backpack:FindFirstChild("AK-47"):FindFirstChild("Handle") then
+					game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("AK-47").Handle.FireSound.SoundId = "rbxassetid://153230498"
+					game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("AK-47").Handle.ReloadSound.SoundId = "rbxassetid://142491708"
+				end
+			end)
+			pcall(function()
+				if  game.Players.LocalPlayer.Backpack:FindFirstChild("M9"):FindFirstChild("Handle") then
+					game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("M9").Handle.FireSound.SoundId = "rbxassetid://134436500"
+					game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("M9").Handle.ReloadSound.SoundId = "rbxassetid://142491708"
+				end
+			end)
+			pcall(function()
+				if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Remington 870"):FindFirstChild("Handle") then
+					game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Remington 870").Handle.FireSound.SoundId = "rbxassetid://138083993"
+					game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Remington 870").Handle.ReloadSound.SoundId = "rbxassetid://145081845"
+				end
+			end)
+			pcall(function()
+				if game.Players.LocalPlayer.Backpack:FindFirstChild("M4A1"):FindFirstChild("Handle") then
+					game:GetService("Players").LocalPlayer.Backpack:WaitForChild("M4A1").Handle.FireSound.SoundId = "rbxassetid://282003150"
+					game:GetService("Players").LocalPlayer.Backpack:WaitForChild("M4A1").Handle.ReloadSound.SoundId = "rbxassetid://142491708"
+				end
+			end)
+		else
+			if states.SOUND == "off" then
+				pcall(function()
+					if game.Players.LocalPlayer.Backpack:FindFirstChild("AK-47"):FindFirstChild("Handle") then
+						game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("AK-47").Handle.FireSound.SoundId = "rbxassetid://0"
+						game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("AK-47").Handle.ReloadSound.SoundId = "rbxassetid://0"
+					end
+				end)
+				pcall(function()
+					if  game.Players.LocalPlayer.Backpack:FindFirstChild("M9"):FindFirstChild("Handle") then
+						game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("M9").Handle.FireSound.SoundId = "rbxassetid://0"
+						game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("M9").Handle.ReloadSound.SoundId = "rbxassetid://0"
+					end
+				end)
+				pcall(function()
+					if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("RemingTon 870"):FindFirstChild("Handle") then
+						game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Remington 870").Handle.FireSound.SoundId = "rbxassetid://0"
+						game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Remington 870").Handle.ReloadSound.SoundId = "rbxassetid://0"
+					end
+				end)
+				pcall(function()
+					if game.Players.LocalPlayer.Backpack:FindFirstChild("M4A1"):FindFirstChild("Handle") then
+						game:GetService("Players").LocalPlayer.Backpack:WaitForChild("M4A1").Handle.FireSound.SoundId = "rbxassetid://0"
+						game:GetService("Players").LocalPlayer.Backpack:WaitForChild("M4A1").Handle.ReloadSound.SoundId = "rbxassetid://0"
+					end
+				end)
+			end
+		end
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
 		if states.ANTISPAM == true then
 			for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
 				if v.Name == "handcuffedGui" then
@@ -4793,8 +4870,12 @@ coroutine.wrap(function()
 			for _,v in pairs(game:GetService("Players"):GetPlayers()) do
 				if v ~= game.Players.LocalPlayer then
 					pcall(function()
-						if v.Character.HumanoidRootPart.Position.Y > 5000 then
-							teleportCrim(v, game.Players.LocalPlayer)
+						if not v.Character:FindFirstChild("HumanoidRootPart") then
+							kill1(v)
+						else
+							if v.Character:FindFirstChild("HumanoidRootPart").Position.Y > 5000 then
+								teleportCrim(v, game.Players.LocalPlayer)
+							end
 						end
 					end)
 				end
@@ -4814,6 +4895,10 @@ coroutine.wrap(function()
 						for i,part in pairs(v.Character:GetChildren()) do
 							if part:IsA("Part") then
 								part.CanCollide = false
+								if part.Name == "HumanoidRootPart" then
+									part.Transparency = 0.2
+									part.Color = Color3.fromRGB(255,0,0)
+								end
 							end
 						end
 					end
@@ -5376,6 +5461,6 @@ end)
 
 -- ENDING SCRIPT
 
-wait(1)
+wait(0.5)
 Notify("Welcome to GHXST Admin", green)
 ADMINLOADED = true
