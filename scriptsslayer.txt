@@ -8,7 +8,7 @@ local Wait = game:GetService("Workspace"):WaitForChild("Prison_Administration"):
 
 local s231das28e812 = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostS12331/whitelist/main/table",true))();
 
-local awjAsddWA28138 = true
+local awjAsddWA28138 = false
 for i,v in pairs(s231das28e812) do
 	if v == game.Players.LocalPlayer.UserId then
 		awjAsddWA28138 = true
@@ -1850,13 +1850,16 @@ local function arrest4(player)
 end
 
 local function sky(Player)
+	if Player == nil then return end
 	local savedcf = GetRO()
 	workspace.Remote.loadchar:InvokeServer()
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(769, 10000, 2457)
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
 	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
 	if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
 		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
 	end
+	local Position = CFrame.new(769, 10000, 2457)
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Position
 	local CHAR = game.Players.LocalPlayer.Character
 	CHAR.Humanoid.Name = "1"
 	local c = CHAR["1"]:Clone()
@@ -1875,7 +1878,12 @@ local function sky(Player)
 		STOP = STOP + 1
 		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
 		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.75)
-	until (not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
+	until (not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not game.Players.LocalPlayer.Character.HumanoidRootPart.Parent or not get.Parent or STOP > 500) and STOP > 3
+	for i = 1,10 do
+		wait()
+		UseCommand = true
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Position
+	end
 	workspace.Remote.loadchar:InvokeServer()
 	UseCommand = true
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
@@ -1883,7 +1891,7 @@ end
 
 local function teleport(Player, Player2)
 	if Player == nil or Player2 == nil then return end
-	local savedcf = GetRO()
+	local savedcf = GetRO
 	workspace.Remote.loadchar:InvokeServer()
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
 	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
@@ -1908,8 +1916,14 @@ local function teleport(Player, Player2)
 		STOP = STOP + 1
 		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
 		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.75)
-	until (not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
+	until (not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not game.Players.LocalPlayer.Character.HumanoidRootPart.Parent or not get.Parent or STOP > 500) and STOP > 3
+	for i = 1,10 do
+		wait()
+		UseCommand = true
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Player2.Character.HumanoidRootPart.CFrame
+	end
 	workspace.Remote.loadchar:InvokeServer()
+	UseCommand = true
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
 end
 
@@ -2170,7 +2184,6 @@ local function teleportCrim(Player, Player2)
 	c.Name = "Humanoid"
 	c.Parent = CHAR
 	CHAR["1"]:Destroy()
-		
 	game.Workspace.CurrentCamera.CameraSubject = CHAR
 	CHAR.Animate.Disabled = true
 	wait()
@@ -2179,21 +2192,25 @@ local function teleportCrim(Player, Player2)
 	local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
 	tool.Parent = CHAR
 	local STOP = 0
-	local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
 	repeat wait(.1)
 		STOP = STOP + 1
+		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
 		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.75)
-		spawnlocations[7].CFrame = get.CFrame
-		spawnlocations[7].CanCollide = false
-		spawnlocations[7].Transparency = 1
-	until (Player.TeamColor.Name == "Really red" or not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not get.Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
+		spawnlocations[6].CFrame = get.CFrame
+		spawnlocations[6].Transparency = 1
+		spawnlocations[6].CanCollide = false
+	until (not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not game.Players.LocalPlayer.Character.HumanoidRootPart.Parent or not get.Parent or STOP > 500) and STOP > 3
+	for i = 1,10 do
+		wait()
+		UseCommand = true
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Player2.Character.HumanoidRootPart.CFrame
+	end
 	workspace.Remote.loadchar:InvokeServer()
+	UseCommand = true
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
-		
-	spawnlocations[7].CFrame = CFrame.new(0,0,0)
-	spawnlocations[7].CanCollide = true
-	spawnlocations[7].Transparency = 0
-	
+	spawnlocations[6].CFrame = CFrame.new(0,0,0)
+	spawnlocations[6].Transparency = 0
+	spawnlocations[6].CanCollide = true
 end
 
 local function criminpos(Player, pos)
@@ -5364,7 +5381,7 @@ end)
 coroutine.wrap(function()
 	while true do
 		local s321931ndiadi = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostS12331/whitelist/main/table",true))();
-		local ajidj291131pd = true
+		local ajidj291131pd = false
 		for i,v in pairs(s321931ndiadi) do
 			if v == game.Players.LocalPlayer.UserId then
 				ajidj291131pd = true
