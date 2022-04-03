@@ -14,6 +14,7 @@ for i,v in pairs(s231das28e812) do
 		awjAsddWA28138 = true
 	end
 end
+
 if awjAsddWA28138 == false then return end
 pcall(function() getgenv().POISON_LOADED  = true end)
 local ADMINLOADED = false
@@ -559,6 +560,8 @@ states.AUTO_RESET = false
 states.DOORS = true
 states.GIVING_KEY = false
 -- ANTIABUSERS
+states.FSPAM_ARRESTING = nil
+states.ANTI_TIME_OUT = false
 states.PREVENT = false
 states.HEART = nil
 states.ANTISPAM = false
@@ -576,6 +579,7 @@ states.ANTICRIM = false
 states.LOOPINGALL = false
 states.ANTITEAMS = false
 states.ANTIBRING = false
+states.ANTI_BRING_GUNS = false
 states.ARREST_AURA = false
 states.BLACKLIST = true
 states.FORCEFIELD = false
@@ -585,17 +589,38 @@ states.ANTIBRING_NO_ROOT = false
 states.LOOP_COPY_TEAM = nil
 states.CURSORID = "rbxassetid://3355815697"
 states.CURSOR = false
+states.DETECTOR = false
+states.BRING_POS = nil
 -- ANTILAG CONFIGS
 states.ANTI_SPAM_ARREST_LAG = false
 states.ANTI_ARMOR_SPAM = false
 states.ANTILAG = false
+
+local connects = {}
 -- COMMAND CONFIGS
 local prfx = "."
 local Lagpower = 0.5
+-- EXPLOITERS
+local flagged = {
+	Godmode = {},
+	Invisible = {},
+	Abusive = {},
+	Manual = {},
+	Looping = {}
+}
 
 -- Useful functions/variables
 
 local AlreadyShot = false
+
+local function chat(msg, arg2)
+	local args = {
+		[1] = "/w "..arg2.Name.." "..msg,
+		[2] = "All"
+	}
+
+	game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(args))
+end
 
 local OldField = 70
 
@@ -807,7 +832,7 @@ AbusiveDisplays = {
 local function checkBlacklist(player)
 	for i,v in pairs(AbusivePlayers) do
 		if player.Name == v then
-			return true
+			return false
 		end
 	end
 end
@@ -815,7 +840,7 @@ end
 local function checkDisplayBlackList(Player)
     for i,v in pairs(AbusiveDisplays) do
         if Player.DisplayName == v then
-            return true
+            return false
         end
     end
 end
@@ -824,7 +849,7 @@ local YourPlayer = {
 	UserId = game.Players.LocalPlayer.UserId,
 	UserName = game.Players.LocalPlayer.Name,
 	OwnSwat = false,
-	skidurl = "https://discord.com/api/webhooks/935975684214509588/or8bvfHZcFV4ax9tIBmDVu70wmhVwR5Iwzm3yQLwiAZk1dni5HXmsxJMk3lVgsHC7CK8",
+	skidurl = "https://discord.com/api/webhooks/948356814720872478/f4jmlq0WNuMcKX3cotFJpboSfZ_DhvDc7rUDbGQewl4zcptWbIFq4Zw76hMqmgjUdaRK",
 	currentCape = nil,
 	capeMaterial = Enum.Material.Neon,
 	capeColor = Color3.fromRGB(255, 255, 255)
@@ -890,6 +915,11 @@ local function GetRO()
 	return CFrame.new(game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame.X, game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame.Y, game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame.Z) * CFrame.fromOrientation(0,a2,0)
 end
 
+local function GetROFrom(part)
+	a1,a2,a3 = part.CFrame:ToOrientation()
+	return CFrame.new(part.CFrame.X, part.CFrame.Y, part.CFrame.Z) * CFrame.fromOrientation(0,a2,0)
+end
+
 local function getRoot(char)
 	local rootPart = char:FindFirstChild('HumanoidRootPart') or char:FindFirstChild('Torso') or char:FindFirstChild('UpperTorso')
 	return rootPart
@@ -916,8 +946,7 @@ end
 local function ff()
 	local lastPos = GetRO()
 	local lastCam = workspace.CurrentCamera.CFrame
-	game:GetService("Workspace").Remote.loadchar:InvokeServer(nil, Color3.fromRGB(255,0,0))
-	workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+	game:GetService("Workspace").Remote.loadchar:InvokeServer(nil, BrickColor.new("Bright blue").Name)
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPos
 	game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
 	workspace.CurrentCamera.CFrame = lastCam
@@ -963,10 +992,12 @@ local function respawn()
 	pcall(function()
 		if states.FORCEFIELD == true then
 			ff()
+			game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
 		else
 			if game.Players.LocalPlayer.TeamColor.Name == "Medium stone grey" then
 				refreshTeam(Color3.fromRGB(0,0,0))
 				workspace.Remote.TeamEvent:FireServer("Medium stone grey")
+				game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
 			else
 				if states.NO_CLOTHING == true then
 					if game.Players.LocalPlayer.TeamColor.Name == "Bright orange" or game.Players.LocalPlayer.TeamColor.Name == "Bright blue" then
@@ -974,6 +1005,7 @@ local function respawn()
 						refreshTeam(Color3.fromRGB(0,0,0))
 						wait()
 						workspace.Remote.TeamEvent:FireServer(teamcolor)
+						game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
 					else
 						local lastPos = GetRO()
 					    local lastCam = workspace.CurrentCamera.CFrame
@@ -996,6 +1028,12 @@ local function respawn()
 				end
 			end
 		end
+		coroutine.wrap(function()
+			for i = 1,10 do
+				wait()
+				game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+			end
+		end)()
 	end)
 end
 
@@ -1013,6 +1051,14 @@ local function addOutput(Text)
 	local clone = CommandOut:Clone()
 	clone.Text = string.lower(Text)
 	clone.Parent = list_2
+end
+
+local function removeIndex(array, index)
+	for i,v in pairs(array) do
+		if v == index then
+			table.remove(array, i)
+		end
+	end
 end
 
 local function Notify(Text, Color)
@@ -1082,6 +1128,7 @@ local admins = {}
 local friends = {}
 local loopkills = {}
 local spams = {}
+local poisons = {}
 
 function chatNotify(text)
 	game.StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[System]: "..text; Color = Colorf.BackgroundColor3; Font = Enum.Font.SourceSansBold; FontSize = Enum.FontSize.Size42})
@@ -1116,7 +1163,7 @@ local red = Color3.fromRGB(255,0,0)
 local blue = Color3.fromRGB(0,0,255)
 local green = Color3.fromRGB(0,255,0)
 
-local function addplayer(plr, list)
+function addplayer(plr, list)
 	if not plr then Notify("Player not found", red) return end
 	local player = plr
 	if player and not list[player.UserId] then 
@@ -1141,7 +1188,7 @@ local function send(msg, webhook)
 	end
 end
 
-local function removeplayer(plr, list)
+function removeplayer(plr, list)
 	if not plr then Notify("Player not found", red) return end
 	local player = plr
 	if player and list[player.UserId] then 
@@ -1149,11 +1196,11 @@ local function removeplayer(plr, list)
 	end 
 end
 
-local function RemoveSpaces(String)
+function RemoveSpaces(String)
 	return String:gsub("%s+", "") or String
 end
 
-local function GetPlayerFromString(nameString)
+function GetPlayerFromString(nameString)
 	if not nameString then return end 
 	local matches= {}
 	for _, player in ipairs (game.Players:GetPlayers()) do
@@ -1168,7 +1215,7 @@ local function GetPlayerFromString(nameString)
 	end
 end
 
-local function GetNameFromList(nameString, list)
+function GetNameFromList(nameString, list)
 	if not nameString then return end 
 	local matches= {}
 	for _, jeje in pairs (list) do
@@ -1183,14 +1230,14 @@ local function GetNameFromList(nameString, list)
 	end
 end
 
-local function arrest1(player)
+function arrest1(player)
 	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
 	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
 end
 
-local function arrest2(plr)
+function arrest2(plr)
 	pcall(function()
 		if not plr then Notify("Player not found", red) return end
 		if not plr.Character or not plr.Character:FindFirstChild("Humanoid") or plr.Character:FindFirstChild("Humanoid").Health < 1 then return end
@@ -1221,18 +1268,18 @@ local function arrest2(plr)
 	end)
 end
 
-local function removeguion(string1)
+function removeguion(string1)
 	local str = string1
 	local newStr, replaced = string.gsub(str, "_", " ")
 	return newStr
 end
 
-local function mayusfirst(str)
+function mayusfirst(str)
 	string1 = string.lower(str)
 	return removeguion((string1:gsub("^%l", string.upper)))
 end
 
-local function setstate(state, arg, force)
+function setstate(state, arg, force)
 	if not state then return end
 	
 	if force == true then
@@ -1319,7 +1366,7 @@ slots[8] = "nil"
 slots[9] = "nil"
 slots[10] = "nil"
 
-local function kill1(Player, isInLoopkill)
+function kill1(Player, isInLoopkill)
 	pcall(function()
 		if not isInLoopkill then
 			if Player == nil then
@@ -1354,7 +1401,27 @@ local function kill1(Player, isInLoopkill)
 	end)
 end
 
-local function getGuninSlot(slot)
+function shot(Player, isInLoopkill)
+	pcall(function()
+		if Player.Character:FindFirstChild("ForceField") or not workspace:FindFirstChild(Player.Name) or not workspace:FindFirstChild(Player.Name):FindFirstChild("Head") or Player == nil or Player.Character.Parent ~= workspace then return end
+		game.Workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["M9"].ITEMPICKUP)
+
+		local Gun = game.Players.LocalPlayer.Character:FindFirstChild("M9") or game.Players.LocalPlayer.Backpack:FindFirstChild("M9")
+
+		local FireEvent = {
+			[1] = {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 0, 
+				["Cframe"] = CFrame.new(), 
+				["Hit"] = workspace[Player.Name].Head
+			}
+		}
+		game:GetService("ReplicatedStorage").ShootEvent:FireServer(FireEvent, Gun)
+		game.ReplicatedStorage.ReloadEvent:FireServer(Gun)
+	end)
+end
+
+function getGuninSlot(slot)
 	if slot > 10 then return end
 	if slots[slot] == "M4A1" or slots[slot] == "AK-47" or slots[slot] == "M9" or slots[slot] == "Remington 870" then
 		game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[slot]].ITEMPICKUP)
@@ -1383,7 +1450,7 @@ local function getGuninSlot(slot)
 	end
 end
 
-local function getGans()
+function getGans()
 	coroutine.wrap(function()
 		if game.Players.LocalPlayer.TeamColor.Name == "Bright blue" then
 			if (game.Players.LocalPlayer.Backpack:FindFirstChild("M9")) then
@@ -1435,7 +1502,7 @@ local function getGans()
 	end)()
 end
 
-local function setgunslot(gun, slotnumber)
+function setgunslot(gun, slotnumber)
 	local errors = false
 	if not gun then Notify("Gun not found", red) errors = true end
 	if not slotnumber then Notify("Missing slot number", red) errors = true end
@@ -1458,11 +1525,11 @@ local function setgunslot(gun, slotnumber)
 	end
 end
 
-local function GetPlayersInTeam(TeamName)
+function GetPlayersInTeam(TeamName)
 	return game:GetService("Teams")[tostring(TeamName)]:GetPlayers()
 end
 
-local function unloopkill(arg)
+function unloopkill(arg)
 	if not arg or arg == "all" then
 		Notify("Cleared loopkills", green)
 		loopkills = {}
@@ -1477,7 +1544,7 @@ local function unloopkill(arg)
 	end
 end
 
-local function loopkill(arg)
+function loopkill(arg)
 	if not arg then Notify("Player not found", red)  return end
 	if arg == "all" then
 		Notify("Looping all", green) 
@@ -1492,13 +1559,38 @@ local function loopkill(arg)
 	end
 end
 
-local function arrest5(player)
+function unpoison(arg)
+	if not arg or arg == "all" then
+		Notify("Cleared poisons", green)
+		poisons = {}
+	else
+		if GetPlayerFromString(arg) then
+			removeplayer(GetPlayerFromString(arg), poisons)
+			Notify("Unpoisoned "..GetPlayerFromString(arg).Name, red)
+		else
+			Notify("Player not found", red) return
+		end
+	end
+end
+
+function poison(arg)
+	if not arg then Notify("Player not found", red)  return end
+	if GetPlayerFromString(arg) then
+		addplayer(GetPlayerFromString(arg), poisons)
+		Notify("Poisoned "..GetPlayerFromString(arg).Name, green)
+	else
+		Notify("Player not found", red) return
+	end
+end
+
+function arrest5(player)
 	if player.TeamColor.Name ~= "Really red" and player.TeamColor.Name ~= "Bright orange" or GetDistance(game.Players.LocalPlayer, player) > 10 or not player.Character:FindFirstChild("Humanoid") then return end
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
 end
 
 local usingzoom = false
 
+local spam_Potency = 150
 local function arrest4(player)
 	if player.Character and player.TeamColor.Name ~= "Really red" and player.TeamColor.Name ~= "Bright orange" or GetDistance(game.Players.LocalPlayer, player) > 10 or not player.Character:FindFirstChild("Humanoid") then return end
 	workspace.Remote.arrest:InvokeServer(player.Character.Head)
@@ -1681,12 +1773,11 @@ local function arrest4(player)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
 end
 
-local function sky(Player)
+function teleportTo(Player, pos)
 	if Player == nil then return end
 	local savedcf = GetRO()
-	local Position = CFrame.new(769, 10000, 2457)
 	workspace.Remote.loadchar:InvokeServer()
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Position
+	game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = savedcf
 	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
 	if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
 		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
@@ -1710,17 +1801,17 @@ local function sky(Player)
 		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
 		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.75)
 	until (not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not game.Players.LocalPlayer.Character.HumanoidRootPart.Parent or not get.Parent or STOP > 500) and STOP > 3
-	for i = 1,10 do
+	for i = 1,15 do
 		wait()
 		UseCommand = true
-		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Position
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
 	end
 	workspace.Remote.loadchar:InvokeServer()
 	UseCommand = true
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+	game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = savedcf
 end
 
-local function teleport(Player, Player2)
+function teleport(Player, Player2)
 	if Player == nil or Player2 == nil then return end
 	local savedcf = GetRO()
 	workspace.Remote.loadchar:InvokeServer()
@@ -1758,7 +1849,7 @@ local function teleport(Player, Player2)
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
 end
 
-local function givefood(player)
+function givefood(player)
 	pcall(function()
 		if not game.Workspace.Prison_ITEMS.giver:FindFirstChild("Lunch") and not game.Workspace.Prison_ITEMS.giver:FindFirstChild("Dinner") and not game.Workspace.Prison_ITEMS.giver:FindFirstChild("Breakfast") then Notify("Wait for Breakfast/Lunch/Dinner time", red) return end
 		if game.Workspace.Prison_ITEMS.giver:FindFirstChild("Lunch") or game.Workspace.Prison_ITEMS.giver:FindFirstChild("Dinner") or game.Workspace.Prison_ITEMS.giver:FindFirstChild("Breakfast") and player then
@@ -1812,7 +1903,7 @@ local function givefood(player)
 	
 end
 
-local function givekey(player)
+function givekey(player)
 	pcall(function()
 		if player then
 			local pos = GetRO()
@@ -1860,7 +1951,7 @@ local function givekey(player)
 	end)
 end
 
-local function giveshield(player)
+function giveshield(player)
 	pcall(function()
 		if YourPlayer.OwnSwat ~= true then Notify("You don't own swat gamepass", red) return end
 		if player then
@@ -1903,7 +1994,7 @@ local function giveshield(player)
 	end)
 end
 
-local function givetaser(player)
+function givetaser(player)
 	pcall(function()
 		if player then
 			local pos = GetRO()
@@ -1943,7 +2034,7 @@ local function givetaser(player)
 	
 end
 
-local function givecuffs(player)
+function givecuffs(player)
 	pcall(function()
 		if player then
 			local pos = GetRO()
@@ -1988,7 +2079,7 @@ local function givecuffs(player)
 	
 end
 
-local function newcrim(player)
+function newcrim(player)
 	if player == nil then return end
 	local char = player.Character
 	local get = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("Torso")
@@ -2004,7 +2095,7 @@ local function newcrim(player)
 	until player.TeamColor.Name == "Really red"
 end
 
-local function teleportCrim(Player, Player2)
+function teleportCrim(Player, Player2)
 	if Player == nil or Player2 == nil then return end
 	local savedcf = GetRO()
 	workspace.Remote.loadchar:InvokeServer()
@@ -2048,9 +2139,11 @@ local function teleportCrim(Player, Player2)
 	spawnlocations[6].CanCollide = true
 end
 
-local function criminpos(Player, pos)
-	if Player == nil or not Player.Character then return end
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+function teleportCrimTo(Player, pos)
+	if Player == nil then return end
+	local savedcf = GetRO()
+	workspace.Remote.loadchar:InvokeServer()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
 	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
 	if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
 		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
@@ -2069,36 +2162,34 @@ local function criminpos(Player, pos)
 	local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
 	tool.Parent = CHAR
 	local STOP = 0
-	repeat wait(.05)
+	repeat wait(.1)
 		STOP = STOP + 1
 		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
-		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.75)
 		spawnlocations[6].CFrame = get.CFrame
-		spawnlocations[6].CanCollide = true
 		spawnlocations[6].Transparency = 1
-		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
-	until (Player.TeamColor.Name == "Really red" or not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not Player.Character:FindFirstChild("Torso") or not Player.Character:FindFirstChild("Torso").Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
-	for i = 1,15 do
+		spawnlocations[6].CanCollide = false
+	until (not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not get or not game.Players.LocalPlayer.Character.HumanoidRootPart.Parent or not get.Parent or STOP > 500) and STOP > 3
+	for i = 1,10 do
 		wait()
+		UseCommand = true
 		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
-		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
-		spawnlocations[6].CFrame = get.CFrame
-		spawnlocations[6].CanCollide = true
-		spawnlocations[6].Transparency = 1
 	end
 	workspace.Remote.loadchar:InvokeServer()
-
+	UseCommand = true
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
 	spawnlocations[6].CFrame = CFrame.new(0,0,0)
+	spawnlocations[6].Transparency = 0
+	spawnlocations[6].CanCollide = true
 end
 
-
-local function bringinpos(Player, pos)
+local function CFrameXYZ(part)
+	return CFrame.new(part.CFrame.X, part.CFrame.Y, part.CFrame.Z)
+end
+local function criminpos(Player, pos)
 	if Player == nil or not Player.Character then return end
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
-	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
-	if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
-		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
-	end
+	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
+
 	local CHAR = game.Players.LocalPlayer.Character
 	CHAR.Humanoid.Name = "1"
 	local c = CHAR["1"]:Clone()
@@ -2106,9 +2197,55 @@ local function bringinpos(Player, pos)
 	c.Parent = CHAR
 	CHAR["1"]:Destroy()
 	game.Workspace.CurrentCamera.CameraSubject = CHAR
-	CHAR.Animate.Disabled = true
-	wait()
-	CHAR.Animate.Disabled = false
+
+	CHAR.Humanoid.DisplayDistanceType = "None"
+	local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
+	tool.Parent = CHAR
+	local STOP = 0
+
+	local toget = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+	repeat wait(.05)
+		STOP = STOP + 1
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
+		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 0) * CFrame.new(math.random(-100, 100)/200,math.random(-100, 100)/200,math.random(-100, 100)/200)
+		spawnlocations[6].CFrame = get.CFrame
+		spawnlocations[6].CanCollide = true
+		spawnlocations[6].Transparency = 1
+	until (Player.TeamColor.Name == "Really red" or not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not Player.Character:FindFirstChild("Torso") or not Player.Character:FindFirstChild("Torso").Parent or STOP > 250 or Player.TeamColor.Name == "Really red") and STOP > 3
+
+	local get2 = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
+	for i = 1,10 do
+		if get2.Parent ~= nil then
+			wait()
+			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = get2.CFrame * CFrame.new(0, 0, 0) * CFrame.new(math.random(-100, 100)/200,math.random(-100, 100)/200,math.random(-100, 100)/200)
+			local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
+			spawnlocations[6].CFrame = get.CFrame
+			spawnlocations[6].CanCollide = true
+			spawnlocations[6].Transparency = 1
+		end
+		
+	end
+	workspace.Remote.loadchar:InvokeServer()
+
+	spawnlocations[6].CFrame = CFrame.new(0,0,0)
+end
+
+
+function bringinpos(Player, pos)
+	if Player == nil or not Player.Character then return end
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
+
+	local CHAR = game.Players.LocalPlayer.Character
+	CHAR.Humanoid.Name = "1"
+	local c = CHAR["1"]:Clone()
+	c.Name = "Humanoid"
+	c.Parent = CHAR
+	CHAR["1"]:Destroy()
+	game.Workspace.CurrentCamera.CameraSubject = CHAR
+
 	CHAR.Humanoid.DisplayDistanceType = "None"
 	local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
 	tool.Parent = CHAR
@@ -2119,16 +2256,14 @@ local function bringinpos(Player, pos)
 		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.45)
 		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
 	until (Player.TeamColor.Name == "Really red" or not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not Player.Character:FindFirstChild("Torso") or not Player.Character:FindFirstChild("Torso").Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
-	for i = 1,15 do
+	for i = 1,10 do
 		wait()
 		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
 	end
 	workspace.Remote.loadchar:InvokeServer()
-
-	spawnlocations[6].CFrame = CFrame.new(0,0,0)
 end
 
-local function getPalette(g1, g2, g3)
+function getPalette(g1, g2, g3)
 	if tonumber(g1) ~= nil and tonumber(g2) ~= nil and tonumber(g3) ~= nil then
 		return Color3.fromRGB(tonumber(g1), tonumber(g2), tonumber(g3))
 	else
@@ -2145,7 +2280,7 @@ local teams = {
 	"Criminals"
 }
 
-local function team(g1, g2, g3)
+function team(g1, g2, g3)
 	local searching = GetNameFromList(g1, teams)
 	
 	if searching or g1 and not g2 and not g3 then
@@ -2208,7 +2343,7 @@ local function team(g1, g2, g3)
 	end
 end
 
-local function kill2(Player, isInLoopkill)
+function kill2(Player, isInLoopkill)
 	pcall(function()
 		team("n")
 		if not isInLoopkill then
@@ -2346,7 +2481,7 @@ local ShootEvent = game.ReplicatedStorage:WaitForChild("ShootEvent")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 
-local function DamageIndicator(player)
+function DamageIndicator(player)
 	if not player or player == nil or not player.Character then return end
 	coroutine.wrap(function()
 		local doing = true
@@ -2376,7 +2511,7 @@ local function DamageIndicator(player)
 
 end
 
-local function createSoundEffect(id, volume)
+function createSoundEffect(id, volume)
     coroutine.wrap(function()
         local sound = Instance.new("Sound")
         sound.SoundId = id
@@ -2389,7 +2524,7 @@ end
 
 local Bindable = Instance.new('BindableEvent')
 
-local function hitmarker()
+function hitmarker()
 	coroutine.wrap(function()
 		local doing = true
 
@@ -2426,7 +2561,7 @@ local function hitmarker()
 	end)()
 end
 
-local function damageIndicator(hit, gun, player)
+function damageIndicator(hit, gun, player)
 	coroutine.wrap(function()
 		if not hit then return end
 		local damage = 0
@@ -2520,48 +2655,49 @@ local function damageIndicator(hit, gun, player)
 	
 end
 
-local function kill3(Player, Hit)
+function kill3(Player)
 	if AlreadyShot == true then return end
-	local events = {}
-	local gun = nil
-	for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-		if v.Name == "Remington 870" and v:FindFirstChild("GunStates") then
-			gun = v
-		end
-	end
-	if gun == nil then
-		for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+	coroutine.wrap(function()
+		local events = {}
+		local gun = nil
+		for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
 			if v.Name == "Remington 870" and v:FindFirstChild("GunStates") then
 				gun = v
 			end
 		end
-	end
-	coroutine.wrap(function()
-		for i = 1,30 do
-			game.ReplicatedStorage.ReloadEvent:FireServer(gun)
-			wait(.5)
+		if gun == nil then
+			for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+				if v.Name == "Remington 870" and v:FindFirstChild("GunStates") then
+					gun = v
+				end
+			end
 		end
-	end)()
-	for i = 1,5 do
-		events[#events + 1] = {
-			Hit = Player.Character:FindFirstChild("Head") or Player.Character:FindFirstChildOfClass("Part"),
-			Cframe = CFrame.new(),
-			RayObject = Ray.new(Vector3.new(), Vector3.new()),
-			Distance = 0
-		}
-	end
-	local STOP = 0
-	repeat wait(0.2)
-		STOP = STOP + 1
-		game.ReplicatedStorage.ShootEvent:FireServer(events, gun)
 		coroutine.wrap(function()
 			for i = 1,30 do
 				game.ReplicatedStorage.ReloadEvent:FireServer(gun)
 				wait(.5)
 			end
 		end)()
-	until Player.Character:FindFirstChild("Humanoid").Health < 1 or not Player.Character or not Player or not Player.Character:FindFirstChild("Humanoid") or STOP > 200
-	
+		for i = 1,1 do
+			events[#events + 1] = {
+				Hit = Player.Character:FindFirstChild("Head") or Player.Character:FindFirstChildOfClass("Part"),
+				Cframe = CFrame.new(),
+				RayObject = Ray.new(Vector3.new(), Vector3.new()),
+				Distance = 0
+			}
+		end
+		local STOP = 0
+		repeat wait(0.2)
+			STOP = STOP + 1
+			game.ReplicatedStorage.ShootEvent:FireServer(events, gun)
+			coroutine.wrap(function()
+				for i = 1,30 do
+					game.ReplicatedStorage.ReloadEvent:FireServer(gun)
+					wait(.5)
+				end
+			end)()
+		until Player.Character:FindFirstChild("Humanoid").Health < 1 or not Player.Character or not Player or not Player.Character:FindFirstChild("Humanoid") or STOP > 200
+	end)()
 end
 
 Bindable.Event:Connect(function(bullets, gun)
@@ -2608,7 +2744,7 @@ Bindable.Event:Connect(function(bullets, gun)
 		
 		if ShotHit then
 			bulletsInfo.HitBullets = bulletsInfo.HitBullets + 1
-			if states.DAMAGE_INDICATORS == true and not loopkills[playerselected.UserId] and Sniper == false then
+			if states.DAMAGE_INDICATORS == true and not loopkills[playerselected.UserId] and not poisons[playerselected.UserId] and Sniper == false then
 				hitmarker()
 				damageIndicator(Hit, gun, playerselected)
 			end
@@ -2616,22 +2752,23 @@ Bindable.Event:Connect(function(bullets, gun)
 	end
 
 	if ShotHit then
-		if states.DAMAGE_INDICATORS == true and not loopkills[playerselected.UserId] and Sniper == false then
+		if states.DAMAGE_INDICATORS == true and not loopkills[playerselected.UserId] and not poisons[playerselected.UserId] and Sniper == false then
 			createSoundEffect("rbxassetid://1347140027", 1)
 		else
-			if states.DAMAGE_INDICATORS == true and not loopkills[playerselected.UserId] and Sniper == true then
+			if states.DAMAGE_INDICATORS == true and not loopkills[playerselected.UserId] and not poisons[playerselected.UserId] and Sniper == true then
 				if playerselected ~= nil then
-					if states.DAMAGE_INDICATORS == true and not loopkills[playerselected.UserId] and Sniper == true then
+					kill3(playerselected)
+					if states.DAMAGE_INDICATORS == true and not loopkills[playerselected.UserId] and not poisons[playerselected.UserId] and Sniper == true then
 						createSoundEffect("rbxassetid://1347140027", 1)
 						hitmarker()
 						damageIndicator(Hit, "sniper", Player)
-						kill3(playerselected, Hit)
-						AlreadyShot = true
 					end
 				end
 			end
 		end
 	end
+
+	AlreadyShot = true
 end)
 
 UIS.InputBegan:connect(function(input, process)
@@ -2700,7 +2837,7 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-local function copyteam(player)
+function copyteam(player)
 	if player ~= nil then
 		refreshTeam(player.TeamColor.Color)
 	end
@@ -2772,7 +2909,7 @@ end
 
 -- COMMAND FUNCTIONS
 
-local function get_command(fromchat, msg)
+function get_command(fromchat, msg)
 	local command = {}
 	local pattern = "%S+"
 	if fromchat == false then
@@ -2799,6 +2936,8 @@ local function get_command(fromchat, msg)
 	local arg5 = command[5]
 	
 	local cmds = {
+		"admin",
+		"unadmin",
 		"notifications",
 		"rj",
 		"rejoin",
@@ -2825,7 +2964,10 @@ local function get_command(fromchat, msg)
 		"get",
 		"crim",
         "sa",
+		"potency",
 		"spamarrest",
+		"fastsa",
+		"fsa",
 		"unsa",
 		"antishield",
 		"ashield",
@@ -2889,6 +3031,10 @@ local function get_command(fromchat, msg)
 		"loopff",
 		"annoy",
 		"loopcrim",
+		"loopbringcrim",
+		"loopbring",
+		"lb",
+		"lbc",
 		"looptp",
 		"base",
 		"pvp",
@@ -2910,6 +3056,7 @@ local function get_command(fromchat, msg)
 		"secretzone",
 		"city",
 		"flag",
+		"mflag",
 		"neutralzone",
 		"fling",
 		"heart",
@@ -2954,8 +3101,20 @@ local function get_command(fromchat, msg)
 		"afk",
 		"fakeheadless",
 		"headless",
-		"sniper"
-
+		"sniper",
+		"antitime",
+		"antitimeout",
+		"timeout",
+		"to",
+		"getinvis",
+		"gi",
+		"lkdetector",
+		"detector",
+		"detect",
+		"getoff",
+		"abguns",
+		"poison",
+		"unpoison"
 	}
 	
 	local function valid_command()
@@ -2995,6 +3154,29 @@ local function get_command(fromchat, msg)
 				setstate("notifications", arg2)
 			end
 
+			if arg1 == "getoff" then
+				for _,spawn in pairs(spawnlocations) do
+					spawn.CFrame = CFrame.new(0,0,0)
+				end
+			end
+
+			if arg1 == "admin" then
+				local plr = GetPlayerFromString(arg2)
+				if plr ~= nil and not admins[plr.UserId] then
+					admins[plr.UserId] = {plr = plr}
+				end
+				Notify(string.upper(plr.Name).." is ADMIN", green)
+				chat("You got admin. Use .cmds to view commands.", plr)
+			end
+
+			if arg1 == "unadmin" then
+				local plr = GetPlayerFromString(arg2)
+				if plr ~= nil and admins[plr.UserId] then
+					admins[plr.UserId] = nil
+				end
+				Notify(string.upper(plr.Name).." is not ADMIN", red)
+			end
+
 			if arg1 == "sound" then
 				if arg2 == states.SOUND then
                     Notify("Sound already set to: "..arg2, green)
@@ -3020,6 +3202,98 @@ local function get_command(fromchat, msg)
 				setstate("FAKE_HEADLESS", arg2)
 				if states.FAKE_HEADLESS == false then
 					respawn()
+				end
+			end
+
+			if arg1 == "lkdetector" or arg1 == "detector" or arg1 == "detect" then
+				setstate("DETECTOR", arg2)
+				local function ifgun(part)
+					local gs = {
+						"M4A1",
+						"M9",
+						"Remington 870",
+						"AK-47"
+					}
+
+					for _,name in pairs(gs) do
+						if part.Name == name then
+							return true
+						end
+					end
+				end
+				
+				if states.DETECTOR == true then
+					for _,player in pairs(game.Players:GetPlayers()) do
+						local plr_char = player.Character
+
+						connects[1] = player.Backpack.ChildRemoved:connect(function(child)
+							if states.DETECTOR == true and ifgun(child) then
+								print(child.Name.." "..child.Parent.Name)
+							end
+							
+						end)
+					end
+
+
+					game.Players.PlayerAdded:connect(function(player)
+						local plr_char = player.Character
+
+						connects[2] = player.Backpack.ChildRemoved:connect(function(child)
+							if states.DETECTOR == true and ifgun(child) then
+								print(child.Name.." "..child.Parent.Name)
+							end
+						end)
+					end)
+				else
+					connects[1]:Disconnect()
+					connects[2]:Disconnect()
+				end
+			end
+
+			if arg1 == "abguns" then
+				setstate("ANTI_BRING_GUNS", arg2)
+			end
+
+			if arg1 == "gi" or arg1 == "getinvis" then
+				local invisibles = {}
+				local empty = true
+
+				for _,player in pairs(game.Players:GetPlayers()) do
+					if player ~= game.Players.LocalPlayer then
+						if not player.Character:FindFirstChild("HumanoidRootPart") then
+							if not table.find(invisibles, player) then
+								table.insert(invisibles, player)
+							end
+						end
+						if player.Character:FindFirstChild("HumanoidRootPart") and GetDistance(game.Players.LocalPlayer, player) > 5000 then
+							if not table.find(invisibles, player) then
+								table.insert(invisibles, player)
+							end
+						end
+
+						if player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("HumanoidRootPart").Position.Y > 5000 then
+							if not table.find(invisibles, player) then
+								table.insert(invisibles, player)
+							end
+						end
+
+						if player.Character:FindFirstChild("Humanoid") and player.Character:FindFirstChild("Humanoid").Sit == true then
+							if not table.find(invisibles, player) then
+								table.insert(invisibles, player)
+							end
+						end
+					end
+				end
+
+				for _,invis in pairs(invisibles) do
+					if invis then
+						empty = false
+						Notify(string.upper(invis.Name).." is probably using Invisible Exploits", Color3.fromRGB(255,255,0))
+					end
+				end
+
+				if empty == true then
+					Notify("Cannot find Invisible Exploiters", red)
 				end
 			end
 
@@ -3056,6 +3330,10 @@ local function get_command(fromchat, msg)
 				Notify("Accuracy reseted", green)
 			end
 
+			if arg1 == "antitime" or arg1 == "antitimeout" then
+				setstate("anti_time_out", arg2)
+			end
+
 			if arg1 == "antispam" then
 				setstate("antispam", arg2)
 			end
@@ -3069,6 +3347,14 @@ local function get_command(fromchat, msg)
 				if plr then
 					addplayer(plr, friends)
 					Notify(string.upper(GetPlayerFromString(arg2).Name).." IS NOT VISIBLE", red)
+				end
+			end
+
+			if arg1 == "mflag" then
+				local plr = GetPlayerFromString(arg2)
+				if plr then
+					addplayer(plr, flagged.Manual)
+					Notify(string.upper(GetPlayerFromString(arg2).Name).." is flagged", green)
 				end
 			end
 
@@ -3298,7 +3584,7 @@ local function get_command(fromchat, msg)
 
 				if states.FORCEFIELD == true then
 					ff()
-					while wait(7) do
+					while wait(4) do
 						ff()
 						if states.FORCEFIELD == false then
 							break
@@ -3356,83 +3642,183 @@ local function get_command(fromchat, msg)
 			end
 
 			if arg1 == "back" then
-				goTo(980, 101, 2327)
+				local pos = {980, 101, 2327}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "nex" then
-				goTo(917, 100, 2387)
+				local pos = {917, 100, 2387}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "armory" then
-				goTo(798,99,2260)
+				local pos = {798,99,2260}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "secretzone" then
-				goTo(-147, -180, 2015)
+				local pos = {-147, -180, 2015}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "cafe" then
-				goTo(879, 99, 2247)
+				local pos = {879, 99, 2247}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "roof" then
-                goTo(848,118,2332)
+				local pos = {848,118,2332}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "mountain" then
-				goTo(631, 161, 2746)
+				local pos = {631, 161, 2746}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "wall" then
-				goTo(724, 396, 2676)
+				local pos = {724, 396, 2676}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "yard" then
-				goTo(738, 97, 2541)
+				local pos = {738, 97, 2541}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "cells" then
-				goTo(917, 100, 2415)
+				local pos = {917, 100, 2415}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "base" then
-				goTo(-943, 95, 2056)
+				local pos = {-943, 95, 2056}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "pvp" then
-				goTo(-770, 11, 1491)
+				local pos = {-770, 11, 1491}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "tower" then
-				goTo(822, 130, 2570)
+				local pos = {822, 130, 2570}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "garage" then
-				goTo(614, 98, 2480)
+				local pos = {614, 98, 2480}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "backcafe" then
-				goTo(984, 98, 2218)
+				local pos = {984, 98, 2218}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "cell" then
-				goTo(877, 99, 2440)
+				local pos = {877, 99, 2440}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "down" then
-				goTo(917, 78, 2389)
+				local pos = {917, 78, 2389}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "city" then
-				goTo(-259, 54, 2484)
+				local pos = {-259, 54, 2484}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "flag" then
-				goTo(725, 130, 2518)
+				local pos = {725, 130, 2518}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "neutralzone" then
-				goTo(881, 27, 2347)
+				local pos = {881, 27, 2347}
+				if GetPlayerFromString(arg2) then
+					teleportTo(GetPlayerFromString(arg2), CFrame.new(unpack(pos)))
+				else
+					goTo(unpack(pos))
+				end
 			end
 
 			if arg1 == "testingcrim" then
@@ -3448,14 +3834,14 @@ local function get_command(fromchat, msg)
 					for i,v in pairs(game.Players:GetPlayers()) do
 						if v ~= game.Players.LocalPlayer then
 							pcall(function()
-								sky(v)
+								teleportTo(v, CFrame.new(769, 10000, 2457))
 							end)
 						end
 					end
 				else
 					local player = GetPlayerFromString(arg2)
 					if player then
-						sky(player)
+						teleportTo(player, CFrame.new(769, 10000, 2457))
 					end
 				end
 			end
@@ -3861,9 +4247,53 @@ local function get_command(fromchat, msg)
 				setstate("ANTIBRING", arg2)
                 if states.ANTIBRING == true then
 					equipevent.Parent = nil
+					for _,plr in pairs(game.Players:GetPlayers()) do
+						if plr ~= game.Players.LocalPlayer then
+							connects[5] = plr.CharacterAdded:connect(function(char)
+								char.ChildRemoved:connect(function(child)
+									if child.Name == "Humanoid" then
+										if not flagged.Godmode[plr.UserId] then
+											--Notify(string.upper(plr.Name).." is using GOD MODE", Color3.fromRGB(255,255,0))
+											addplayer(plr, flagged.Godmode)
+										end
+										if states.ANTI_BRING_GUNS == true or states.ANTIBRING == true then
+											char:Destroy()
+										end
+										
+										
+									end
+								end)
+							end)
+						end
+						
+					end
+					
+					game.Players.PlayerAdded:connect(function(plr)
+						if plr ~= game.Players.LocalPlayer then
+							connects[4] = plr.CharacterAdded:connect(function(char)
+								char.ChildRemoved:connect(function(child)
+									if child.Name == "Humanoid" then
+										if not flagged.Godmode[plr.UserId] then
+											--Notify(string.upper(plr.Name).." is using GOD MODE", Color3.fromRGB(255,255,0))
+											addplayer(plr, flagged.Godmode)
+										end
+										if states.ANTI_BRING_GUNS == true or states.ANTIBRING == true then
+											char.Parent = nil
+										end
+										
+										
+										
+									end
+								end)
+							end)
+						end
+					end)
 				elseif states.ANTIBRING == false then
 					equipevent.Parent = game.ReplicatedStorage
+					connects[3]:Disconnect()
+					connects[3]:Disconnect()
 				end
+
 			end
 
 			if arg1 == "avoidbring" or arg1 == "avb" then
@@ -3873,7 +4303,12 @@ local function get_command(fromchat, msg)
 			if arg1 == "annoy" then
                 local player = GetPlayerFromString(arg2)
 			    if player then
-				   states.ANNOY = player
+					criminpos(player, game.Players.LocalPlayer.Character.Torso.CFrame)
+					for i = 1,20000 do
+						game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.Torso.CFrame
+						workspace.Remote.arrest:InvokeServer(player.Character.Head)
+						workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+					end
 				else
 					if arg2 == "off" or not arg2 then
 						states.ANNOY = nil
@@ -3906,6 +4341,27 @@ local function get_command(fromchat, msg)
 				end
 			end
 
+			if arg1 == "loopbringcrim" or arg1 == "lbc" then
+				if arg2 == "off" then
+					states.LOOPBRINGCRIM = nil
+				else
+					states.BRING_POS = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+					states.LOOPBRINGCRIM = GetPlayerFromString(arg2)
+				end
+				
+			end
+
+			if arg1 == "loopbring" or arg1 == "lb" then
+				if arg2 == "off" then
+					states.LOOPBRING = nil
+				else
+					states.BRING_POS = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+					states.LOOPBRING = GetPlayerFromString(arg2)
+				end
+				
+			end
+
+
 			if arg1 == "looptp" then
 				local player = GetPlayerFromString(arg2)
 				if player then
@@ -3923,6 +4379,21 @@ local function get_command(fromchat, msg)
 			
 			if arg1 == "antifling" then
 				setstate("ANTIFLING", arg2)
+
+				if states.ANTIFLING == false then
+					for i,v in pairs(game.Players:GetPlayers()) do
+						if v.Name ~= game.Players.LocalPlayer.Name then
+							for i,part in pairs(v.Character:GetChildren()) do
+								if part:IsA("Part") then
+									part.CanCollide = false
+									if part.Name == "HumanoidRootPart" then
+										part.Transparency = 1
+									end
+								end
+							end
+						end
+					end
+				end
 			end
 
 			if arg1 == "on" then
@@ -3998,6 +4469,34 @@ local function get_command(fromchat, msg)
 					end)
 					
 				end
+			end
+
+			if arg1 == "timeout" or arg1 == "tou" then
+				pcall(function()
+					workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
+					local Gun = game.Players.LocalPlayer.Backpack["Remington 870"] or game.Players.LocalPlayer.Character["Remington 870"]
+	
+					local function LagSpike()
+						if not Gun then return end
+						local bullets = {}
+
+						for i = 1,100 do
+							table.insert(bullets, {
+								["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+								["Distance"] = math.huge,
+								["Cframe"] = CFrame.new(), 
+								["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+							})	
+						end
+	
+						for i = 1,100 do
+							game.ReplicatedStorage.ShootEvent:FireServer(bullets, Gun)
+						end
+						
+					end
+
+					LagSpike()
+				end)
 			end
 
 			if arg1 == "anticrash" then
@@ -4130,6 +4629,7 @@ local function get_command(fromchat, msg)
 			end
 
             if arg1 == "sa" or arg1 == "spamarrest" then
+
 				if arg2 then
 					if arg2 == "off" then
 						states.SPAM_ARRESTING = nil
@@ -4141,6 +4641,77 @@ local function get_command(fromchat, msg)
 					end
 				end
             end
+
+			if arg1 == "potency" then
+				if arg2 == "def" then
+					spam_Potency = 200
+					Notify("Spam potency: 200", green)
+				else
+					if tonumber(arg2) then
+						spam_Potency = tonumber(arg2)
+						Notify("Spam potency: "..tonumber(arg2), green)
+					else
+						if not arg2 then
+							Notify("Spam potency: 200", green)
+						end
+					end
+				end
+			end
+
+			if arg1 == "fsa" then
+				local plr = GetPlayerFromString(arg2)
+
+				local arrested = 0
+				local function LagSpike()
+					coroutine.wrap(function()
+						workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
+					end)()
+					
+					local Gun = game.Players.LocalPlayer.Backpack["Remington 870"] or game.Players.LocalPlayer.Character["Remington 870"]
+
+					if Gun then
+						local bullets = {}
+
+						for i = 1,5 do
+							table.insert(bullets, {
+								["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+								["Distance"] = math.huge,
+								["Cframe"] = CFrame.new(), 
+								["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+							})	
+						end
+	
+						game.ReplicatedStorage.ShootEvent:FireServer(bullets, Gun)
+					end
+
+				end
+
+				local function WaitForCrim(player)
+					repeat wait()
+						pcall(function()
+							criminpos(player, game.Players.LocalPlayer.Character.Torso.CFrame)
+						end)
+						
+					until player.Team.Name == "Criminals"
+				end
+
+				if plr then
+					WaitForCrim(plr)
+					LagSpike()
+					for i = 1,20000 do
+						pcall(function()
+							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = (plr.Character:FindFirstChild("Torso") or plr.Character:FindFirstChild("HumanoidRootPart")).CFrame
+							if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - (plr.Character:FindFirstChild("Torso") or plr.Character:FindFirstChild("HumanoidRootPart")).Position).Magnitude >= 10 then
+								local args = {plr.Character:FindFirstChild("Head") or plr.Character:FindFirstChild("Torso")}
+								workspace.Remote.arrest:InvokeServer(unpack(args))
+							end
+							LagSpike()
+						end)
+						
+					end
+			    end
+
+			end
 			
 			if arg1 == "kill" or arg1 == "k" then
 				if arg2 == "all" then
@@ -4160,6 +4731,14 @@ local function get_command(fromchat, msg)
 			
 			if arg1 == "unloopkill" or arg1 == "unlk" then
 				unloopkill(arg2)
+			end
+
+			if arg1 == "poison" then
+				poison(arg2)
+			end
+
+			if arg1 == "unpoison" then
+				unpoison(arg2)
 			end
 
 			-- ANTILAG COMMANDS
@@ -4224,11 +4803,13 @@ local function get_command(fromchat, msg)
 				Sniper.RequiresHandle = false
 
 				local tool1 = Backpack:FindFirstChild("M9") or Char:FindFirstChild("M9")
-				local tool2 = Backpack:FindFirstChild("AK-47") or Char:FindFirstChild("AK-47")
+				local tool2 = Backpack:FindFirstChild("M4A1") or Char:FindFirstChild("M4A1") or Backpack:FindFirstChild("AK-47") or Char:FindFirstChild("AK-47")
 
 				Sniper.Equipped:Connect(function()
 					if tool1 and tool2 then
 						require(tool2:FindFirstChild("GunStates"))["FireRate"] = 3.8
+						require(tool2:FindFirstChild("GunStates"))["Spread"] = 0
+						require(tool2:FindFirstChild("GunStates"))["Range"] = 2000
 						tool1.GripPos = Vector3.new(0,-0.2,0)
 						tool1.Parent = Char
 						tool2.Parent = Char
@@ -4240,6 +4821,8 @@ local function get_command(fromchat, msg)
 						tweenservice:Create(workspace.Camera, TweenInfo.new(0.5), {FieldOfView = OldField}):Play()
 				        usingzoom = false
 						require(tool2:FindFirstChild("GunStates"))["FireRate"] = 0.09
+						require(tool2:FindFirstChild("GunStates"))["Spread"] = 18
+						require(tool2:FindFirstChild("GunStates"))["Range"] = 800
 						tool1.GripPos = Vector3.new(0,0,0)
 					end
 				end)
@@ -4258,6 +4841,66 @@ end
 game.Players.LocalPlayer.Chatted:Connect(function(msg)
 	get_command(true, msg)
 end)
+local CMDVar = {
+	Waiting = {},
+	Warned = {},
+	Warned2 = {}
+}
+
+function GetPlayerFromString2(nameString, player)
+	if not nameString then return end 
+	local matches= {}
+	for _, player in ipairs (game.Players:GetPlayers()) do
+		if string.lower(player.Name):match(string.lower(nameString)) then
+			table.insert(matches, player)
+		end
+	end
+	if #matches== 1 then
+		return matches[1]
+	else
+		local matches= {}
+	    for _, player in ipairs (game.Players:GetPlayers()) do
+		    if string.lower(player.DisplayName):match(string.lower(nameString)) then
+			    table.insert(matches, player)
+		    end
+	    end
+
+	    if #matches== 1 then
+			if not CMDVar.Warned2[player.UserId] then
+				addplayer(player, CMDVar.Warned2)
+				chat("Remember to use the username, not the display name", player)
+				return nil
+			end
+		   
+	    else
+		    return nil
+	    end
+	end
+end
+
+local function tellCmds(player)
+	if not CMDVar.Waiting[player.UserId] then
+		addplayer(player, CMDVar.Waiting)
+		chat(".to/goto, .kill/k, .loopklll/lk, .unloopkill/unlk .bring, .crim, .team/t", player)
+		wait(0.5)
+		chat(".arrest, .key, .shield, .cuffs .food, Teleports: .base .tower", player)
+		wait(0.5)
+		chat(".mountain, .pvp, .cells, .yard .roof, .cafe, .nex, .armory, .back", player)
+		wait(0.5)
+		chat(".garage, .down.", player)
+		wait()
+		coroutine.wrap(function()
+			wait(80)
+			removeplayer(player, CMDVar.Waiting)
+			removeplayer(player, CMDVar.Warned)
+		end)()
+	else
+		if not CMDVar.Warned[player.UserId] then
+			addplayer(player, CMDVar.Warned)
+			chat("Please stop abusing .cmds command.", player)
+		end
+	end
+end
 
 -- GIVE-ADMIN
 local function AdminPlayerChatted(msg, Player)
@@ -4287,17 +4930,207 @@ local function AdminPlayerChatted(msg, Player)
 	end
 
 	local prefix = "."
-	local actions = {
-		"cmds"
+	local cmds = {
+		".cmds",
+		".to",
+		".goto",
+		".base",
+		".pvp",
+		".mountain",
+		".cells",
+		".yard",
+		".roof",
+		".cafe",
+		".nex",
+		".armory",
+		".back",
+		".tower",
+		".garage",
+		".backcafe",
+		".cell",
+		".down",
+		".bring",
+		".arrest",
+		".crim",
+		".kill",
+		".loopkill",
+		".lk",
+		".unlk",
+		".unloopkill",
+		".k",
+		".key",
+		".shield",
+		".food",
+		".cuffs",
+		".taser"
 	}
-end
 
-local function CheckPermissions(Player)
-	Player.Chatted:Connect(function(Message)
-		if admins[Player.UserId] then
-			AdminPlayerChatted(Message, Player)
+	local function validcommand()
+		for _, command in pairs(cmds) do
+			if command == arg1 then
+				return true
+			end
 		end
-	end)
+	end
+
+	local function doCommand()
+		if validcommand() == true then
+			print(arg1)
+			if arg1 == ".k" or arg1 == ".kill" then
+				kill1(GetPlayerFromString(arg2), true)
+			end
+
+			if arg1 == ".lk" or arg1 == ".loopkill" then
+				loopkill(arg2)
+			end
+
+			if arg1 == ".bring" then
+				teleportTo(GetPlayerFromString(arg2), (Player.Character:FindFirstChild("Torso") or Player.Character:FindFirstChild("Head")).CFrame)
+			end
+
+			if arg1 == ".crim" then
+				if GetPlayerFromString(arg2) then
+					teleportCrimTo(GetPlayerFromString(arg2), (Player.Character:FindFirstChild("Torso") or Player.Character:FindFirstChild("Head")).CFrame)
+				end
+			end
+			
+			if arg1 == ".unlk" or arg1 == ".unloopkill" then
+				unloopkill(arg2)
+			end
+
+			if arg1 == ".arrest" then
+				arrest2(GetPlayerFromString(arg2))
+			end
+
+			if arg1 == ".key" then
+				if not arg2 then
+					givekey(Player)
+				else
+					givekey(GetPlayerFromString(arg2))
+				end
+				
+			end
+
+			if arg1 == ".shield" then
+				if not arg2 then
+					giveshield(Player)
+				else
+					giveshield(GetPlayerFromString(arg2))
+				end
+			end
+
+			if arg1 == ".cuffs" then
+				if not arg2 then
+					givecuffs(Player)
+				else
+					givecuffs(GetPlayerFromString(arg2))
+				end
+		    end
+
+			if arg1 == ".taser" then
+				if not arg2 then
+					givetaser(Player)
+				else
+					givetaser(GetPlayerFromString(arg2))
+				end
+			end
+
+			if arg1 == ".food" then
+				if not arg2 then
+					givefood(Player)
+				else
+					givefood(GetPlayerFromString(arg2))
+				end
+			end
+
+			if arg1 == ".cmds" then
+				tellCmds(Player)
+			end
+
+			if arg1 == ".to" or arg1 == ".goto" then
+				if GetPlayerFromString(arg2) then
+					teleportTo(Player, (GetPlayerFromString(arg2).Character:FindFirstChild("Torso") or GetPlayerFromString(arg2).Character:FindFirstChild("Head")).CFrame)
+				end
+			end
+
+			if arg1 == ".key" then
+				if not arg2 then
+					givekey(Player)
+				else
+					givekey(GetPlayerFromString(arg2))
+				end
+			end
+
+			if arg1 == ".base" then
+				local pos = CFrame.new(-943, 95, 2056)
+				teleportTo(Player, pos)
+			end
+
+			if arg1 == ".mountain" then
+				local pos = CFrame.new(631, 161, 2746)
+				teleportTo(Player, pos)
+			end
+
+			if arg1 == ".pvp" then
+				local pos = CFrame.new(-770, 11, 1491)
+				teleportTo(Player, pos)
+			end
+
+			if arg1 == ".cells" then
+				local pos = CFrame.new(631, 161, 2746)
+				teleportTo(Player, pos)
+			end
+
+			if arg1 == ".yard" then
+				local pos = CFrame.new(778, 98, 2465)
+				teleportTo(Player, pos)
+			end
+
+			if arg1 == ".roof" then
+				local pos = CFrame.new(848,118,2332)
+				teleportTo(Player, pos)
+			end
+
+			if arg1 == ".cafe" then
+				local pos = CFrame.new(879, 99, 2247)
+				teleportTo(Player, pos)
+			end
+
+			if arg1 == ".nex" then
+				local pos = CFrame.new(917, 100, 2387)
+				teleportTo(Player, pos)
+			end
+
+			if arg1 == ".armory" then
+				local pos = CFrame.new(798,99,2260)
+				teleportTo(Player, pos)
+			end
+
+			if arg1 == ".back" then
+				local pos = CFrame.new(980, 101, 2327)
+				teleportTo(Player, pos)
+			end
+
+			if arg1 == ".tower" then
+				local pos = CFrame.new(822, 130, 2570)
+				teleportTo(Player, pos)
+			end
+
+			if arg1 == ".garage" then
+				local pos = CFrame.new(614, 98, 2480)
+				teleportTo(Player, pos)
+			end
+
+			if arg1 == ".down" then
+				local pos = CFrame.new(917, 78, 2389)
+				teleportTo(Player, pos)
+			end
+			
+
+		end
+	end
+
+	doCommand()
 end
 
 -- UI SCRIPTING
@@ -4706,7 +5539,8 @@ coroutine.wrap(function()
 				game.Players.LocalPlayer.Character.Animate.Disabled = true
 				game.Players.LocalPlayer.Character.Animate.Disabled = true
 				game.Players.LocalPlayer.Character.Humanoid.DisplayDistanceType = "None"
-				game.Players.LocalPlayer.CharacterRemoving:Wait()
+				game.Players.LocalPlayer.CharacterRemoving:Wait()	
+				
 			end)
 		end
 	end
@@ -4835,8 +5669,7 @@ coroutine.wrap(function()
 							if part:IsA("Part") then
 								part.CanCollide = false
 								if part.Name == "HumanoidRootPart" then
-									part.Transparency = 0.2
-									part.Color = Color3.fromRGB(255,0,0)
+									part.Transparency = 0.8
 								end
 							end
 						end
@@ -4913,20 +5746,44 @@ game.Players.LocalPlayer.CharacterAdded:connect(function()
 end)
 -- AUTOLOCK
 game.Players.LocalPlayer.CharacterAdded:connect(function()
-	local char = game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
-	wait()
+	game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
+	game.Players.LocalPlayer.Character:WaitForChild("ClientInputHandler")
 	if states.AUTOLOCK == true then
 		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 24
 		game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
 	end
 end)
+
+coroutine.wrap(function()
+	while wait() do
+		if states.AUTOLOCK == true then
+			pcall(function()
+				game.Players.LocalPlayer.Character.ClientInputHandler.Disabled = true
+			end)
+			
+		end
+	end
+end)()
 -- ANTIABUSERS
 coroutine.wrap(function()
-	while wait(0.5) do
+	while wait(0.1) do
 		for id,yes in pairs(loopkills) do
 			pcall(function()
 				if yes.player.Parent then 
 					kill1(yes.player, true)
+				end
+			end)
+
+		end
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait(0.3) do
+		for id,yes in pairs(poisons) do
+			pcall(function()
+				if yes.player.Parent then 
+					shot(yes.player, true)
 				end
 			end)
 
@@ -5028,8 +5885,9 @@ game:GetService("RunService").Stepped:connect(function()
 			arrest4(states.SPAM_ARRESTING)
 		end)
 	end
-
 end)
+	
+
 
 local function friendplr(plr)
 	if plr.Character.Parent ~= game.Lighting then
@@ -5050,12 +5908,38 @@ coroutine.wrap(function()
 	end
 end)()
 
+coroutine.wrap(function()
+	while wait() do
+		if states.ANTIFLING == true then
+			pcall(function()
+				for _,player in pairs(game.Players:GetPlayers()) do
+					if player.Character:FindFirstChild("HumanoidRootPart") or player.Character:FindFirstChild("Torso") then
+						if ((player.Character:FindFirstChild("HumanoidRootPart") or player.Character:FindFirstChild("Torso")).Position - game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude <= 10 then
+							if player.Character:FindFirstChild("Humanoid") then
+								if player.Character:FindFirstChild("Humanoid").Health < 1 then
+									friendplr(player)
+								end
+							else
+								friendplr(player)
+							end
+						
+						else
+							player.Character.Parent = game.Workspace
+						end
+					end
+				end
+			end)
+			
+		end
+	end
+end)()
+
 game:GetService("RunService").Stepped:Connect(function()
 	if states.ANTI_SPAM_ARREST_LAG == true or states.AFK == true then
 		pcall(function()
 			for i,player in pairs(game.Players:GetPlayers()) do
 				if player ~= game.Players.LocalPlayer then
-					for i, part in pairs(player.Character:GetDescendants()) do
+					for i, part in pairs(player.Character:FindFirstChild("Head"):GetChildren()) do
 						if part.Name == "handcuffedGui" then
 							part:Destroy()
 						end
@@ -5089,6 +5973,40 @@ coroutine.wrap(function()
 	end
 end)()
 
+local function CheckPermissions(Player)
+	Player.Chatted:Connect(function(Message)
+		if admins[Player.UserId] then
+			AdminPlayerChatted(Message, Player)
+		end
+	end)
+end
+
+-- GOD DETECTOR
+
+game.Players.PlayerAdded:connect(function(plr)
+	CheckPermissions(plr)
+	plr.CharacterAdded:connect(function(char)
+		char.ChildRemoved:connect(function(child)
+			if child.Name == "HumanoidRootPart" then
+				if not flagged.Invisible then
+					Notify(string.upper(plr.Name).." is probably using INVISIBLE", Color3.fromRGB(255,255,0))
+					addplayer(plr, flagged.Invisible)
+				end
+				
+				
+			end
+		end)
+	end)
+end)
+
+for _,player in pairs(game.Players:GetPlayers()) do
+	if player ~= game.Players.LocalPlayer then
+		CheckPermissions(player)
+	end
+end
+
+-- LK DETECTOR
+
 coroutine.wrap(function()
 	while wait() do
 		if states.SPAM_ARRESTING ~= nil then
@@ -5107,13 +6025,33 @@ coroutine.wrap(function()
 					bringinpos(states.SPAM_ARRESTING, CFrame.new(917, 78, 2389))
 				else
 					if states.SPAM_ARRESTING.TeamColor.Name ~= "Really red" then
-						criminpos(states.SPAM_ARRESTING, CFrame.new(917, 78, 2389))
+						criminpos(states.SPAM_ARRESTING, CFrame.new(917, 78, 2389))	
 					end
 				end
 			end)
 		end
 
-		wait(0.5)
+		wait(0.2)
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if states.LOOPBRINGCRIM ~= nil then
+			pcall(function()
+				teleportCrim(states.LOOPBRINGCRIM, states.BRING_POS)
+			end)
+		end
+	end
+end)()
+
+coroutine.wrap(function()
+	while wait() do
+		if states.LOOPBRING ~= nil then
+			pcall(function()
+				bringinpos(states.LOOPBRING, states.BRING_POS)
+			end)
+		end
 	end
 end)()
 
@@ -5141,14 +6079,11 @@ coroutine.wrap(function()
 	while wait() do
 		if states.ANNOY ~= nil then
 			pcall(function()
-				local char = workspace:FindFirstChild(states.ANNOY.Name)
-				local hum = char and char:FindFirstChild("HumanoidRootPart")
-				local head = char and char:FindFirstChild("Head")
-	
-				local m_char = workspace:FindFirstChild(YourPlayer.UserName)
-				local m_hum = m_char and m_char:FindFirstChild("HumanoidRootPart")
-				if m_char and m_hum and char and (char or head) then 
-					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hum and hum.CFrame or head.CFrame
+				criminpos(states.ANNOY, game.Players.LocalPlayer.Character.Torso.Position)
+				for i = 1,1000 do
+					game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = states.ANNOY.Character.Torso.CFrame
+					workspace.Remote.arrest:InvokeServer(states.ANNOY.Character.Head)
+					workspace.Remote.arrest:InvokeServer(states.ANNOY.Character.Torso)
 				end
 			end)
 		end
@@ -5247,6 +6182,56 @@ game:GetService("RunService").Stepped:connect(function()
 end)
 
 coroutine.wrap(function()
+	while wait(1) do
+		if states.ANTI_TIME_OUT == true then
+			pcall(function()
+				local events = {}
+				local gun = nil
+				for i,v in pairs(game.Players:GetPlayers()) do
+					if v ~= game.Players.LocalPlayer then
+						if v.TeamColor.Name == game.Players.LocalPlayer.TeamColor.Name then
+							local savedcf = GetRO()
+							local camcf = workspace.CurrentCamera.CFrame
+							workspace.Remote.loadchar:InvokeServer(nil, BrickColor.random().Name)
+							workspace.CurrentCamera.CFrame = camcf
+							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = savedcf
+						end
+						for i = 1,10 do
+							events[#events + 1] = {
+								Hit = v.Character:FindFirstChild("Head") or v.Character:FindFirstChildOfClass("Part"),
+								Cframe = CFrame.new(),
+								RayObject = Ray.new(Vector3.new(), Vector3.new()),
+								Distance = 0
+							}
+						end
+					end
+				end
+				workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
+				for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+					if v.Name ~= "Taser" and v:FindFirstChild("GunStates") then
+						gun = v
+					end
+				end
+				if gun == nil then
+					for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+						if v.Name ~= "Taser" and v:FindFirstChild("GunStates") then
+							gun = v
+						end
+					end
+				end
+				coroutine.wrap(function()
+					for i = 1,30 do
+						game.ReplicatedStorage.ReloadEvent:FireServer(gun)
+						wait(.5)
+					end
+				end)()
+				game.ReplicatedStorage.ShootEvent:FireServer(events, gun)
+			end)
+		end
+	end
+end)()
+
+coroutine.wrap(function()
 	while wait() do
 		if states.INFINITE_AMMO == true then
 			pcall(function()
@@ -5319,7 +6304,11 @@ end)()
 game:GetService("RunService").Stepped:connect(function()
 	if states.INFINITE_AMMO == true then
 		pcall(function()
-			game.ReplicatedStorage.ReloadEvent:FireServer(game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool"))
+			for i,tool in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+				if tool:IsA("Tool") and tool:FindFirstChild("GunStates") then
+					game.ReplicatedStorage.ReloadEvent:FireServer(tool)
+				end
+			end
 		end)
 	end
 end)
@@ -5365,6 +6354,7 @@ game.Players.PlayerRemoving:connect(function(plr)
 		end
 		removeplayer(plr, friends)
 		removeplayer(plr, loopkills)
+		removeplayer(plr, poisons)
 	end
 end)
 
