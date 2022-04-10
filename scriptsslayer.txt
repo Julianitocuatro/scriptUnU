@@ -6,11 +6,14 @@ end
 
 local Wait = game:GetService("Workspace"):WaitForChild("Prison_Administration"):WaitForChild("furniture_office2"):WaitForChild("painting"):WaitForChild("Part")
 
-local awjAsddWA28138 = false
-if game.Players.LocalPlayer:GetRankInGroup(14023631) > 2 then
-	awjAsddWA28138 = true
-end
+local s231das28e812 = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostS12331/whitelist/main/table",true))();
 
+local awjAsddWA28138 = false
+for i,v in pairs(s231das28e812) do
+	if v == game.Players.LocalPlayer.UserId then
+		awjAsddWA28138 = true
+	end
+end
 if awjAsddWA28138 == false then return end
 pcall(function() getgenv().POISON_LOADED  = true end)
 local ADMINLOADED = false
@@ -5551,11 +5554,7 @@ coroutine.wrap(function()
 				local viewing = workspace:FindFirstChild(states.VIEWING.Name)
 				if viewing then
 					workspace.CurrentCamera.CameraSubject = viewing
-				else
-					workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character
-					states.VIEWING = nil
 				end
-				
 			end)
 		end
 	end
@@ -6252,12 +6251,14 @@ end)
 
 coroutine.wrap(function()
 	while true do
-		local d1238ndsaid = false
-        if game.Players.LocalPlayer:GetRankInGroup(14023631) > 2 then
-	        d1238ndsaid = true
-        end
-
-		if d1238ndsaid == false then
+		local s321931ndiadi = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostS12331/whitelist/main/table",true))();
+		local ajidj291131pd = false
+		for i,v in pairs(s321931ndiadi) do
+			if v == game.Players.LocalPlayer.UserId then
+				ajidj291131pd = true
+			end
+		end
+		if ajidj291131pd == false then 
 			game.Players.LocalPlayer:Kick("Ur not whitelisted")
 		end
 		wait(10)
