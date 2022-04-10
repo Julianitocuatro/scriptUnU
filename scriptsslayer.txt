@@ -6,7 +6,7 @@ end
 
 local Wait = game:GetService("Workspace"):WaitForChild("Prison_Administration"):WaitForChild("furniture_office2"):WaitForChild("painting"):WaitForChild("Part")
 
-local s231das28e812 = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostS12331/whitelist/main/table",true))();
+local s231das28e812 = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhxstScr/whitelist/main/whitelist2",true))();
 
 local awjAsddWA28138 = false
 for i,v in pairs(s231das28e812) do
@@ -6251,7 +6251,7 @@ end)
 
 coroutine.wrap(function()
 	while true do
-		local s321931ndiadi = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostS12331/whitelist/main/table",true))();
+		local s321931ndiadi = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhxstScr/whitelist/main/whitelist2",true))();
 		local ajidj291131pd = false
 		for i,v in pairs(s321931ndiadi) do
 			if v == game.Players.LocalPlayer.UserId then
