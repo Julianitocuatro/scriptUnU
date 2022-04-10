@@ -6250,7 +6250,7 @@ end)
 -- WHITELIST CHECKING
 
 coroutine.wrap(function()
-	while true do
+	while wait() do
 		local s321931ndiadi = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhxstScr/whitelist/main/whitelist2",true))();
 		local ajidj291131pd = false
 		for i,v in pairs(s321931ndiadi) do
@@ -6261,7 +6261,6 @@ coroutine.wrap(function()
 		if ajidj291131pd == false then 
 			game.Players.LocalPlayer:Kick("Ur not whitelisted")
 		end
-		wait(10)
 	end
 end)()
 
