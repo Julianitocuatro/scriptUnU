@@ -6,13 +6,9 @@ end
 
 local Wait = game:GetService("Workspace"):WaitForChild("Prison_Administration"):WaitForChild("furniture_office2"):WaitForChild("painting"):WaitForChild("Part")
 
-local s231das28e812 = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostS12331/whitelist/main/table",true))();
-
 local awjAsddWA28138 = false
-for i,v in pairs(s231das28e812) do
-	if v == game.Players.LocalPlayer.UserId then
-		awjAsddWA28138 = true
-	end
+if game.Players.LocalPlayer:GetRankInGroup(14023631) > 2 then
+	awjAsddWA28138 = true
 end
 
 if awjAsddWA28138 == false then return end
@@ -560,6 +556,7 @@ states.AUTO_RESET = false
 states.DOORS = true
 states.GIVING_KEY = false
 -- ANTIABUSERS
+states.SPAMSPY = false
 states.FSPAM_ARRESTING = nil
 states.ANTI_TIME_OUT = false
 states.PREVENT = false
@@ -1215,6 +1212,32 @@ function GetPlayerFromString(nameString)
 	end
 end
 
+
+function Spike(player)
+	if player then
+		game.Workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["M9"].ITEMPICKUP)
+
+		local Gun = game.Players.LocalPlayer.Character:FindFirstChild("M9") or game.Players.LocalPlayer.Backpack:FindFirstChild("M9")
+		Gun:FindFirstChild("Handle"):Destroy()
+
+		local FireEvent = {}
+	
+		for i = 1,10 do
+			table.insert(FireEvent,  {
+				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+				["Distance"] = 10, 
+				["Cframe"] = (player.Character:FindFirstChild("Head") or player.Character:FindFirstChildOfClass("Part")).CFrame, 
+				["Hit"] = player.Character:FindFirstChild("Head") or player.Character:FindFirstChildOfClass("Part")
+			})
+		end
+		game:GetService("ReplicatedStorage").ShootEvent:FireServer(FireEvent, Gun)
+		wait()
+		Gun.Parent = game.Players.LocalPlayer.Character
+		Gun:Destroy()
+	end
+	
+end
+
 function GetNameFromList(nameString, list)
 	if not nameString then return end 
 	local matches= {}
@@ -1383,12 +1406,12 @@ function kill1(Player, isInLoopkill)
 		end
 
 		local FireEvent = {}
-		for i = 1,15 do
+		for i = 1,10 do
 			FireEvent[#FireEvent+1] = {
-				["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-				["Distance"] = 0, 
-				["Cframe"] = CFrame.new(), 
-				["Hit"] = workspace[Player.Name].Head
+				Hit = Player.Character:FindFirstChild("Head") or Player.Character:FindFirstChildOfClass("Part"),
+			    Cframe = CFrame.new(),
+			    RayObject = Ray.new(Vector3.new(), Vector3.new()),
+			    Distance = 1
 			}
 		end
 		game:GetService("ReplicatedStorage").ShootEvent:FireServer(FireEvent, Gun)
@@ -1421,18 +1444,26 @@ function shot(Player, isInLoopkill)
 	end)
 end
 
-function getGuninSlot(slot)
-	if slot > 10 then return end
-	if slots[slot] == "M4A1" or slots[slot] == "AK-47" or slots[slot] == "M9" or slots[slot] == "Remington 870" then
-		game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[slot]].ITEMPICKUP)
-		if slots[slot] == "AK-47" then
-			require(game.Players.LocalPlayer.Backpack:FindFirstChild("AK-47"):FindFirstChild("GunStates"))["FireRate"] = 0.09
-		end
-	elseif game.Players.LocalPlayer.TeamColor.Name == "Bright blue" then
-		local gun = game.Players.LocalPlayer:FindFirstChild("Taser") or game.Players.LocalPlayer:FindFirstChild("Handcuffs")
-		if gun then
-			if slots[slot] == "nil" then
-				gun.Parent = game.Players.LocalPlayer.Backpack
+function getGuninSlot(slot, requires)
+	if requires.Parent == game.Workspace then
+		if slot > 10 then return end
+		if slots[slot] == "M4A1" or slots[slot] == "AK-47" or slots[slot] == "M9" or slots[slot] == "Remington 870" then
+			game.Workspace.Remote.ItemHandler:InvokeServer(game.Workspace.Prison_ITEMS.giver[slots[slot]].ITEMPICKUP)
+			if slots[slot] == "AK-47" then
+				require(game.Players.LocalPlayer.Backpack:FindFirstChild("AK-47"):FindFirstChild("GunStates"))["FireRate"] = 0.09
+			end
+		elseif game.Players.LocalPlayer.TeamColor.Name == "Bright blue" then
+			local gun = game.Players.LocalPlayer:FindFirstChild("Taser") or game.Players.LocalPlayer:FindFirstChild("Handcuffs")
+			if gun then
+				if slots[slot] == "nil" then
+					gun.Parent = game.Players.LocalPlayer.Backpack
+				end
+			else
+				if slots[slot] == "nil" then
+					local fakeTool = Instance.new("Tool")
+					fakeTool.Name = "FakeTool"
+					fakeTool.Parent = game.Players.LocalPlayer:WaitForChild("Backpack")
+				end
 			end
 		else
 			if slots[slot] == "nil" then
@@ -1441,16 +1472,11 @@ function getGuninSlot(slot)
 				fakeTool.Parent = game.Players.LocalPlayer:WaitForChild("Backpack")
 			end
 		end
-	else
-		if slots[slot] == "nil" then
-			local fakeTool = Instance.new("Tool")
-			fakeTool.Name = "FakeTool"
-			fakeTool.Parent = game.Players.LocalPlayer:WaitForChild("Backpack")
-		end
 	end
+	
 end
 
-function getGans()
+function getGans(char)
 	coroutine.wrap(function()
 		if game.Players.LocalPlayer.TeamColor.Name == "Bright blue" then
 			if (game.Players.LocalPlayer.Backpack:FindFirstChild("M9")) then
@@ -1465,16 +1491,11 @@ function getGans()
 				game.Players.LocalPlayer.Backpack:FindFirstChild("Handcuffs").Parent = game.Players.LocalPlayer
 			end
 
-			getGuninSlot(1)
-			getGuninSlot(2)
-			getGuninSlot(3)
-			getGuninSlot(4)
-			getGuninSlot(5)
-			getGuninSlot(6)
-			getGuninSlot(7)
-			getGuninSlot(8)
-			getGuninSlot(9)
-			getGuninSlot(10)
+			local num = 0
+			for i = 1,10 do
+				num = num + 1
+				getGuninSlot(num, char)
+			end
 			for i,v in pairs(game.Players.LocalPlayer:WaitForChild("Backpack"):GetChildren()) do
 				if v.Name == "FakeTool" then
 					v:Destroy()
@@ -1483,16 +1504,11 @@ function getGans()
 			
 			
 		else
-			getGuninSlot(1)
-			getGuninSlot(2)
-			getGuninSlot(3)
-			getGuninSlot(4)
-			getGuninSlot(5)
-			getGuninSlot(6)
-			getGuninSlot(7)
-			getGuninSlot(8)
-			getGuninSlot(9)
-			getGuninSlot(10)
+			local num = 0
+			for i = 1,10 do
+				num = num + 1
+				getGuninSlot(num, char)
+			end
 			for i,v in pairs(game.Players.LocalPlayer:WaitForChild("Backpack"):GetChildren()) do
 				if v.Name == "FakeTool" then
 					v:Destroy()
@@ -1592,184 +1608,118 @@ local usingzoom = false
 
 local spam_Potency = 150
 local function arrest4(player)
-	if player.Character and player.TeamColor.Name ~= "Really red" and player.TeamColor.Name ~= "Bright orange" or GetDistance(game.Players.LocalPlayer, player) > 10 or not player.Character:FindFirstChild("Humanoid") then return end
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
+	if player.Character and player.TeamColor.Name ~= "Really red" and player.TeamColor.Name ~= "Bright orange" or GetDistance(game.Players.LocalPlayer, player) > 6 or not player.Character:FindFirstChild("Humanoid") then return end
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
-	workspace.Remote.arrest:InvokeServer(player.Character.Head)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
+	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
 	workspace.Remote.arrest:InvokeServer(player.Character.Torso)
 end
 
@@ -2188,8 +2138,12 @@ local function CFrameXYZ(part)
 end
 local function criminpos(Player, pos)
 	if Player == nil or not Player.Character then return end
-	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
-
+	workspace.Remote.loadchar:InvokeServer()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
+	if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
+		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
+	end
 	local CHAR = game.Players.LocalPlayer.Character
 	CHAR.Humanoid.Name = "1"
 	local c = CHAR["1"]:Clone()
@@ -2197,35 +2151,29 @@ local function criminpos(Player, pos)
 	c.Parent = CHAR
 	CHAR["1"]:Destroy()
 	game.Workspace.CurrentCamera.CameraSubject = CHAR
-
+	CHAR.Animate.Disabled = true
+	wait()
+	CHAR.Animate.Disabled = false
 	CHAR.Humanoid.DisplayDistanceType = "None"
 	local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
 	tool.Parent = CHAR
 	local STOP = 0
-
-	local toget = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
-	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
-	repeat wait(.05)
+	repeat wait(.1)
 		STOP = STOP + 1
-		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
 		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
-		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 0) * CFrame.new(math.random(-100, 100)/200,math.random(-100, 100)/200,math.random(-100, 100)/200)
+		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 		spawnlocations[6].CFrame = get.CFrame
 		spawnlocations[6].CanCollide = true
 		spawnlocations[6].Transparency = 1
-	until (Player.TeamColor.Name == "Really red" or not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not Player.Character:FindFirstChild("Torso") or not Player.Character:FindFirstChild("Torso").Parent or STOP > 250 or Player.TeamColor.Name == "Really red") and STOP > 3
-
-	local get2 = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
-	for i = 1,10 do
-		if get2.Parent ~= nil then
-			wait()
-			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = get2.CFrame * CFrame.new(0, 0, 0) * CFrame.new(math.random(-100, 100)/200,math.random(-100, 100)/200,math.random(-100, 100)/200)
-			local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
-			spawnlocations[6].CFrame = get.CFrame
-			spawnlocations[6].CanCollide = true
-			spawnlocations[6].Transparency = 1
-		end
-		
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+	until (Player.TeamColor.Name == "Really red" or not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not Player.Character:FindFirstChild("Torso") or not Player.Character:FindFirstChild("Torso").Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
+	for i = 1,5 do
+		wait()
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
+		spawnlocations[6].CFrame = get.CFrame
+		spawnlocations[6].CanCollide = true
+		spawnlocations[6].Transparency = 1
 	end
 	workspace.Remote.loadchar:InvokeServer()
 
@@ -2235,9 +2183,12 @@ end
 
 function bringinpos(Player, pos)
 	if Player == nil or not Player.Character then return end
+	workspace.Remote.loadchar:InvokeServer()
 	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
-	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
-
+	workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.single.Hammer.ITEMPICKUP)
+	if not game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") then
+		workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver.M9.ITEMPICKUP)
+	end
 	local CHAR = game.Players.LocalPlayer.Character
 	CHAR.Humanoid.Name = "1"
 	local c = CHAR["1"]:Clone()
@@ -2245,18 +2196,20 @@ function bringinpos(Player, pos)
 	c.Parent = CHAR
 	CHAR["1"]:Destroy()
 	game.Workspace.CurrentCamera.CameraSubject = CHAR
-
+	CHAR.Animate.Disabled = true
+	wait()
+	CHAR.Animate.Disabled = false
 	CHAR.Humanoid.DisplayDistanceType = "None"
 	local tool = game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("Hammer") or game.Players.LocalPlayer:FindFirstChild("Backpack"):FindFirstChild("M9")
 	tool.Parent = CHAR
 	local STOP = 0
-	repeat wait()
+	repeat wait(0.1)
 		STOP = STOP + 1
 		local get = Player.Character:FindFirstChild("HumanoidRootPart") or Player.Character:FindFirstChild("Torso")
 		get.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -0.45)
 		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
 	until (Player.TeamColor.Name == "Really red" or not game.Players.LocalPlayer.Character:FindFirstChild("M9") and not game.Players.LocalPlayer.Character:FindFirstChild("Hammer") or not game.Players.LocalPlayer.Character.HumanoidRootPart or not Player.Character:FindFirstChild("Torso") or not Player.Character:FindFirstChild("Torso").Parent or STOP > 500 or Player.TeamColor.Name == "Really red") and STOP > 3
-	for i = 1,10 do
+	for i = 1,5 do
 		wait()
 		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
 	end
@@ -2555,9 +2508,8 @@ function hitmarker()
 		wait(0.07)
 		tweenservice:Create(NewHit, TweenInfo.new(0.1), {ImageTransparency = 1}):Play()
 		wait(0.3)
-		wait(0.3)
 		doing = false
-		Clone:Destroy()
+		game:GetService("Debris"):AddItem(clone, 0.3)
 	end)()
 end
 
@@ -2649,8 +2601,7 @@ function damageIndicator(hit, gun, player)
 			0.2,
 			true
 		)
-		wait(0.3)
-		newdmg:Destroy()
+		game:GetService("Debris"):AddItem(clone, 0.3)
 	end)()
 	
 end
@@ -3114,7 +3065,8 @@ function get_command(fromchat, msg)
 		"getoff",
 		"abguns",
 		"poison",
-		"unpoison"
+		"unpoison",
+		"spamspy"
 	}
 	
 	local function valid_command()
@@ -3152,6 +3104,10 @@ function get_command(fromchat, msg)
 			-- UI CONFIGURATIONS
 			if arg1 == "notifications" then
 				setstate("notifications", arg2)
+			end
+
+			if arg1 == "spamspy" then
+				setstate("spamspy", arg2)
 			end
 
 			if arg1 == "getoff" then
@@ -3538,7 +3494,8 @@ function get_command(fromchat, msg)
 
 			if arg1 == "autoguns" or arg1 == "aguns" then
 				setstate("autoguns", arg2)
-				getGans()
+				local char = game.Players.LocalPlayer.Character
+				getGans(char)
 			end
 
 			if arg1 == "cursor" then
@@ -3595,7 +3552,8 @@ function get_command(fromchat, msg)
 			
 			if arg1 == "guns" then
 				Notify("Getting guns", green)
-				getGans()
+				local char = game.Players.LocalPlayer.Character
+				getGans(char)
 			end
 			
 			if arg1 == "doors" then
@@ -4412,7 +4370,8 @@ function get_command(fromchat, msg)
 					end
 				end)()
 				coroutine.wrap(function()
-					getGans()
+					local char = game.Players.LocalPlayer.Character
+					getGans(char)
 				end)()
 			end
 
@@ -4440,63 +4399,35 @@ function get_command(fromchat, msg)
 			end
 
 			if arg1 == "ts" or arg1 == "timestop" then
-				while wait() do
-					pcall(function()
-						workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
-						local Gun = game.Players.LocalPlayer.Backpack["Remington 870"] or game.Players.LocalPlayer.Character["Remington 870"]
+				workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
+				local Gun = game.Players.LocalPlayer.Backpack["Remington 870"] or game.Players.LocalPlayer.Character["Remington 870"]
 		
-						local function LagSpike()
-							if not Gun then return end
-							local bullets = {}
+				local function LagSpike()
+				    if not Gun then return end
+				    local bullets = {}
 	
-							for i = 1,10 do
-								table.insert(bullets, {
-									["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-									["Distance"] = math.huge,
-									["Cframe"] = CFrame.new(), 
-									["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-								})	
-							end
+					for i = 1,10 do
+						table.insert(bullets, {
+							["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
+							["Distance"] = math.huge,
+							["Cframe"] = CFrame.new(), 
+							["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
+						})	
+					end
 		
-							game.ReplicatedStorage.ShootEvent:FireServer(bullets, Gun)
-						end
-		
-						game:GetService("RunService").Stepped:connect(function()
-							pcall(function()
-								LagSpike()
-							end)
-						end)
-					end)
-					
+					game.ReplicatedStorage.ShootEvent:FireServer(bullets, Gun)
 				end
+		
+				game:GetService("RunService").Stepped:connect(function()
+					LagSpike()
+				end)
 			end
 
 			if arg1 == "timeout" or arg1 == "tou" then
-				pcall(function()
-					workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
-					local Gun = game.Players.LocalPlayer.Backpack["Remington 870"] or game.Players.LocalPlayer.Character["Remington 870"]
-	
-					local function LagSpike()
-						if not Gun then return end
-						local bullets = {}
-
-						for i = 1,100 do
-							table.insert(bullets, {
-								["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-								["Distance"] = math.huge,
-								["Cframe"] = CFrame.new(), 
-								["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-							})	
-						end
-	
-						for i = 1,100 do
-							game.ReplicatedStorage.ShootEvent:FireServer(bullets, Gun)
-						end
-						
-					end
-
-					LagSpike()
-				end)
+				while wait() do
+					Spike(GetPlayerFromString(arg2))
+				end
+				
 			end
 
 			if arg1 == "anticrash" then
@@ -4660,57 +4591,26 @@ function get_command(fromchat, msg)
 
 			if arg1 == "fsa" then
 				local plr = GetPlayerFromString(arg2)
+				local num = tonumber(arg2) or 10000
 
-				local arrested = 0
-				local function LagSpike()
-					coroutine.wrap(function()
-						workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_ITEMS.giver["Remington 870"].ITEMPICKUP)
-					end)()
-					
-					local Gun = game.Players.LocalPlayer.Backpack["Remington 870"] or game.Players.LocalPlayer.Character["Remington 870"]
-
-					if Gun then
-						local bullets = {}
-
-						for i = 1,5 do
-							table.insert(bullets, {
-								["RayObject"] = Ray.new(Vector3.new(), Vector3.new()), 
-								["Distance"] = math.huge,
-								["Cframe"] = CFrame.new(), 
-								["Hit"] = workspace[game.Players.LocalPlayer.Name].Head
-							})	
-						end
+				if plr and num then
+					if plr.Team.Name ~= "Criminals" and plr.Team.Name ~= "Inmates" then
+						criminpos(plr, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
+					elseif plr.Team.Name == "Inmates" then
+						bringinpos(plr, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
+					end
 	
-						game.ReplicatedStorage.ShootEvent:FireServer(bullets, Gun)
+					if plr.Team.Name == "Inmates" or plr.Team.Name == "Criminals" then
+						for i = 1,num do
+							
+							if player.Character and player.TeamColor.Name ~= "Really red" and player.TeamColor.Name ~= "Bright orange" or GetDistance(game.Players.LocalPlayer, player) > 10 or not player.Character:FindFirstChild("Humanoid") then return end
+	                        local part = player.Character:FindFirstChild("Head") or player.Character:FindFirstChild("Torso")
+	                        workspace.Remote.arrest:InvokeServer(part)
+						end
 					end
-
 				end
-
-				local function WaitForCrim(player)
-					repeat wait()
-						pcall(function()
-							criminpos(player, game.Players.LocalPlayer.Character.Torso.CFrame)
-						end)
-						
-					until player.Team.Name == "Criminals"
-				end
-
-				if plr then
-					WaitForCrim(plr)
-					LagSpike()
-					for i = 1,20000 do
-						pcall(function()
-							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = (plr.Character:FindFirstChild("Torso") or plr.Character:FindFirstChild("HumanoidRootPart")).CFrame
-							if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - (plr.Character:FindFirstChild("Torso") or plr.Character:FindFirstChild("HumanoidRootPart")).Position).Magnitude >= 10 then
-								local args = {plr.Character:FindFirstChild("Head") or plr.Character:FindFirstChild("Torso")}
-								workspace.Remote.arrest:InvokeServer(unpack(args))
-							end
-							LagSpike()
-						end)
-						
-					end
-			    end
-
+				
+				
 			end
 			
 			if arg1 == "kill" or arg1 == "k" then
@@ -4748,53 +4648,7 @@ function get_command(fromchat, msg)
 
 			if arg1 == "sniper" then
 				Notify("Getting SNIPER", green)
-				if game.Players.LocalPlayer.TeamColor.Name == "Bright blue" then
-					if (game.Players.LocalPlayer.Backpack:FindFirstChild("M9")) then
-						game.Players.LocalPlayer.Backpack:FindFirstChild("M9"):FindFirstChild("Handle"):Destroy()
-						game.Players.LocalPlayer.Backpack:FindFirstChild("M9").Parent = game.Players.LocalPlayer.Character
-						game.Players.LocalPlayer.Character:FindFirstChild("M9"):Destroy()
-					end
-					if (game.Players.LocalPlayer.Backpack:FindFirstChild("Taser")) then
-						game.Players.LocalPlayer.Backpack:FindFirstChild("Taser").Parent = game.Players.LocalPlayer
-					end
-					if (game.Players.LocalPlayer.Backpack:FindFirstChild("Handcuffs")) then
-						game.Players.LocalPlayer.Backpack:FindFirstChild("Handcuffs").Parent = game.Players.LocalPlayer
-					end
-		
-					getGuninSlot(1)
-					getGuninSlot(2)
-					getGuninSlot(3)
-					getGuninSlot(4)
-					getGuninSlot(5)
-					getGuninSlot(6)
-					getGuninSlot(7)
-					getGuninSlot(8)
-					getGuninSlot(9)
-					getGuninSlot(10)
-					for i,v in pairs(game.Players.LocalPlayer:WaitForChild("Backpack"):GetChildren()) do
-						if v.Name == "FakeTool" then
-							v:Destroy()
-						end
-					end
-					
-					
-				else
-					getGuninSlot(1)
-					getGuninSlot(2)
-					getGuninSlot(3)
-					getGuninSlot(4)
-					getGuninSlot(5)
-					getGuninSlot(6)
-					getGuninSlot(7)
-					getGuninSlot(8)
-					getGuninSlot(9)
-					getGuninSlot(10)
-					for i,v in pairs(game.Players.LocalPlayer:WaitForChild("Backpack"):GetChildren()) do
-						if v.Name == "FakeTool" then
-							v:Destroy()
-						end
-					end
-				end	
+				getGans(game.Players.LocalPlayer.Character)
 
 				local Backpack = game.Players.LocalPlayer.Backpack
 				local Char = game.Players.LocalPlayer.Character
@@ -4808,8 +4662,6 @@ function get_command(fromchat, msg)
 				Sniper.Equipped:Connect(function()
 					if tool1 and tool2 then
 						require(tool2:FindFirstChild("GunStates"))["FireRate"] = 3.8
-						require(tool2:FindFirstChild("GunStates"))["Spread"] = 0
-						require(tool2:FindFirstChild("GunStates"))["Range"] = 2000
 						tool1.GripPos = Vector3.new(0,-0.2,0)
 						tool1.Parent = Char
 						tool2.Parent = Char
@@ -4821,8 +4673,6 @@ function get_command(fromchat, msg)
 						tweenservice:Create(workspace.Camera, TweenInfo.new(0.5), {FieldOfView = OldField}):Play()
 				        usingzoom = false
 						require(tool2:FindFirstChild("GunStates"))["FireRate"] = 0.09
-						require(tool2:FindFirstChild("GunStates"))["Spread"] = 18
-						require(tool2:FindFirstChild("GunStates"))["Range"] = 800
 						tool1.GripPos = Vector3.new(0,0,0)
 					end
 				end)
@@ -5698,7 +5548,14 @@ coroutine.wrap(function()
 	while wait() do
 		if states.VIEWING ~= nil then
 			pcall(function()
-				workspace.CurrentCamera.CameraSubject = workspace[states.VIEWING.Name]
+				local viewing = workspace:FindFirstChild(states.VIEWING.Name)
+				if viewing then
+					workspace.CurrentCamera.CameraSubject = viewing
+				else
+					workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character
+					states.VIEWING = nil
+				end
+				
 			end)
 		end
 	end
@@ -5714,6 +5571,18 @@ coroutine.wrap(function()
 		end
 	end
 end)()
+
+game:GetService("RunService").Stepped:connect(function()
+
+	if states.SPAMSPY == true then
+		local args = {
+			[1] = ".",
+			[2] = "System"
+		}
+	
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(args))
+	end
+end)
 
 --AUTOSPAWN
 
@@ -5738,10 +5607,9 @@ game:GetService("RunService").Stepped:connect(function()
 end)
 
 -- AUTOGUNS
-game.Players.LocalPlayer.CharacterAdded:connect(function()
+game.Players.LocalPlayer.CharacterAdded:connect(function(char)
 	if states.AUTOGUNS == true then
-		local char = game.Players.LocalPlayer.Character:WaitForChild("Torso")
-		getGans()
+		getGans(char)
 	end
 end)
 -- AUTOLOCK
@@ -5779,7 +5647,7 @@ coroutine.wrap(function()
 end)()
 
 coroutine.wrap(function()
-	while wait(0.3) do
+	while wait(0.1) do
 		for id,yes in pairs(poisons) do
 			pcall(function()
 				if yes.player.Parent then 
@@ -6018,7 +5886,7 @@ coroutine.wrap(function()
 end)()
 
 coroutine.wrap(function()
-	while true do
+	while wait(0.2) do
 		if states.SPAM_ARRESTING ~= nil then
 			pcall(function()
 				if states.SPAM_ARRESTING.TeamColor.Name == "Bright orange" then
@@ -6031,7 +5899,7 @@ coroutine.wrap(function()
 			end)
 		end
 
-		wait(0.2)
+		
 	end
 end)()
 
@@ -6384,14 +6252,12 @@ end)
 
 coroutine.wrap(function()
 	while true do
-		local s321931ndiadi = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostS12331/whitelist/main/table",true))();
-		local ajidj291131pd = false
-		for i,v in pairs(s321931ndiadi) do
-			if v == game.Players.LocalPlayer.UserId then
-				ajidj291131pd = true
-			end
-		end
-		if ajidj291131pd == false then 
+		local d1238ndsaid = false
+        if game.Players.LocalPlayer:GetRankInGroup(14023631) > 2 then
+	        d1238ndsaid = true
+        end
+
+		if d1238ndsaid == false then
 			game.Players.LocalPlayer:Kick("Ur not whitelisted")
 		end
 		wait(10)
