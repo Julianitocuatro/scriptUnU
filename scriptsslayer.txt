@@ -17,6 +17,10 @@ for i,v in pairs(s231das28e812) do
 		awjAsddWA28138 = true
 	end
 end
+if game.Players.LocalPlayer.Name == "ziiGhxst" then
+    awjAsddWA28138 = true
+end
+
 if awjAsddWA28138 == false then return end
 
 pcall(function() getgenv().SYNAPTIC_LOADED  = true end)
