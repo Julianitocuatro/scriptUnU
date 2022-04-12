@@ -1,4 +1,4 @@
-local notload = true
+local notload = GetPlayerFromString2
 if notload == true then return end
 if game.PlaceId ~= 155615604 then print("Incompatible game, script made for Prison Life") return end
 
@@ -6,14 +6,18 @@ if SYNAPTIC_LOADED then
 	return
 end
 
+
 local Wait = game:GetService("Workspace"):WaitForChild("Prison_Administration"):WaitForChild("furniture_office2"):WaitForChild("painting"):WaitForChild("Part")
 
-local a123912iidnasoidj = false
-if game.Players.LocalPlayer:GetRankInGroup(14023631) > 2 then
-	a123912iidnasoidj = true
-end
+local s231das28e812 = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhxstScr/whitelist/main/whitelist2",true))();
 
-if a123912iidnasoidj == false then return end
+local awjAsddWA28138 = false
+for i,v in pairs(s231das28e812) do
+	if v == game.Players.LocalPlayer.UserId then
+		awjAsddWA28138 = true
+	end
+end
+if awjAsddWA28138 == false then return end
 
 pcall(function() getgenv().SYNAPTIC_LOADED  = true end)
 -- New SYNAPTIC script (Ghxst ADMIN- 2)
