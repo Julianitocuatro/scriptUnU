@@ -1,4 +1,4 @@
-local notload = GetPlayerFromString2
+local notload = false
 if notload == true then return end
 if game.PlaceId ~= 155615604 then print("Incompatible game, script made for Prison Life") return end
 
