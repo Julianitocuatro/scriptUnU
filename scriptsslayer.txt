@@ -1,3 +1,0 @@
-local wait = game.Workspace:WaitForChild("Doors")
-
-game.Players.LocalPlayer:Kick("Changed Script")
