@@ -8,7 +8,7 @@ end
 
 local Wait = game:GetService("Workspace"):WaitForChild("Prison_Administration"):WaitForChild("furniture_office2"):WaitForChild("painting"):WaitForChild("Part")
 -- WHITELIST
-local a123912iidnasoidj = true
+local a123912iidnasoidj = false
 if game.Players.LocalPlayer:GetRankInGroup(14023631) > 2 then
 	a123912iidnasoidj = true
 end
